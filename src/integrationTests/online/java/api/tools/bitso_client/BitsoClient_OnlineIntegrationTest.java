@@ -5,20 +5,17 @@ import api.tools.BitsoClient;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.client.Client;
 import java.net.URISyntaxException;
 
-import static api.tools.context.Environment.DEV;
-import static javax.ws.rs.client.ClientBuilder.newClient;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class BitsoClient_OnlineIntegrationTest {
     private BitsoClient bitsoClient;
-    private Client client = newClient();
 
     @Before
     public void setUp() throws Exception {
-        bitsoClient = new BitsoClient(client, DEV);
+        bitsoClient = new BitsoClient("https://api-dev.bitso.com/v3/trades?book=btc_mxn");
     }
 
     @Test
@@ -27,5 +24,15 @@ public class BitsoClient_OnlineIntegrationTest {
         TradeResult tradeResult = bitsoClient.getTrades();
         // then
         assertNotNull(tradeResult);
+    }
+
+    @Test
+    public void shouldReturnResultsAccordingToLimit() throws Exception {
+        //given
+        bitsoClient = new BitsoClient("https://api-dev.bitso.com/v3/trades?book=btc_mxn&limit=5");
+        // when
+        TradeResult tradeResult = bitsoClient.getTrades();
+        // then
+        assertEquals(5, tradeResult.getTradeList().size());
     }
 }

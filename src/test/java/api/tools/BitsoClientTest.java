@@ -14,7 +14,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
-import static api.tools.context.Environment.DEV;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -34,7 +33,8 @@ public class BitsoClientTest {
 
     @Before
     public void setUp() throws Exception {
-        bitsoClient = new BitsoClient(client);
+        bitsoClient = new BitsoClient("https://bitso.com");
+        bitsoClient.setClient(client);
         given(client.target(any(URI.class))).willReturn(webTarget);
         given(webTarget.request(any(MediaType.class))).willReturn(builder);
     }
@@ -46,19 +46,7 @@ public class BitsoClientTest {
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
-        assertEquals("https://api.bitso.com/v3/trades/?book=btc_mxn", captor.getValue().toString());
-    }
-
-    @Test
-    public void shouldTargetBitsoTradeDevUrlForDevEnvironment() throws Exception {
-        //given
-        bitsoClient = new BitsoClient(client, DEV);
-        // when
-        bitsoClient.getTrades();
-        // then
-        ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
-        verify(client).target(captor.capture());
-        assertEquals("https://api-dev.bitso.com/v3/trades/?book=btc_mxn", captor.getValue().toString());
+        assertEquals("https://bitso.com", captor.getValue().toString());
     }
 
     @Test

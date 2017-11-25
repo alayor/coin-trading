@@ -5,20 +5,16 @@ import api.tools.BitsoClient;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.client.Client;
 import java.net.URISyntaxException;
 
-import static api.tools.context.Environment.DEV;
-import static javax.ws.rs.client.ClientBuilder.newClient;
 import static org.junit.Assert.assertNotNull;
 
 public class BitsoClient_MockedIntegrationTest {
     private BitsoClient bitsoClient;
-    private Client client = newClient();
 
     @Before
     public void setUp() throws Exception {
-        bitsoClient = new BitsoClient(client, DEV);
+        bitsoClient = new BitsoClient("https://api-dev.bitso.com/v3/");
     }
 
     @Test
