@@ -12,7 +12,7 @@ import static api.tools.context.Environment.DEV;
 import static javax.ws.rs.client.ClientBuilder.newClient;
 import static org.junit.Assert.assertNotNull;
 
-public class BitsoClientIntegrationTest {
+public class BitsoClient_MockedIntegrationTest {
     private BitsoClient bitsoClient;
     private Client client = newClient();
 

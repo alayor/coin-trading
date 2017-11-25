@@ -11,13 +11,21 @@ buildscript {
 apply plugin: 'java'
 
 sourceSets {
-    integrationTest {
+    onlineIntegrationTests {
         java {
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
-            srcDir file('src/integrationTest/java')
+            srcDir file('src/integrationTests/online/java')
         }
-        resources.srcDir file('src/integrationTest/resources')
+        resources.srcDir file('src/integrationTest/online/resources')
+    }
+    mockedIntegrationTests {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integrationTests/mocked/java')
+        }
+        resources.srcDir file('src/integrationTest/mocked/resources')
     }
 }
 
@@ -30,16 +38,15 @@ apply plugin: 'javafx-gradle-plugin'
 
 
 jfx {
-    // minimal requirement for jfxJar-task
     mainClass = 'ui.Main'
-
-    // minimal requirement for jfxNative-task
     vendor = 'Alonso A. Ortega'
 }
 
 configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
+    onlineIntegrationTestsCompile.extendsFrom testCompile
+    onlineIntegrationTestsRuntime.extendsFrom testRuntime
+    mockedIntegrationTestsCompile.extendsFrom testCompile
+    mockedIntegrationTestsRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -49,8 +56,14 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
 }
 
-task integrationTest(type: Test) {
-    testClassesDirs =  sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+task onlineITest(type: Test) {
+    testClassesDirs =  sourceSets.onlineIntegrationTests.output.classesDirs
+    classpath = sourceSets.onlineIntegrationTests.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+task mockedITest(type: Test) {
+    testClassesDirs =  sourceSets.mockedIntegrationTests.output.classesDirs
+    classpath = sourceSets.mockedIntegrationTests.runtimeClasspath
     outputs.upToDateWhen { false }
 }
