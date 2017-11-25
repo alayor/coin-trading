@@ -1,12 +1,10 @@
-package api._tools;
+package api._tools_;
 
 import api.model.TradeResult;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Matches;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Client;
