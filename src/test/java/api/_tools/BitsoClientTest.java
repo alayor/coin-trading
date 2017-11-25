@@ -1,5 +1,6 @@
 package api._tools;
 
+import api.model.TradeResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,10 +8,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -22,6 +25,8 @@ public class BitsoClientTest {
     private Client client;
     @Mock
     private WebTarget webTarget;
+    @Mock
+    private Invocation.Builder builder;
 
     @Before
     public void setUp() throws Exception {
@@ -30,11 +35,11 @@ public class BitsoClientTest {
     }
 
     @Test
-    public void shouldTargetBitsoTradeUrl() throws Exception {
+    public void shouldTargetBitsoTradeUrlForBtcMxnBook() throws Exception {
         // when
         bitsoClient.getTrades();
         // then
-        verify(client).target("https://api.bitso.com/v3/trades/");
+        verify(client).target("https://api.bitso.com/v3/trades/?book=btc_mxn");
     }
 
     @Test
@@ -43,5 +48,15 @@ public class BitsoClientTest {
         bitsoClient.getTrades();
         // then
         verify(webTarget).request(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    @Test
+    public void shouldGetTradeResultFromRequest() throws Exception {
+        // given
+        given(webTarget.request(any(MediaType.class))).willReturn(builder);
+        // when
+        bitsoClient.getTrades();
+        // then
+        verify(builder).get(TradeResult.class);
     }
 }

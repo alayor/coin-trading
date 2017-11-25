@@ -1,25 +1,28 @@
 package api._tools;
 
+import api.model.TradeResult;
+
 import javax.ws.rs.client.Client;
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Properties;
 
+import static java.lang.String.format;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 class BitsoClient {
 
     private final Client client;
-    private Properties prop = new Properties();
+    private Properties props = new Properties();
 
     BitsoClient(Client client) throws IOException {
         this.client = client;
-        prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
+        props.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
     }
 
     void getTrades() {
         client
-          .target(prop.getProperty("trade_url"))
-          .request(APPLICATION_JSON_TYPE);
+          .target(format("%s?book=%s", props.getProperty("trade_url"), props.getProperty("default_book")))
+          .request(APPLICATION_JSON_TYPE)
+          .get(TradeResult.class);
     }
 }
