@@ -12,6 +12,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+import static api.tools.context.Environment.DEV;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -38,11 +39,21 @@ public class BitsoClientTest {
     }
 
     @Test
-    public void shouldTargetBitsoTradeUrlForBtcMxnBook() throws Exception {
+    public void shouldTargetBitsoTradeUrl() throws Exception {
         // when
         bitsoClient.getTrades();
         // then
         verify(client).target("https://api.bitso.com/v3/trades/?book=btc_mxn");
+    }
+
+    @Test
+    public void shouldTargetBitsoTradeDevUrlForDevEnvironment() throws Exception {
+        //given
+        bitsoClient = new BitsoClient(client, DEV);
+        // when
+        bitsoClient.getTrades();
+        // then
+        verify(client).target("https://api-dev.bitso.com/v3/trades/?book=btc_mxn");
     }
 
     @Test
