@@ -19,8 +19,8 @@ class BitsoClient {
         props.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
     }
 
-    void getTrades() {
-        client
+    TradeResult getTrades() {
+        return client
           .target(format("%s?book=%s", props.getProperty("trade_url"), props.getProperty("default_book")))
           .request(APPLICATION_JSON_TYPE)
           .get(TradeResult.class);

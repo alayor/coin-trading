@@ -1,10 +1,12 @@
 package api._tools;
 
 import api.model.TradeResult;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Matches;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Client;
@@ -12,6 +14,8 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -27,11 +31,14 @@ public class BitsoClientTest {
     private WebTarget webTarget;
     @Mock
     private Invocation.Builder builder;
+    @Mock
+    private TradeResult tradeResult;
 
     @Before
     public void setUp() throws Exception {
         bitsoClient = new BitsoClient(client);
         given(client.target(anyString())).willReturn(webTarget);
+        given(webTarget.request(any(MediaType.class))).willReturn(builder);
     }
 
     @Test
@@ -52,11 +59,19 @@ public class BitsoClientTest {
 
     @Test
     public void shouldGetTradeResultFromRequest() throws Exception {
-        // given
-        given(webTarget.request(any(MediaType.class))).willReturn(builder);
         // when
         bitsoClient.getTrades();
         // then
         verify(builder).get(TradeResult.class);
+    }
+
+    @Test
+    public void shouldReturnTradeResult() throws Exception {
+        // given
+        given(builder.get(TradeResult.class)).willReturn(tradeResult);
+        // when
+        TradeResult actualTradeResult = bitsoClient.getTrades();
+        // then
+        assertEquals(tradeResult, actualTradeResult);
     }
 }

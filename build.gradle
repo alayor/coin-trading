@@ -10,6 +10,14 @@ buildscript {
 }
 apply plugin: 'java'
 
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/unit_tests', 'src/integration_tests']
+        }
+    }
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -28,6 +36,7 @@ jfx {
 dependencies {
     compile 'junit:junit:4.12'
     compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
 
 }
