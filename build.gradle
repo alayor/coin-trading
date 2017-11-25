@@ -25,3 +25,9 @@ jfx {
     // minimal requirement for jfxNative-task
     vendor = 'Alonso A. Ortega'
 }
+dependencies {
+    compile 'junit:junit:4.12'
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
+
+}
