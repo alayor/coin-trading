@@ -5,6 +5,7 @@ import api.tools.context.Environment;
 
 import javax.ws.rs.client.Client;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Properties;
 
 import static java.lang.String.format;
@@ -28,7 +29,7 @@ public class BitsoClient {
 
     public TradeResult getTrades() {
         return client
-          .target(format("%s?book=%s", getTradeUrl(), props.getProperty("default_book")))
+          .target(URI.create(format("%s?book=%s", getTradeUrl(), props.getProperty("default_book"))))
           .request(APPLICATION_JSON_TYPE)
           .get(TradeResult.class);
     }
