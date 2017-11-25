@@ -1,4 +1,7 @@
 ## Stock Trading
+Application that connects to the Bitso cryptocurrency exchange,
+maintains state between the application and Bitso, and simulates trade
+execution following a simple trading strategy
 
 ### Checklist
 
