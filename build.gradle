@@ -11,10 +11,13 @@ buildscript {
 apply plugin: 'java'
 
 sourceSets {
-    test {
+    integrationTest {
         java {
-            srcDirs = ['src/unit_tests', 'src/integration_tests']
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration_test/java')
         }
+        resources.srcDir file('src/integration_test/resources')
     }
 }
 
@@ -33,10 +36,21 @@ jfx {
     // minimal requirement for jfxNative-task
     vendor = 'Alonso A. Ortega'
 }
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
 dependencies {
     compile 'junit:junit:4.12'
     compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1'
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
+}
 
+task integrationTest(type: Test) {
+    testClassesDirs =  sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
 }

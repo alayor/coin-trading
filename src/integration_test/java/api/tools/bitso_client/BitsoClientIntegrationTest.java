@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import javax.ws.rs.client.Client;
 
+import static org.junit.Assert.assertFalse;
+
 public class BitsoClientIntegrationTest {
     private BitsoClient bitsoClient;
     private Client client;
@@ -17,6 +19,5 @@ public class BitsoClientIntegrationTest {
 
     @Test
     public void should() {
-
     }
 }
