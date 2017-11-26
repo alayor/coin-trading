@@ -17,7 +17,7 @@ sourceSets {
             runtimeClasspath += main.output + test.output
             srcDir file('src/integrationTests/online/java')
         }
-        resources.srcDir file('src/integrationTest/online/resources')
+        resources.srcDir file('src/integrationTests/online/resources')
     }
     mockedIntegrationTests {
         java {
@@ -25,7 +25,7 @@ sourceSets {
             runtimeClasspath += main.output + test.output
             srcDir file('src/integrationTests/mocked/java')
         }
-        resources.srcDir file('src/integrationTest/mocked/resources')
+        resources.srcDir file('src/integrationTests/mocked/resources')
     }
 }
 
@@ -54,6 +54,8 @@ dependencies {
     compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1'
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
+    compile group: 'org.nanohttpd', name: 'nanohttpd', version: '2.3.0'
+
 }
 
 task onlineITest(type: Test) {
