@@ -7,6 +7,8 @@ import service.tools.BitsoApiRequester;
 
 import java.net.URISyntaxException;
 
+import static org.junit.Assert.assertNotNull;
+
 public class TradingService_OnlineIntegrationTest {
     private TradingService tradingService;
     private BitsoApiRequester bitsoApiRequester;
@@ -21,5 +23,6 @@ public class TradingService_OnlineIntegrationTest {
         // when
         tradingService = new TradingService(bitsoApiRequester);
         // then
+        assertNotNull(tradingService);
     }
 }

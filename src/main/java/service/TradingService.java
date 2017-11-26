@@ -10,6 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Collections.reverse;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -20,6 +21,7 @@ public class TradingService {
     private ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
     private final ArrayBlockingQueue<Trade> trades = new ArrayBlockingQueue<>(500);
+    private AtomicReference<String> lastId = new AtomicReference<>();
 
     private static ScheduledThreadPoolExecutor getScheduledThreadPoolExecutor() {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -33,7 +35,11 @@ public class TradingService {
 
     TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor) {
         this.bitsoApiRequester = bitsoApiRequester;
-        this.trades.addAll(getTradesFromApi(bitsoApiRequester));
+        List<Trade> tradesFromApi = getTradesFromApi(bitsoApiRequester);
+        if(!tradesFromApi.isEmpty()) {
+            lastId.set(tradesFromApi.get(tradesFromApi.size() - 1).getTid());
+            this.trades.addAll(tradesFromApi);
+        }
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 
@@ -44,8 +50,12 @@ public class TradingService {
     }
 
     void updateTrades() {
-        TradeResult tradesSince = bitsoApiRequester.getTradesSince(trades.peek().getTid());
-        trades.addAll(tradesSince.getTradeList());
+        TradeResult tradesSince = bitsoApiRequester.getTradesSince(lastId.get());
+        List<Trade> tradeList = tradesSince.getTradeList();
+        if(!tradeList.isEmpty()) {
+            lastId.set(tradeList.get(tradeList.size() - 1).getTid());
+            trades.addAll(tradeList);
+        }
     }
 
     Runnable getUpdateTradesRunnable() {

@@ -31,6 +31,8 @@ public class TradingServiceTest {
     @Mock
     private TradeResult tradeResult;
     @Mock
+    private TradeResult tradeResultSince;
+    @Mock
     private ScheduledExecutorService scheduleExecutorService;
     @Mock
     private ScheduledFuture future;
@@ -73,17 +75,17 @@ public class TradingServiceTest {
     public void shouldGetLastTradeUsingLastTradeId() throws Exception {
         // given
         given(bitsoApiRequester.getTrades(anyInt())).willReturn(tradeResult);
-        given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResult);
+        given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResultSince);
         List<Trade> trades = asList(
-          createTrade("1234"),
-          createTrade("6789")
+          createTrade("1244"),
+          createTrade("1233")
         );
         given(tradeResult.getTradeList()).willReturn(trades);
         tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
         // when
         tradingService.updateTrades();
         // then
-        verify(bitsoApiRequester).getTradesSince("6789");
+        verify(bitsoApiRequester).getTradesSince("1244");
     }
 
     @Test
