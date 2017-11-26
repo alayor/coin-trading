@@ -8,6 +8,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import service.model.TradeResult;
 import service.tools.BitsoApiRequester;
 
+import java.util.concurrent.ScheduledExecutorService;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -20,6 +23,8 @@ public class TradingServiceTest {
     private BitsoApiRequester bitsoApiRequester;
     @Mock
     private TradeResult tradeResult;
+    @Mock
+    private ScheduledExecutorService scheduleExecutorService;
 
     @Before
     public void setUp() throws Exception {
@@ -34,4 +39,11 @@ public class TradingServiceTest {
         verify(bitsoApiRequester).getTrades(100);
     }
 
+    @Test
+    public void shouldScheduleTradesUpdatingProcess() throws Exception {
+        // when
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
+        // then
+        verify(scheduleExecutorService).scheduleAtFixedRate(tradingService.getUpdateTradesRunnable(), 0, 5, SECONDS);
+    }
 }
