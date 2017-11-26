@@ -9,12 +9,12 @@ import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
-public class BitsoClient {
+public class BitsoApiRequester {
 
     private final String uri;
     private Client client = ClientBuilder.newClient();
 
-    public BitsoClient(String uri) throws IOException {
+    public BitsoApiRequester(String uri) throws IOException {
         this.uri = uri;
     }
 

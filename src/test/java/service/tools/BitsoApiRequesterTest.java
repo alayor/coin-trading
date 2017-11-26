@@ -20,8 +20,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BitsoClientTest {
-    private BitsoClient bitsoClient;
+public class BitsoApiRequesterTest {
+    private BitsoApiRequester bitsoApiRequester;
     @Mock
     private Client client;
     @Mock
@@ -33,8 +33,8 @@ public class BitsoClientTest {
 
     @Before
     public void setUp() throws Exception {
-        bitsoClient = new BitsoClient("https://bitso.com");
-        bitsoClient.setClient(client);
+        bitsoApiRequester = new BitsoApiRequester("https://bitso.com");
+        bitsoApiRequester.setClient(client);
         given(client.target(any(URI.class))).willReturn(webTarget);
         given(webTarget.request(any(MediaType.class))).willReturn(builder);
     }
@@ -42,7 +42,7 @@ public class BitsoClientTest {
     @Test
     public void shouldTargetBitsoTradeUrl() throws Exception {
         // when
-        bitsoClient.getTrades();
+        bitsoApiRequester.getTrades();
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
@@ -52,7 +52,7 @@ public class BitsoClientTest {
     @Test
     public void shouldRequestWithJsonType() throws Exception {
         // when
-        bitsoClient.getTrades();
+        bitsoApiRequester.getTrades();
         // then
         verify(webTarget).request(MediaType.APPLICATION_JSON_TYPE);
     }
@@ -60,7 +60,7 @@ public class BitsoClientTest {
     @Test
     public void shouldGetTradeResultFromRequest() throws Exception {
         // when
-        bitsoClient.getTrades();
+        bitsoApiRequester.getTrades();
         // then
         verify(builder).get(TradeResult.class);
     }
@@ -70,7 +70,7 @@ public class BitsoClientTest {
         // given
         given(builder.get(TradeResult.class)).willReturn(tradeResult);
         // when
-        TradeResult actualTradeResult = bitsoClient.getTrades();
+        TradeResult actualTradeResult = bitsoApiRequester.getTrades();
         // then
         assertEquals(tradeResult, actualTradeResult);
     }
