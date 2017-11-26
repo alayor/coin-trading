@@ -1,6 +1,6 @@
-package api.tools;
+package service.tools;
 
-import api.model.TradeResult;
+import service.model.TradeResult;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

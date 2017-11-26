@@ -1,12 +1,12 @@
-package api.tools;
+package service.tools;
 
-import api.model.TradeResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.model.TradeResult;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;

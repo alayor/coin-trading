@@ -1,11 +1,11 @@
 package mockedIntegrationTests;
 
-import api.model.TradeResult;
-import api.tools.BitsoClient;
 import mockedIntegrationTests.tools.MockedServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import service.model.TradeResult;
+import service.tools.BitsoClient;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

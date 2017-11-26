@@ -58,14 +58,20 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
 }
 
+task mockedITest(type: Test) {
+    testClassesDirs =  sourceSets.mockedIntegrationTests.output.classesDirs
+    classpath = sourceSets.mockedIntegrationTests.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
 task onlineITest(type: Test) {
     testClassesDirs =  sourceSets.onlineIntegrationTests.output.classesDirs
     classpath = sourceSets.onlineIntegrationTests.runtimeClasspath
     outputs.upToDateWhen { false }
 }
 
-task mockedITest(type: Test) {
-    testClassesDirs =  sourceSets.mockedIntegrationTests.output.classesDirs
-    classpath = sourceSets.mockedIntegrationTests.runtimeClasspath
-    outputs.upToDateWhen { false }
+task testall {
+    dependsOn 'test'
+    dependsOn 'mockedITest'
+    dependsOn 'onlineITest'
 }

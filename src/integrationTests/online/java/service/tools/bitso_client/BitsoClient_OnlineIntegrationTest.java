@@ -1,9 +1,9 @@
-package api.tools.bitso_client;
+package service.tools.bitso_client;
 
-import api.model.TradeResult;
-import api.tools.BitsoClient;
 import org.junit.Before;
 import org.junit.Test;
+import service.model.TradeResult;
+import service.tools.BitsoClient;
 
 import java.net.URISyntaxException;
 
