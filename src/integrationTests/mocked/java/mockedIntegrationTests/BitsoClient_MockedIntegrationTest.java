@@ -3,32 +3,33 @@ package mockedIntegrationTests;
 import api.model.TradeResult;
 import api.tools.BitsoClient;
 import mockedIntegrationTests.tools.MockedServer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertNotNull;
 
 public class BitsoClient_MockedIntegrationTest {
     private BitsoClient bitsoClient;
-    private MockedServer mockedServer;
+    private static MockedServer mockedServer = new MockedServer();
 
-    @Before
-    public void setUp() throws Exception {
-        mockedServer = new MockedServer();
+    @BeforeClass
+    public static void setUp() {
         mockedServer.start();
-        bitsoClient = new BitsoClient("http://localhost:9999/singleTradeFixture.json");
     }
 
-    @After
-    public void tearDown() throws Exception {
-
+    @AfterClass
+    public static void tearDown() {
+      mockedServer.stop();
     }
 
     @Test
-    public void shouldParseResultToTradeResult() throws URISyntaxException {
+    public void shouldParseResultToTradeResult() throws URISyntaxException, IOException {
+        // given
+        bitsoClient = new BitsoClient("http://localhost:9999/singleTradeFixture.json");
         // when
         TradeResult tradeResult = bitsoClient.getTrades();
         // then

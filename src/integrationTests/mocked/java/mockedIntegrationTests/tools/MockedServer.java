@@ -10,7 +10,7 @@ import java.io.StringWriter;
 
 public class MockedServer extends NanoHTTPD {
 
-    public MockedServer() throws IOException {
+    public MockedServer() {
         super(9999);
     }
 
@@ -21,10 +21,6 @@ public class MockedServer extends NanoHTTPD {
         } catch (IOException ioe) {
             System.err.println("Couldn't start server:\n" + ioe);
         }
-    }
-
-    public void stop() {
-        stop();
     }
 
     @Override
