@@ -34,9 +34,9 @@ public class BitsoApiRequester {
         this.uri = properties.getProperty("trade_url");
     }
 
-    public TradeResult getTrades(int i) {
+    public TradeResult getTrades(int limit) {
         URI uri = URI.create(this.uri);
-        uri = appender.appendArgument(uri, "limit", String.valueOf(i));
+        uri = appender.appendArgument(uri, "limit", String.valueOf(limit));
         return client
           .target(uri)
           .request(APPLICATION_JSON_TYPE)
