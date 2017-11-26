@@ -17,7 +17,8 @@ class TradingService {
     TradingService(BitsoApiRequester bitsoApiRequester) {
         this.bitsoApiRequester = bitsoApiRequester;
         trades = bitsoApiRequester.getTrades(100).getTradeList();
-        ScheduledExecutorService scheduledExecutorService = newScheduledThreadPool(2);
+
+        ScheduledExecutorService scheduledExecutorService = newScheduledThreadPool(1);
         scheduledExecutorService.scheduleAtFixedRate(() -> getLastTrades(5), 0, 5, TimeUnit.SECONDS);
     }
 

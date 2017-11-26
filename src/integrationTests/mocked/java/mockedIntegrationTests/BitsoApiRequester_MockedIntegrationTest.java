@@ -10,7 +10,8 @@ import service.tools.BitsoApiRequester;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BitsoApiRequester_MockedIntegrationTest {
     private BitsoApiRequester bitsoApiRequester;
@@ -33,6 +34,13 @@ public class BitsoApiRequester_MockedIntegrationTest {
         // when
         TradeResult tradeResult = bitsoApiRequester.getTrades(25);
         // then
-        assertNotNull(tradeResult);
+        assertTrue(tradeResult.isSuccess());
+        assertEquals(1, tradeResult.getTradeList().size());
+        assertEquals("btc_mxn", tradeResult.getTradeList().get(0).getBook());
+        assertEquals("2017-11-25T23:32:30+0000", tradeResult.getTradeList().get(0).getCreatedAt());
+        assertEquals("0.00863248", tradeResult.getTradeList().get(0).getAmount());
+        assertEquals("buy", tradeResult.getTradeList().get(0).getMakerSide());
+        assertEquals("163310.07", tradeResult.getTradeList().get(0).getPrice());
+        assertEquals("321748", tradeResult.getTradeList().get(0).getTid());
     }
 }

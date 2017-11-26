@@ -37,10 +37,22 @@ public class BitsoApiRequester {
     public TradeResult getTrades(int limit) {
         URI uri = URI.create(this.uri);
         uri = appender.appendArgument(uri, "limit", String.valueOf(limit));
+        return getTradeResult(uri);
+    }
+
+    private TradeResult getTradeResult(URI uri) {
         return client
           .target(uri)
           .request(APPLICATION_JSON_TYPE)
           .get(TradeResult.class);
+    }
+
+    public TradeResult getTradesSince(int id) {
+        URI uri = URI.create(this.uri);
+        uri = appender.appendArgument(uri, "limit", "100");
+        uri = appender.appendArgument(uri, "marker", String.valueOf(id));
+        uri = appender.appendArgument(uri, "sort", "asc");
+        return getTradeResult(uri);
     }
 
     void setClient(Client client) {

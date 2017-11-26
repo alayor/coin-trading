@@ -87,4 +87,16 @@ public class BitsoApiRequesterTest {
         // then
         assertEquals(tradeResult, actualTradeResult);
     }
+
+    @Test
+    public void shouldGetTradesSinceSpecifiedId() throws Exception {
+        // when
+        bitsoApiRequester.getTradesSince(2128419);
+        // then
+        ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
+        verify(client).target(captor.capture());
+        assertEquals(
+          "https://api.bitso.com/v3/trades/?limit=100&marker=2128419&sort=asc",
+          captor.getValue().toString());
+    }
 }
