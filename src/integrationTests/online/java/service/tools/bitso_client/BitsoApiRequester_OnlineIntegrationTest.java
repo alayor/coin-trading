@@ -21,7 +21,7 @@ public class BitsoApiRequester_OnlineIntegrationTest {
     @Test
     public void shouldParseResultToTradeResult() throws URISyntaxException {
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTrades();
+        TradeResult tradeResult = bitsoApiRequester.getTrades(25);
         // then
         assertNotNull(tradeResult);
     }
@@ -29,9 +29,9 @@ public class BitsoApiRequester_OnlineIntegrationTest {
     @Test
     public void shouldReturnResultsAccordingToLimit() throws Exception {
         //given
-        bitsoApiRequester = new BitsoApiRequester("https://api-dev.bitso.com/v3/trades?book=btc_mxn&limit=5");
+        bitsoApiRequester = new BitsoApiRequester("https://api-dev.bitso.com/v3/trades?book=btc_mxn");
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTrades();
+        TradeResult tradeResult = bitsoApiRequester.getTrades(5);
         // then
         assertEquals(5, tradeResult.getTradeList().size());
     }

@@ -33,7 +33,7 @@ public class BitsoApiRequesterTest {
 
     @Before
     public void setUp() throws Exception {
-        bitsoApiRequester = new BitsoApiRequester("https://bitso.com");
+        bitsoApiRequester = new BitsoApiRequester();
         bitsoApiRequester.setClient(client);
         given(client.target(any(URI.class))).willReturn(webTarget);
         given(webTarget.request(any(MediaType.class))).willReturn(builder);
@@ -42,17 +42,30 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldTargetBitsoTradeUrl() throws Exception {
         // when
-        bitsoApiRequester.getTrades();
+        bitsoApiRequester.getTrades(5);
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
-        assertEquals("https://bitso.com", captor.getValue().toString());
+        assertEquals("https://api.bitso.com/v3/trades/?limit=5", captor.getValue().toString());
+    }
+
+    @Test
+    public void shouldCallUsingUrlFromConstructor() throws Exception {
+        // given
+        bitsoApiRequester = new BitsoApiRequester("http://example.com");
+        bitsoApiRequester.setClient(client);
+        // when
+        bitsoApiRequester.getTrades(25);
+        // then
+        ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
+        verify(client).target(captor.capture());
+        assertEquals("http://example.com?limit=25", captor.getValue().toString());
     }
 
     @Test
     public void shouldRequestWithJsonType() throws Exception {
         // when
-        bitsoApiRequester.getTrades();
+        bitsoApiRequester.getTrades(25);
         // then
         verify(webTarget).request(MediaType.APPLICATION_JSON_TYPE);
     }
@@ -60,7 +73,7 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldGetTradeResultFromRequest() throws Exception {
         // when
-        bitsoApiRequester.getTrades();
+        bitsoApiRequester.getTrades(25);
         // then
         verify(builder).get(TradeResult.class);
     }
@@ -70,7 +83,7 @@ public class BitsoApiRequesterTest {
         // given
         given(builder.get(TradeResult.class)).willReturn(tradeResult);
         // when
-        TradeResult actualTradeResult = bitsoApiRequester.getTrades();
+        TradeResult actualTradeResult = bitsoApiRequester.getTrades(25);
         // then
         assertEquals(tradeResult, actualTradeResult);
     }

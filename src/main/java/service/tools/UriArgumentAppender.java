@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 class UriArgumentAppender {
 
-    URI append(URI uri, String parameterKey, String parameterValue) throws URISyntaxException {
+    URI appendArgument(URI uri, String parameterKey, String parameterValue) {
         String newQuery = uri.getQuery();
         String appendQuery = parameterKey + "=" + parameterValue;
         if (newQuery == null) {
@@ -13,7 +13,12 @@ class UriArgumentAppender {
         } else {
             newQuery += "&" + appendQuery;
         }
-        return new URI(uri.getScheme(), uri.getAuthority(),
-          uri.getPath(), newQuery, uri.getFragment());
+        try {
+            return new URI(uri.getScheme(), uri.getAuthority(),
+              uri.getPath(), newQuery, uri.getFragment());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }

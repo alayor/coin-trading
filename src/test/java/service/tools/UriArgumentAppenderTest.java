@@ -47,7 +47,7 @@ public class UriArgumentAppenderTest {
     @Test
     public void shouldAppendArgumentCorrectly() throws Exception {
         // when
-        URI result = appender.append(uri, parameterKey, parameterValue);
+        URI result = appender.appendArgument(uri, parameterKey, parameterValue);
         // then
         assertEquals(expectedResult, result.toString());
     }

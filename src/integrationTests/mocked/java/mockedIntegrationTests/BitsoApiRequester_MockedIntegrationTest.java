@@ -31,7 +31,7 @@ public class BitsoApiRequester_MockedIntegrationTest {
         // given
         bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/singleTradeFixture.json");
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTrades();
+        TradeResult tradeResult = bitsoApiRequester.getTrades(25);
         // then
         assertNotNull(tradeResult);
     }
