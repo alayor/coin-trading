@@ -30,7 +30,7 @@ public class BitsoApiRequester {
         this.uri = uri;
     }
 
-    BitsoApiRequester() {
+    public BitsoApiRequester() {
         this.uri = properties.getProperty("trade_url");
     }
 
@@ -41,6 +41,7 @@ public class BitsoApiRequester {
     }
 
     private TradeResult getTradeResult(URI uri) {
+        uri = appender.appendArgument(uri, "book", properties.getProperty("default_book"));
         return client
           .target(uri)
           .request(APPLICATION_JSON_TYPE)

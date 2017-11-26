@@ -1,4 +1,4 @@
-package service.tools.bitso_client;
+package onlineIntegrationTests;
 
 import org.junit.Before;
 import org.junit.Test;

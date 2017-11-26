@@ -9,13 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-class TradingService {
+public class TradingService {
 
     private final BitsoApiRequester bitsoApiRequester;
     private final Runnable updateTradesRunnable = this::updateTrades;
     private List<Trade> trades;
 
-    TradingService(BitsoApiRequester bitsoApiRequester) {
+    public TradingService(BitsoApiRequester bitsoApiRequester) {
         this(bitsoApiRequester, newScheduledThreadPool(1));
     }
 

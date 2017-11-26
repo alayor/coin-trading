@@ -46,7 +46,7 @@ public class BitsoApiRequesterTest {
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
-        assertEquals("https://api.bitso.com/v3/trades/?limit=5", captor.getValue().toString());
+        assertEquals("https://api.bitso.com/v3/trades/?limit=5&book=btc_mxn", captor.getValue().toString());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class BitsoApiRequesterTest {
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
-        assertEquals("http://example.com?limit=25", captor.getValue().toString());
+        assertEquals("http://example.com?limit=25&book=btc_mxn", captor.getValue().toString());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class BitsoApiRequesterTest {
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
         assertEquals(
-          "https://api.bitso.com/v3/trades/?limit=100&marker=2128419&sort=asc",
+          "https://api.bitso.com/v3/trades/?limit=100&marker=2128419&sort=asc&book=btc_mxn",
           captor.getValue().toString());
     }
 }
