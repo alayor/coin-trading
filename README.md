@@ -14,3 +14,11 @@ execution following a simple trading strategy
 | Use config option X to request recent trades.  |   |   |
 | Use config option X to limit number of ASKs displayed in UI.  |   |   |
 | The loop that causes the trading algorithm to reevaluate.  |   |   |
+
+### Assumptions
+* In "Display the X most recent trades on the same UI". The X is also
+configurable and represents the same number as in the best bids
+and asks configuration.
+* X will have a maximum of 2000.
+* If X is greater than the available trades at any particular moment,
+then the UI will display the maximum number at that moment.
