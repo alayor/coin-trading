@@ -19,7 +19,7 @@ public class BitsoClient_MockedIntegrationTest {
     public void setUp() throws Exception {
         mockedServer = new MockedServer();
         mockedServer.start();
-        bitsoClient = new BitsoClient("http://localhost:9999");
+        bitsoClient = new BitsoClient("http://localhost:9999/singleTradeFixture.json");
     }
 
     @After

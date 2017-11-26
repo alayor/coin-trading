@@ -2,9 +2,11 @@ package mockedIntegrationTests.tools;
 
 
 import fi.iki.elonen.NanoHTTPD;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 public class MockedServer extends NanoHTTPD {
 
@@ -27,7 +29,19 @@ public class MockedServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        URL resource = getClass().getResource("fixtures/singleTradeFixture.json");
-        return newFixedLengthResponse(Response.Status.OK, "application/json", "{}");
+        String fixture = getFixture(session);
+        return newFixedLengthResponse(Response.Status.OK, "application/json", fixture);
+    }
+
+    private String getFixture(IHTTPSession session) {
+        InputStream inputStream = getClass().getResourceAsStream("fixtures" + session.getUri());
+        StringWriter writer = new StringWriter();
+        try {
+            IOUtils.copy(inputStream, writer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return writer.toString();
     }
 }
