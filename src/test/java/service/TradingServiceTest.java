@@ -5,12 +5,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.model.Trade;
 import service.model.TradeResult;
 import service.tools.BitsoApiRequester;
 
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
@@ -61,5 +64,32 @@ public class TradingServiceTest {
         tradingService.stop();
         // then
         verify(future).cancel(false);
+    }
+
+    @Test
+    public void shouldGetLastTradeUsingLastTradeId() throws Exception {
+        // given
+        given(bitsoApiRequester.getTrades(anyInt())).willReturn(tradeResult);
+        List<Trade> trades = asList(
+          createTrade("1234"),
+          createTrade("6789")
+        );
+        given(tradeResult.getTradeList()).willReturn(trades);
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
+        // when
+        tradingService.updateTrades();
+        // then
+        verify(bitsoApiRequester).getTradesSince("6789");
+    }
+
+    private Trade createTrade(String id) {
+        return new Trade(
+          "btc_mxn",
+          "2017-11-26",
+          "100",
+          "buy",
+          "200",
+          id
+        );
     }
 }

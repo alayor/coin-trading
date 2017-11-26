@@ -91,7 +91,7 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldGetTradesSinceSpecifiedId() throws Exception {
         // when
-        bitsoApiRequester.getTradesSince(2128419);
+        bitsoApiRequester.getTradesSince("2128419");
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());

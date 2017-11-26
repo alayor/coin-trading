@@ -40,7 +40,7 @@ public class BitsoApiRequester_MockedIntegrationTest {
         assertEquals("0.00863248", tradeResult.getTradeList().get(0).getAmount());
         assertEquals("buy", tradeResult.getTradeList().get(0).getMakerSide());
         assertEquals("163310.07", tradeResult.getTradeList().get(0).getPrice());
-        assertEquals("321748", tradeResult.getTradeList().get(0).getTid());
+        assertEquals("2129343", tradeResult.getTradeList().get(0).getTid());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class BitsoApiRequester_MockedIntegrationTest {
         // given
         bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/multipleTradesFixture.json");
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTradesSince(2128418);
+        TradeResult tradeResult = bitsoApiRequester.getTradesSince("2128418");
         // then
         assertTrue(tradeResult.isSuccess());
         assertEquals(25, tradeResult.getTradeList().size());

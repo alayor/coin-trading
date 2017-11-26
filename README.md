@@ -19,6 +19,6 @@ execution following a simple trading strategy
 * In "Display the X most recent trades on the same UI". The X is also
 configurable and represents the same number as in the best bids
 and asks configuration.
-* X will have a maximum of 2000.
+* X will have a maximum of 500.
 * If X is greater than the available trades at any particular moment,
 then the UI will display the maximum number at that moment.

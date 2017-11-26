@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import static java.util.Collections.reverse;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TradingService {
@@ -17,7 +18,7 @@ public class TradingService {
     private final BitsoApiRequester bitsoApiRequester;
     private ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
-    private final ArrayBlockingQueue<Trade> trades = new ArrayBlockingQueue<>(2000);
+    private final ArrayBlockingQueue<Trade> trades = new ArrayBlockingQueue<>(500);
 
     private static ScheduledThreadPoolExecutor getScheduledThreadPoolExecutor() {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -31,12 +32,18 @@ public class TradingService {
 
     TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor) {
         this.bitsoApiRequester = bitsoApiRequester;
-        trades.addAll(bitsoApiRequester.getTrades(100).getTradeList());
+        this.trades.addAll(getTrades(bitsoApiRequester));
         scheduledFuture = executor.scheduleAtFixedRate(updateTradesRunnable, 0, 5, SECONDS);
     }
 
-    private void updateTrades() {
+    private List<Trade> getTrades(BitsoApiRequester bitsoApiRequester) {
+        List<Trade> tradeList = bitsoApiRequester.getTrades(100).getTradeList();
+        reverse(tradeList);
+        return tradeList;
+    }
 
+    void updateTrades() {
+      bitsoApiRequester.getTradesSince(trades.peek().getTid());
     }
 
     Runnable getUpdateTradesRunnable() {
@@ -50,6 +57,7 @@ public class TradingService {
     public List<Trade> getLastTrades() {
         List<Trade> list = new ArrayList<>();
         trades.drainTo(list);
+        reverse(list);
         return list;
     }
 }

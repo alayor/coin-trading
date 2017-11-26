@@ -45,4 +45,19 @@ public class TradingService_MockedIntegrationTest {
         assertEquals("2129339", lastTrades.get(1).getTid());
         assertEquals("2129338", lastTrades.get(2).getTid());
     }
+
+    @Test
+    public void shouldIncludeNewTradeAfterUpdating() throws Exception {
+        // given
+        tradingService = new TradingService(bitsoApiRequester);
+        Thread.sleep(6000);
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades();
+        // then
+        assertEquals(4, lastTrades.size());
+        assertEquals("2129343", lastTrades.get(0).getTid());
+        assertEquals("2129342", lastTrades.get(1).getTid());
+        assertEquals("2129339", lastTrades.get(2).getTid());
+        assertEquals("2129338", lastTrades.get(3).getTid());
+    }
 }

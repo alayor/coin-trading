@@ -48,7 +48,7 @@ public class BitsoApiRequester {
           .get(TradeResult.class);
     }
 
-    public TradeResult getTradesSince(int id) {
+    public TradeResult getTradesSince(String id) {
         URI uri = URI.create(this.uri);
         uri = appender.appendArgument(uri, "limit", "100");
         uri = appender.appendArgument(uri, "marker", String.valueOf(id));
