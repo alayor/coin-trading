@@ -14,7 +14,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doReturn;
@@ -51,14 +53,15 @@ public class TradingServiceTest {
         // when
         tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
         // then
-        verify(scheduleExecutorService).scheduleAtFixedRate(
-          tradingService.getUpdateTradesRunnable(), 0, 5, SECONDS);
+        verify(scheduleExecutorService).scheduleWithFixedDelay(
+          tradingService.getUpdateTradesRunnable(), 5, 5, SECONDS);
     }
 
     @Test
     public void shouldStopScheduler() throws Exception {
         // given
-        doReturn(future).when(scheduleExecutorService).scheduleAtFixedRate(any(), anyLong(), anyLong(), any());
+        doReturn(future).when(scheduleExecutorService).scheduleWithFixedDelay(
+          any(), anyLong(), anyLong(), any());
         tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
         // when
         tradingService.stop();
@@ -70,6 +73,7 @@ public class TradingServiceTest {
     public void shouldGetLastTradeUsingLastTradeId() throws Exception {
         // given
         given(bitsoApiRequester.getTrades(anyInt())).willReturn(tradeResult);
+        given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResult);
         List<Trade> trades = asList(
           createTrade("1234"),
           createTrade("6789")
@@ -80,6 +84,19 @@ public class TradingServiceTest {
         tradingService.updateTrades();
         // then
         verify(bitsoApiRequester).getTradesSince("6789");
+    }
+
+    @Test
+    public void shouldAddNewTradesToArrayQueue() throws Exception {
+        // given
+        given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResult);
+        List<Trade> trades = singletonList(createTrade("6789"));
+        given(tradeResult.getTradeList()).willReturn(trades);
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
+        // when
+        tradingService.updateTrades();
+        // then
+        assertEquals(2, tradingService.getLastTrades().size());
     }
 
     private Trade createTrade(String id) {

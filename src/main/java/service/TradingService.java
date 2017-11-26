@@ -1,6 +1,7 @@
 package service;
 
 import service.model.Trade;
+import service.model.TradeResult;
 import service.tools.BitsoApiRequester;
 
 import java.util.ArrayList;
@@ -32,18 +33,19 @@ public class TradingService {
 
     TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor) {
         this.bitsoApiRequester = bitsoApiRequester;
-        this.trades.addAll(getTrades(bitsoApiRequester));
-        scheduledFuture = executor.scheduleAtFixedRate(updateTradesRunnable, 0, 5, SECONDS);
+        this.trades.addAll(getTradesFromApi(bitsoApiRequester));
+        scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 
-    private List<Trade> getTrades(BitsoApiRequester bitsoApiRequester) {
+    private List<Trade> getTradesFromApi(BitsoApiRequester bitsoApiRequester) {
         List<Trade> tradeList = bitsoApiRequester.getTrades(100).getTradeList();
         reverse(tradeList);
         return tradeList;
     }
 
     void updateTrades() {
-      bitsoApiRequester.getTradesSince(trades.peek().getTid());
+        TradeResult tradesSince = bitsoApiRequester.getTradesSince(trades.peek().getTid());
+        trades.addAll(tradesSince.getTradeList());
     }
 
     Runnable getUpdateTradesRunnable() {
