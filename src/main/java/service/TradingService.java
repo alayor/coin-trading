@@ -1,9 +1,10 @@
 package service;
 
 import service.model.Trade;
-import service.model.TradeResult;
 import service.tools.BitsoApiRequester;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -16,7 +17,7 @@ public class TradingService {
     private final BitsoApiRequester bitsoApiRequester;
     private ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
-    private ArrayBlockingQueue<Trade> trades = new ArrayBlockingQueue<>(2000);
+    private final ArrayBlockingQueue<Trade> trades = new ArrayBlockingQueue<>(2000);
 
     private static ScheduledThreadPoolExecutor getScheduledThreadPoolExecutor() {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -34,8 +35,8 @@ public class TradingService {
         scheduledFuture = executor.scheduleAtFixedRate(updateTradesRunnable, 0, 5, SECONDS);
     }
 
-    void updateTrades() {
-        TradeResult tradesSince = bitsoApiRequester.getTradesSince(10);
+    private void updateTrades() {
+
     }
 
     Runnable getUpdateTradesRunnable() {
@@ -44,5 +45,11 @@ public class TradingService {
 
     public void stop() {
         scheduledFuture.cancel(false);
+    }
+
+    public List<Trade> getLastTrades() {
+        List<Trade> list = new ArrayList<>();
+        trades.drainTo(list);
+        return list;
     }
 }

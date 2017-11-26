@@ -17,7 +17,7 @@ public class MockedServer extends NanoHTTPD {
     public void start() {
         try {
             start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-            System.out.println("\nRunning! Point your browsers to http://localhost:8080/ \n");
+            System.out.println("\nRunning mocked server in http://localhost:9999/ \n");
         } catch (IOException ioe) {
             System.err.println("Couldn't start server:\n" + ioe);
         }
