@@ -26,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import service.model.Trade;
 import service.model.TradeResult;
 import service.tools.BitsoApiRequester;
+import service.tools.CurrentTrades;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TradingServiceTest {

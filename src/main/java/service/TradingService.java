@@ -3,6 +3,7 @@ package service;
 import service.model.Trade;
 import service.model.TradeResult;
 import service.tools.BitsoApiRequester;
+import service.tools.CurrentTrades;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;

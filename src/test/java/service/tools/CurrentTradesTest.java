@@ -1,11 +1,13 @@
-package service;
+package service.tools;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.TradingSimulator;
 import service.model.Trade;
+import service.tools.CurrentTrades;
 
 import java.util.List;
 

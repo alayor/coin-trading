@@ -16,11 +16,11 @@ public class TickCounter {
         upticks.set(0);
     }
 
-    public int getUpticks() {
+    public synchronized int getUpticks() {
         return upticks.get();
     }
 
-    public int getDownticks() {
+    public synchronized int getDownticks() {
         return downticks.get();
     }
 

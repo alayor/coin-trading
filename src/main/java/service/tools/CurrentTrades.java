@@ -1,5 +1,6 @@
-package service;
+package service.tools;
 
+import service.TradingSimulator;
 import service.model.Trade;
 
 import java.util.ArrayList;
@@ -9,16 +10,16 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import static java.util.Collections.reverse;
 
-class CurrentTrades {
+public class CurrentTrades {
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
     private TradingSimulator tradingSimulator;
 
-    CurrentTrades(List<Trade> newTrades, TradingSimulator tradingSimulator) {
+    public CurrentTrades(List<Trade> newTrades, TradingSimulator tradingSimulator) {
         this.tradingSimulator = tradingSimulator;
         freeSpaceAndAddTrades(newTrades);
     }
 
-    void addTrades(List<Trade> tradeList) {
+    public void addTrades(List<Trade> tradeList) {
         tradeList = tradingSimulator.addSimulatedTrades(getLast(), tradeList);
         freeSpaceAndAddTrades(tradeList);
     }
@@ -47,13 +48,13 @@ class CurrentTrades {
         }
     }
 
-    List<Trade> getTrades() {
+    public List<Trade> getTrades() {
         List<Trade> list = new ArrayList<>(trades);
         reverse(list);
         return list;
     }
 
-    String getLastTradeId() {
+    public String getLastTradeId() {
         return getLast().getTid();
     }
 
