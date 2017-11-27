@@ -1,6 +1,6 @@
-package mockedIntegrationTests;
+package offlineIntegrationTests;
 
-import mockedIntegrationTests.tools.MockedServer;
+import offlineIntegrationTests.tools.MockedServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

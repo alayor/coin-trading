@@ -1,5 +1,4 @@
-package mockedIntegrationTests.tools;
-
+package offlineIntegrationTests.tools;
 
 import fi.iki.elonen.NanoHTTPD;
 import org.apache.commons.io.IOUtils;

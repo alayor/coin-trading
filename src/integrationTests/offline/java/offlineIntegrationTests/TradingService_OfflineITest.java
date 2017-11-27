@@ -1,6 +1,6 @@
-package mockedIntegrationTests;
+package offlineIntegrationTests;
 
-import mockedIntegrationTests.tools.MockedServer;
+import offlineIntegrationTests.tools.MockedServer;
 import org.junit.*;
 import service.TradingService;
 import service.model.Trade;
