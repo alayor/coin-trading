@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
@@ -69,23 +68,6 @@ public class TradingServiceTest {
         tradingService.stop();
         // then
         verify(future).cancel(false);
-    }
-
-    @Test
-    public void shouldGetLastTradeUsingLastTradeId() throws Exception {
-        // given
-        given(bitsoApiRequester.getTrades(anyInt())).willReturn(tradeResult);
-        given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResultSince);
-        List<Trade> trades = asList(
-          createTrade("1244"),
-          createTrade("1233")
-        );
-        given(tradeResult.getTradeList()).willReturn(trades);
-        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
-        // when
-        tradingService.updateTrades();
-        // then
-        verify(bitsoApiRequester).getTradesSince("1244");
     }
 
     @Test
