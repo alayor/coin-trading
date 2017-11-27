@@ -1,4 +1,4 @@
-package model.service;
+package service.tools;
 
 import org.junit.Before;
 import org.junit.Test;

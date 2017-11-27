@@ -1,4 +1,4 @@
-package model.service;
+package service.tools;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -6,25 +6,25 @@ public class TickCounter {
     private AtomicInteger upticks = new AtomicInteger(0);
     private AtomicInteger downticks = new AtomicInteger(0);
 
-    void uptick() {
+    public void uptick() {
         synchronized (this) {
             upticks.incrementAndGet();
             downticks.set(0);
         } //TODO: Investigate why ReentrantLock is not working here
     }
 
-    void downtick() {
+    public void downtick() {
         synchronized (this) {
             downticks.incrementAndGet();
             upticks.set(0);
         }
     }
 
-    int getUpticks() {
+    public int getUpticks() {
         return upticks.get();
     }
 
-    int getDownticks() {
+    public int getDownticks() {
         return downticks.get();
     }
 }
