@@ -10,6 +10,7 @@ public class Trade {
     private final String makerSide;
     private final String price;
     private final String tid;
+    private boolean simulated;
 
     public Trade(@JsonProperty("book") String book,
                  @JsonProperty("created_at") String createdAt,
@@ -23,6 +24,7 @@ public class Trade {
         this.makerSide = makerSide;
         this.price = price;
         this.tid = tid;
+        this.simulated = false;
     }
 
     public String getBook() {
@@ -47,5 +49,24 @@ public class Trade {
 
     public String getTid() {
         return tid;
+    }
+
+    public boolean isSimulated()
+    {
+        return simulated;
+    }
+
+    public Trade withSimulated(boolean simulated)
+    {
+        Trade trade = new Trade(
+                this.book,
+                this.createdAt,
+                this.amount,
+                this.makerSide,
+                this.price,
+                this.tid
+        );
+        trade.simulated = simulated;
+        return trade;
     }
 }

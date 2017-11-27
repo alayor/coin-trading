@@ -9,10 +9,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import service.model.Trade;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,7 +49,7 @@ public class SimulatedTradingTest {
     }
 
     @Test
-    public void shouldAddOneSimulatedBuyTradeWhenUpticksAreMet() throws Exception
+    public void shouldAddOneSimulatedTradeWhenUpticksAreMet() throws Exception
     {
         // given
         Trade lastTrade = createTrade("1", "100");
@@ -55,7 +58,7 @@ public class SimulatedTradingTest {
                 createTrade("3", "300"),
                 createTrade("4", "400")
         );
-        givenGetUpticksWillReturnAtCall(3, 2);
+        givenGetUpticksWillReturnAtCall(3,3);
         // when
         List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
         // then
@@ -66,20 +69,35 @@ public class SimulatedTradingTest {
     {
         given(tickCounter.getUpticks()).willAnswer(new Answer<Integer>()
         {
-            int count = 1;
+            int count = 0;
             @Override public Integer answer(InvocationOnMock invocation) throws Throwable
             {
+                count++;
                 if(count == callNumber) {
                     return valueToReturn;
                 }
-                count++;
                 return -1;
             }
         });
     }
 
     @Test
-    public void shouldAddOneSimulatedBuyTradeWhenDownticksAreMet() throws Exception
+    public void shouldAddOneSimulatedTradeWhenUpticksMetWithLastTrade() throws Exception
+    {
+        // given
+        Trade lastTrade = createTrade("1", "100");
+        List<Trade> newTrades = singletonList(
+                createTrade("2", "200")
+        );
+        givenGetUpticksWillReturnAtCall(3, 1);
+        // when
+        List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        assertEquals(2, trades.size());
+    }
+
+    @Test
+    public void shouldAddOneSimulatedTradeWhenDownticksAreMet() throws Exception
     {
         // given
         Trade lastTrade = createTrade("1", "400");
@@ -88,7 +106,7 @@ public class SimulatedTradingTest {
                 createTrade("3", "200"),
                 createTrade("4", "100")
         );
-        givenGetDownticksWillReturnAtCall(3, 2);
+        givenGetDownticksWillReturnAtCall(3, 3);
         // when
         List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
         // then
@@ -99,13 +117,13 @@ public class SimulatedTradingTest {
     {
         given(tickCounter.getDownticks()).willAnswer(new Answer<Integer>()
         {
-            int count = 1;
+            int count = 0;
             @Override public Integer answer(InvocationOnMock invocation) throws Throwable
             {
+                count++;
                 if(count == callNumber) {
                     return valueToReturn;
                 }
-                count++;
                 return -1;
             }
         });
@@ -124,5 +142,54 @@ public class SimulatedTradingTest {
         trading.addSimulatedTrades(lastTrade, newTrades);
         // then
         verify(tickCounter, times(3)).downtick();
+    }
+
+    @Test
+    public void shouldAddOneSimulatedTradeWhenDownticksMetWithLastTrade() throws Exception
+    {
+        // given
+        Trade lastTrade = createTrade("1", "200");
+        List<Trade> newTrades = singletonList(
+                createTrade("2", "100")
+        );
+        givenGetDownticksWillReturnAtCall(3, 1);
+        // when
+        List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        assertEquals(2, trades.size());
+    }
+
+    @Test
+    public void newUptickAddedTradeShouldBeSimulated() throws Exception
+    {
+        // given
+        Trade lastTrade = createTrade("1", "100");
+        List<Trade> newTrades = asList(
+                createTrade("2", "200"),
+                createTrade("3", "300"),
+                createTrade("4", "400")
+        );
+        givenGetUpticksWillReturnAtCall(3, 3);
+        // when
+        List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        assertTrue(trades.get(3).isSimulated());
+    }
+
+    @Test
+    public void newDowntickAddedTradeShouldBeSimulated() throws Exception
+    {
+        // given
+        Trade lastTrade = createTrade("1", "400");
+        List<Trade> newTrades = asList(
+                createTrade("2", "300"),
+                createTrade("3", "200"),
+                createTrade("4", "100")
+        );
+        givenGetDownticksWillReturnAtCall(3, 3);
+        // when
+        List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        assertTrue(trades.get(3).isSimulated());
     }
 }
