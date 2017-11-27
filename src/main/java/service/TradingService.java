@@ -44,7 +44,17 @@ public class TradingService {
     void updateTrades() {
         TradeResult tradesSince = bitsoApiRequester.getTradesSince(trades.peekLast().getTid());
         List<Trade> tradeList = tradesSince.getTradeList();
+        int tradesToPoll = tradeList.size() - trades.remainingCapacity();
+        freeSpace(tradesToPoll);
         trades.addAll(tradeList);
+    }
+
+    private void freeSpace(int tradesToPoll) {
+        if(tradesToPoll > 0) {
+            for (int i = 0; i < tradesToPoll; i++) {
+                trades.poll();
+            }
+        }
     }
 
     Runnable getUpdateTradesRunnable() {
@@ -56,8 +66,7 @@ public class TradingService {
     }
 
     public List<Trade> getLastTrades() {
-        List<Trade> list = new ArrayList<>();
-        trades.drainTo(list);
+        List<Trade> list = new ArrayList<>(trades);
         reverse(list);
         return list;
     }

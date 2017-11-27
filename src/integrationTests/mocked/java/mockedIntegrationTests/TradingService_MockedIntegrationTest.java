@@ -35,8 +35,12 @@ public class TradingService_MockedIntegrationTest {
     @After
     public void tearDown() throws Exception {
         copy(
-          getPath("tools/fixtures/threeTradesFixtureTmp.json"),
+          getPath("tools/fixtures/threeTradesFixtureBackup.json"),
           getPath("tools/fixtures/threeTradesFixture.json")
+        );
+        copy(
+          getPath("tools/fixtures/fiveHundredTradesFixtureBackup.json"),
+          getPath("tools/fixtures/fiveHundredTradesFixture.json")
         );
     }
 
@@ -88,5 +92,22 @@ public class TradingService_MockedIntegrationTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void shouldRemoveOldTradeWhenTradingArrayIsFull() throws Exception {
+        // given
+        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/fiveHundredTradesFixture.json");
+        tradingService = new TradingService(bitsoApiRequester);
+        copy(
+          getPath("tools/fixtures/singleTradeFixture.json"),
+          getPath("tools/fixtures/fiveHundredTradesFixture.json")
+        );
+        Thread.sleep(6000);
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades();
+        // then
+        assertEquals(500, lastTrades.size());
+        assertEquals("2129343", lastTrades.get(0).getTid());
     }
 }
