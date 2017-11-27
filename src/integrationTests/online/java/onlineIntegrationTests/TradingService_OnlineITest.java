@@ -9,7 +9,8 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertNotNull;
 
-public class TradingService_OnlineIntegrationTest {
+public class TradingService_OnlineITest
+{
     private TradingService tradingService;
     private BitsoApiRequester bitsoApiRequester;
 

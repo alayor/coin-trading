@@ -3,14 +3,19 @@ package service.tools;
 import service.model.Trade;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimulatedTrading {
 
+    private final int downticksToBuy;
+    private final int upticksToSell;
     private TickCounter tickCounter;
 
     public SimulatedTrading(int upticksToSell, int downticksToBuy) {
         tickCounter = new TickCounter();
+        this.upticksToSell = upticksToSell;
+        this.downticksToBuy = downticksToBuy;
     }
 
     //    private List<Trade> createSimulatedTrades(List<Trade> tradeList) {
@@ -43,28 +48,35 @@ public class SimulatedTrading {
 
 
     public List<Trade> addSimulatedTrades(Trade lastTrade, List<Trade> newTrades) {
+        List<Trade> tradesWithSimulated = new ArrayList<>();
+        tradesWithSimulated.add(newTrades.get(0));
         calculateLastTradeTick(lastTrade, newTrades);
         for (int i = 1; i < newTrades.size(); i++) {
-            BigDecimal price1 = getPrice(newTrades.get(i - 1));
-            BigDecimal price2 = getPrice(newTrades.get(i));
-            int compare = price2.compareTo(price1);
-            if (compare > 0) {
-                tickCounter.uptick();
-            } else if (compare < 0) {
-                tickCounter.downtick();
+            tradesWithSimulated.add(newTrades.get(i));
+            int compare = getPrice(newTrades.get(i)).compareTo(getPrice(newTrades.get(i - 1)));
+            tick(compare);
+            if(tickCounter.getUpticks() == upticksToSell) {
+                tradesWithSimulated.add(newTrades.get(i));
+            } else if(tickCounter.getDownticks() == downticksToBuy) {
+                tradesWithSimulated.add(newTrades.get(i));
             }
         }
-        return newTrades;
+        return tradesWithSimulated;
     }
 
-    private void calculateLastTradeTick(Trade lastTrade, List<Trade> tradeList) {
-        BigDecimal lastTradePrice = getPrice(lastTrade);
-        int compare = getPrice(tradeList.get(0)).compareTo(lastTradePrice);
+    private void tick(int compare)
+    {
         if (compare > 0) {
             tickCounter.uptick();
         } else if (compare < 0) {
             tickCounter.downtick();
         }
+    }
+
+    private void calculateLastTradeTick(Trade lastTrade, List<Trade> tradeList) {
+        BigDecimal lastTradePrice = getPrice(lastTrade);
+        int compare = getPrice(tradeList.get(0)).compareTo(lastTradePrice);
+        tick(compare);
     }
 
     private BigDecimal getPrice(Trade trade) {

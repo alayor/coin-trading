@@ -19,13 +19,13 @@ sourceSets {
         }
         resources.srcDir file('src/integrationTests/online/resources')
     }
-    mockedIntegrationTests {
+    offlineIntegrationTests {
         java {
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
-            srcDir file('src/integrationTests/mocked/java')
+            srcDir file('src/integrationTests/offline/java')
         }
-        resources.srcDir file('src/integrationTests/mocked/resources')
+        resources.srcDir file('src/integrationTests/offline/resources')
     }
 }
 
@@ -45,8 +45,8 @@ jfx {
 configurations {
     onlineIntegrationTestsCompile.extendsFrom testCompile
     onlineIntegrationTestsRuntime.extendsFrom testRuntime
-    mockedIntegrationTestsCompile.extendsFrom testCompile
-    mockedIntegrationTestsRuntime.extendsFrom testRuntime
+    offlineIntegrationTestsCompile.extendsFrom testCompile
+    offlineIntegrationTestsRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -59,9 +59,9 @@ dependencies {
 
 }
 
-task mockedITest(type: Test) {
-    testClassesDirs =  sourceSets.mockedIntegrationTests.output.classesDirs
-    classpath = sourceSets.mockedIntegrationTests.runtimeClasspath
+task offlineITest(type: Test) {
+    testClassesDirs =  sourceSets.offlineIntegrationTests.output.classesDirs
+    classpath = sourceSets.offlineIntegrationTests.runtimeClasspath
     outputs.upToDateWhen { false }
 }
 
@@ -73,6 +73,6 @@ task onlineITest(type: Test) {
 
 task testall {
     dependsOn 'test'
-    dependsOn 'mockedITest'
+    dependsOn 'offlineITest'
     dependsOn 'onlineITest'
 }

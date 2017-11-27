@@ -11,7 +11,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class TradingService_MockedIntegrationTest {
+public class TradingService_OfflineITest
+{
 
     private BitsoApiRequester bitsoApiRequester;
     private static MockedServer mockedServer = new MockedServer();

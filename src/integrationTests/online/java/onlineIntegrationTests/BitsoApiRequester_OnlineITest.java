@@ -10,7 +10,8 @@ import java.net.URISyntaxException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class BitsoApiRequester_OnlineIntegrationTest {
+public class BitsoApiRequester_OnlineITest
+{
     private BitsoApiRequester bitsoApiRequester;
 
     @Before

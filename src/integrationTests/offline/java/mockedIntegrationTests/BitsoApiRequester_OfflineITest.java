@@ -12,7 +12,8 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.*;
 
-public class BitsoApiRequester_MockedIntegrationTest {
+public class BitsoApiRequester_OfflineITest
+{
     private BitsoApiRequester bitsoApiRequester;
     private static MockedServer mockedServer = new MockedServer();
 
