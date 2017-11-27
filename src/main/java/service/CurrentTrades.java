@@ -12,6 +12,10 @@ import static java.util.Collections.reverse;
 class CurrentTrades {
     private final BlockingDeque<Trade> tradeDeque = new LinkedBlockingDeque<>(500);
 
+    public CurrentTrades(List<Trade> trades) {
+        tradeDeque.addAll(trades);
+    }
+
     void addTrades(List<Trade> tradeList) {
         if(tradeList != null) {
             freeSpace(tradeList);

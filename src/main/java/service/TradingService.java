@@ -14,7 +14,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TradingService {
 
-    private final CurrentTrades currentTrades = new CurrentTrades();
+    private final CurrentTrades currentTrades;
     private final BitsoApiRequester bitsoApiRequester;
     private final ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
@@ -31,7 +31,7 @@ public class TradingService {
 
     TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor) {
         this.bitsoApiRequester = bitsoApiRequester;
-        this.currentTrades.addTrades(getTradesFromApi(bitsoApiRequester));
+        currentTrades = new CurrentTrades(getTradesFromApi(bitsoApiRequester));
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +17,7 @@ public class CurrentTradesTest {
 
     @Before
     public void setUp() throws Exception {
-        currentTrades = new CurrentTrades();
+        currentTrades = new CurrentTrades(emptyList());
     }
 
     @Test
@@ -69,5 +70,15 @@ public class CurrentTradesTest {
           "50",
           id
         );
+    }
+
+    @Test
+    public void shouldBeCreatedWithInitialTrades() throws Exception {
+        // given
+        currentTrades = new CurrentTrades(createTrades(3));
+        // when
+        List<Trade> trades = currentTrades.getTrades();
+        // then
+        assertEquals(3, trades.size());
     }
 }
