@@ -1,6 +1,7 @@
 package service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import service.model.Trade;
 
@@ -17,7 +18,14 @@ public class CurrentTradesTest {
 
     @Before
     public void setUp() throws Exception {
-        currentTrades = new CurrentTrades(emptyList());
+        currentTrades = new CurrentTrades(emptyList(), 3, 3);
+    }
+
+    @Test
+    public void shouldNotThrowExceptionIfConstructorArgumentIsNull() throws Exception {
+        // when
+        currentTrades = new CurrentTrades(null, 3, 3);
+        // then no exception is thrown
     }
 
     @Test
@@ -31,8 +39,8 @@ public class CurrentTradesTest {
     public void shouldReturnTradesInReverseOrderAsAdded() throws Exception {
         // given
         currentTrades.addTrades(asList(
-          createTrade("1233"),
-          createTrade("1244")
+          createTrade("1233", "1000"),
+          createTrade("1244", "1000")
         ));
         // when
         List<Trade> trades = currentTrades.getTrades();
@@ -46,7 +54,7 @@ public class CurrentTradesTest {
         // given
         currentTrades.addTrades(createTrades(500));
         // when
-        currentTrades.addTrades(singletonList(createTrade("501")));
+        currentTrades.addTrades(singletonList(createTrade("501", "1000")));
         // then
         List<Trade> trades = currentTrades.getTrades();
         assertEquals(500, trades.size());
@@ -55,19 +63,19 @@ public class CurrentTradesTest {
 
     private List<Trade> createTrades(int num) {
         List<Trade> trades = new ArrayList<>();
-        for(int i = 0; i < num; i++) {
-          trades.add(createTrade(String.valueOf(i)));
+        for (int i = 0; i < num; i++) {
+            trades.add(createTrade(String.valueOf(i), "1000"));
         }
         return trades;
     }
 
-    private Trade createTrade(String id) {
+    private Trade createTrade(String id, String price) {
         return new Trade(
           "btc_mxn",
           "2017-11-26",
           "100",
           "sell",
-          "50",
+          price,
           id
         );
     }
@@ -75,10 +83,26 @@ public class CurrentTradesTest {
     @Test
     public void shouldBeCreatedWithInitialTrades() throws Exception {
         // given
-        currentTrades = new CurrentTrades(createTrades(3));
+        currentTrades = new CurrentTrades(createTrades(3), 3, 3);
         // when
         List<Trade> trades = currentTrades.getTrades();
         // then
         assertEquals(3, trades.size());
+    }
+
+    @Test
+    @Ignore
+    public void shouldCreateSellTradeIfUpticksAreMet() throws Exception {
+        // given
+        currentTrades = new CurrentTrades(createTrades(20), 3, 3);
+        currentTrades.addTrades(asList(
+          createTrade("1", "1000"),
+          createTrade("2", "1001"),
+          createTrade("3", "1002")
+        ));
+        // when
+        List<Trade> trades = currentTrades.getTrades();
+        // then
+        assertEquals(24, trades.size());
     }
 }

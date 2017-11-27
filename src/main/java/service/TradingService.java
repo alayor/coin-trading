@@ -31,7 +31,7 @@ public class TradingService {
 
     TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor) {
         this.bitsoApiRequester = bitsoApiRequester;
-        currentTrades = new CurrentTrades(getTradesFromApi(bitsoApiRequester));
+        currentTrades = new CurrentTrades(getTradesFromApi(bitsoApiRequester), 3, 3);
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 
