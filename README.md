@@ -11,6 +11,9 @@ and _best asks_ configuration.
  the UI will display the maximum number of trades at that moment.
 * Imaginary or simulated trades created using "contrarian trading strategy"
  will have the same info (id, price, created_at, etc.) as the previous trade.
+* The default value of M and N is zero. 
+* If M is zero or less than zero no simulated trade will be added.
+* If N is zero or less than zero no simulated trade will be added.
 * When a new simulated trade is created using the "contrarian trading strategy",
  the upticks and downticks count will reset.
  E.g.

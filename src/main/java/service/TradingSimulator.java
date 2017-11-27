@@ -51,10 +51,10 @@ public class TradingSimulator
 
     private void addSimulatedTrade(Trade currentTrade, List<Trade> tradesWithSimulated)
     {
-        if(tickCounter.getUpticks() == upticksToSell) {
+        if(upticksToSell > 0 && tickCounter.getUpticks() == upticksToSell) {
             tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "sell"));
             tickCounter.reset();
-        } else if(tickCounter.getDownticks() == downticksToBuy) {
+        } else if(downticksToBuy > 0 && tickCounter.getDownticks() == downticksToBuy) {
             tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "buy"));
             tickCounter.reset();
         }

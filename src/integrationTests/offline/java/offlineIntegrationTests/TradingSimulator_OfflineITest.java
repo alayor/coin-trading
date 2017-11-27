@@ -41,7 +41,7 @@ public class TradingSimulator_OfflineITest
     }
 
     @Test
-    public void shouldAddSellSimulatedTradeIfUpticksEqualThanUpticksToSell() throws Exception
+    public void shouldAddSellSimulatedTradeIfUpticksEqualToUpticksToSell() throws Exception
     {
         // given
         tradingSimulator = new TradingSimulator(3, 3);
@@ -60,7 +60,7 @@ public class TradingSimulator_OfflineITest
     }
 
     @Test
-    public void shouldAddBuySimulatedTradeIfDownticksEqualThanDownticksToBuy() throws Exception
+    public void shouldAddBuySimulatedTradeIfDownticksEqualToDownticksToBuy() throws Exception
     {
         // given
         tradingSimulator = new TradingSimulator(3, 2);
@@ -78,7 +78,7 @@ public class TradingSimulator_OfflineITest
     }
 
     @Test
-    public void shouldAddMultipleSellSimulatedTradeIfUpticksEqualThanUpticksToSell() throws Exception
+    public void shouldAddMultipleSellSimulatedTradeIfUpticksEqualToUpticksToSell() throws Exception
     {
         // given
         tradingSimulator = new TradingSimulator(2, 3);
@@ -98,4 +98,58 @@ public class TradingSimulator_OfflineITest
         assertEquals("sell", trades.get(5).getMakerSide());
     }
 
+    @Test
+    public void shouldAddMultipleBuySimulatedTradeIfUpticksEqualToDownticksToBuy() throws Exception
+    {
+        // given
+        tradingSimulator = new TradingSimulator(3, 2);
+        List<Trade> newTrades = asList(
+                createTrade("2", "103", "sell"),
+                createTrade("3", "102", "sell"),
+                createTrade("4", "101", "sell"),
+                createTrade("5", "100", "sell")
+        );
+        // when
+        List<Trade> trades = tradingSimulator.addSimulatedTrades(createTrade("1", "104"), newTrades);
+        // then
+        assertEquals(6, trades.size());
+        assertTrue(trades.get(2).isSimulated());
+        assertEquals("buy", trades.get(2).getMakerSide());
+        assertTrue(trades.get(5).isSimulated());
+        assertEquals("buy", trades.get(5).getMakerSide());
+    }
+
+    @Test
+    public void shouldNotAddAnyTradesIfUpticksToSellIsZero() throws Exception
+    {
+        // given
+        tradingSimulator = new TradingSimulator(0, 2);
+        List<Trade> newTrades = asList(
+                createTrade("2", "100", "buy"),
+                createTrade("3", "100", "buy"),
+                createTrade("4", "100", "buy"),
+                createTrade("5", "100", "buy")
+        );
+        // when
+        List<Trade> trades = tradingSimulator.addSimulatedTrades(createTrade("1", "100"), newTrades);
+        // then
+        assertEquals(4, trades.size());
+    }
+
+    @Test
+    public void shouldNotAddAnyTradesIfDownticksToBuyIsZero() throws Exception
+    {
+        // given
+        tradingSimulator = new TradingSimulator(2, 0);
+        List<Trade> newTrades = asList(
+                createTrade("2", "100", "buy"),
+                createTrade("3", "100", "buy"),
+                createTrade("4", "100", "buy"),
+                createTrade("5", "100", "buy")
+        );
+        // when
+        List<Trade> trades = tradingSimulator.addSimulatedTrades(createTrade("1", "100"), newTrades);
+        // then
+        assertEquals(4, trades.size());
+    }
 }

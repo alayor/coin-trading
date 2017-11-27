@@ -249,11 +249,47 @@ public class TradingSimulatorTest
         List<Trade> newTrades = asList(
                 createTrade("2", "200"),
                 createTrade("3", "300"),
-                createTrade("4", "400", "sell")
-        );
+                createTrade("4", "400", "sell"));
         givenGetDownticksWillReturnAtCall(3, 3);
         // when
         trading.addSimulatedTrades(lastTrade, newTrades);
         // then
-        verify(tickCounter).reset();    }
+        verify(tickCounter).reset();
+    }
+
+    @Test
+    public void shouldNotAddSimulatedTradeIfDownticksToBuyIsZero() throws Exception {
+        // given
+        trading = new TradingSimulator(3, 0);
+        trading.setTickCounter(tickCounter);
+        Trade lastTrade = createTrade("1", "400");
+        List<Trade> newTrades = asList(
+                createTrade("2", "400"),
+                createTrade("3", "400"),
+                createTrade("4", "400")
+        );
+        given(tickCounter.getDownticks()).willReturn(0);
+        // when
+        List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        assertEquals(3, trades.size());
+    }
+
+    @Test
+    public void shouldNotAddSimulatedTradeIfUpticksToSellIsZero() throws Exception {
+        // given
+        trading = new TradingSimulator(0, 3);
+        trading.setTickCounter(tickCounter);
+        Trade lastTrade = createTrade("1", "100");
+        List<Trade> newTrades = asList(
+                createTrade("2", "200"),
+                createTrade("3", "300"),
+                createTrade("4", "400")
+        );
+        given(tickCounter.getUpticks()).willReturn(0);
+        // when
+        List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        assertEquals(3, trades.size());
+    }
 }
