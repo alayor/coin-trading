@@ -28,7 +28,7 @@ and _best asks_ configuration.
 * Uptick and downtick counting will start right after the system preloads
   old trades.
   E.g.
-  ```
+  ```javascript
   // System starts and shows old trades
   price = 1000
   price = 1001
