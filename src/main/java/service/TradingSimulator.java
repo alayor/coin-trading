@@ -30,18 +30,25 @@ public class TradingSimulator
 
     private void addSimulatedTradeFromLastTrade(List<Trade> tradesWithSimulated, Trade lastTrade, List<Trade> tradeList) {
         if(lastTrade != null) {
-            compareAndTick(tradeList.get(0), lastTrade);
-            addSimulatedTrade(tradeList.get(0), tradesWithSimulated);
+            compareAndAddSimulatedTrade(tradeList.get(0), lastTrade, tradesWithSimulated);
         }
     }
 
-    private void compareAndTick(Trade trade, Trade lastTrade)
+    private void compareAndAddSimulatedTrade(Trade trade, Trade lastTrade, List<Trade> tradesWithSimulated)
     {
         int compare = getPrice(trade).compareTo(getPrice(lastTrade));
         if (compare > 0) {
-            tickCounter.uptick();
+            int uptick = tickCounter.uptick();
+            if(upticksToSell > 0 && uptick == upticksToSell) {
+                tradesWithSimulated.add(trade.withSimulatedAndMarkerSide(true, "sell"));
+                tickCounter.reset();
+            }
         } else if (compare < 0) {
-            tickCounter.downtick();
+            int downtick = tickCounter.downtick();
+            if(downticksToBuy > 0 && downtick == downticksToBuy) {
+                tradesWithSimulated.add(trade.withSimulatedAndMarkerSide(true, "buy"));
+                tickCounter.reset();
+            }
         }
     }
 
@@ -49,23 +56,11 @@ public class TradingSimulator
         return new BigDecimal(trade.getPrice());
     }
 
-    private void addSimulatedTrade(Trade currentTrade, List<Trade> tradesWithSimulated)
-    {
-        if(upticksToSell > 0 && tickCounter.getUpticks() == upticksToSell) {
-            tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "sell"));
-            tickCounter.reset();
-        } else if(downticksToBuy > 0 && tickCounter.getDownticks() == downticksToBuy) {
-            tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "buy"));
-            tickCounter.reset();
-        }
-    }
-
     private void addSimulatedTradesFromNewTrades(List<Trade> tradesWithSimulated, List<Trade> newTrades)
     {
         for (int i = 1; i < newTrades.size(); i++) {
             tradesWithSimulated.add(newTrades.get(i));
-            compareAndTick(newTrades.get(i), newTrades.get(i - 1));
-            addSimulatedTrade(newTrades.get(i), tradesWithSimulated);
+            compareAndAddSimulatedTrade(newTrades.get(i), newTrades.get(i - 1), tradesWithSimulated);
         }
     }
 

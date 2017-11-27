@@ -18,9 +18,8 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import service.TradingSimulator;
-import service.tools.TickCounter;
 import service.model.Trade;
+import service.tools.TickCounter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TradingSimulatorTest
@@ -74,7 +73,7 @@ public class TradingSimulatorTest
     }
 
     private void givenGetUpticksWillReturnAtCall(int valueToReturn, int callNumber) {
-        given(tickCounter.getUpticks()).willAnswer(new Answer<Integer>()
+        given(tickCounter.uptick()).willAnswer(new Answer<Integer>()
         {
             int count = 0;
             @Override public Integer answer(InvocationOnMock invocation) throws Throwable
@@ -119,7 +118,7 @@ public class TradingSimulatorTest
     }
 
     private void givenGetDownticksWillReturnAtCall(int valueToReturn, int callNumber) {
-        given(tickCounter.getDownticks()).willAnswer(new Answer<Integer>()
+        given(tickCounter.downtick()).willAnswer(new Answer<Integer>()
         {
             int count = 0;
             @Override public Integer answer(InvocationOnMock invocation) throws Throwable
@@ -213,11 +212,11 @@ public class TradingSimulatorTest
     @Test
     public void newDowntickAddedTradeShouldBeBuyMarkerSide() throws Exception {
         // given
-        Trade lastTrade = createTrade("1", "100");
+        Trade lastTrade = createTrade("1", "400");
         List<Trade> newTrades = asList(
-                createTrade("2", "200"),
-                createTrade("3", "300"),
-                createTrade("4", "400", "sell")
+                createTrade("2", "300"),
+                createTrade("3", "200"),
+                createTrade("4", "100", "sell")
         );
         givenGetDownticksWillReturnAtCall(3, 3);
         // when
@@ -245,11 +244,11 @@ public class TradingSimulatorTest
     @Test
     public void shouldResetTickCounterWhenNewBuyTradeIsAdded() throws Exception {
         // given
-        Trade lastTrade = createTrade("1", "100");
+        Trade lastTrade = createTrade("1", "400");
         List<Trade> newTrades = asList(
-                createTrade("2", "200"),
-                createTrade("3", "300"),
-                createTrade("4", "400", "sell"));
+                createTrade("2", "300"),
+                createTrade("3", "200"),
+                createTrade("4", "100", "sell"));
         givenGetDownticksWillReturnAtCall(3, 3);
         // when
         trading.addSimulatedTrades(lastTrade, newTrades);
@@ -268,7 +267,7 @@ public class TradingSimulatorTest
                 createTrade("3", "400"),
                 createTrade("4", "400")
         );
-        given(tickCounter.getDownticks()).willReturn(0);
+        given(tickCounter.downtick()).willReturn(0);
         // when
         List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
         // then
@@ -286,7 +285,7 @@ public class TradingSimulatorTest
                 createTrade("3", "300"),
                 createTrade("4", "400")
         );
-        given(tickCounter.getUpticks()).willReturn(0);
+        given(tickCounter.uptick()).willReturn(0);
         // when
         List<Trade> trades = trading.addSimulatedTrades(lastTrade, newTrades);
         // then

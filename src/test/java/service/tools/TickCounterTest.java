@@ -11,18 +11,18 @@ public class TickCounterTest {
     public void uptickShouldIncrementUptickCount() throws Exception {
         // when
         TickCounter tickCounter = new TickCounter();
-        tickCounter.uptick();
+        int uptick = tickCounter.uptick();
         // then
-        assertEquals(1, tickCounter.getUpticks());
+        assertEquals(1, uptick);
     }
 
     @Test
     public void downTickShouldIncrementDowntickCount() throws Exception {
         // when
         TickCounter tickCounter = new TickCounter();
-        tickCounter.downtick();
+        int downtick = tickCounter.downtick();
         // then
-        assertEquals(1, tickCounter.getDownticks());
+        assertEquals(1, downtick);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class TickCounterTest {
         //when
         tickCounter.uptick();
         // then
-        assertEquals(0, tickCounter.getDownticks());
+        assertEquals(1, tickCounter.downtick());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class TickCounterTest {
         // when
         tickCounter.downtick();
         // then
-        assertEquals(0, tickCounter.getUpticks());
+        assertEquals(1, tickCounter.uptick());
     }
 
     @Test
@@ -60,12 +60,12 @@ public class TickCounterTest {
                 {
                     // given
                     tickCounter.uptick();
-                    int last = tickCounter.getUpticks();
+                    int last = tickCounter.uptick();
                     for (int i1 = 0; i1 < 1000000; i1++)
                     {
                         // when
                         tickCounter.uptick();
-                        int value = tickCounter.getUpticks();
+                        int value = tickCounter.uptick();
                         //then
                         assertTrue(value > last);
                         last = value;
@@ -89,12 +89,12 @@ public class TickCounterTest {
                 {
                     // given
                     tickCounter.downtick();
-                    int last = tickCounter.getDownticks();
+                    int last = tickCounter.downtick();
                     for (int i1 = 0; i1 < 1000000; i1++)
                     {
                         // when
                         tickCounter.downtick();
-                        int value = tickCounter.getDownticks();
+                        int value = tickCounter.downtick();
                         //then
                         assertTrue(value > last);
                         last = value;
@@ -123,7 +123,7 @@ public class TickCounterTest {
                         // when
                         tickCounter.downtick();
                         //then
-                        assertEquals(0, tickCounter.getUpticks());
+                        assertEquals(1, tickCounter.uptick());
                     }
                 }
             });
@@ -149,7 +149,7 @@ public class TickCounterTest {
                         // when
                         tickCounter.uptick();
                         //then
-                        assertEquals(0, tickCounter.getDownticks());
+                        assertEquals(1, tickCounter.downtick());
                     }
                 }
             });
@@ -199,7 +199,7 @@ public class TickCounterTest {
         // when
         tickCounter.reset();
         // then
-        assertEquals(0, tickCounter.getUpticks());
+        assertEquals(1, tickCounter.uptick());
     }
 
     @Test
@@ -212,7 +212,7 @@ public class TickCounterTest {
         // when
         tickCounter.reset();
         // then
-        assertEquals(0, tickCounter.getDownticks());
+        assertEquals(1, tickCounter.downtick());
     }
 
     @Test
@@ -231,7 +231,7 @@ public class TickCounterTest {
                         // when
                         tickCounter.reset();
                         //then
-                        assertEquals(0, tickCounter.getUpticks());
+                        assertEquals(1, tickCounter.uptick());
                     }
                 }
             });
@@ -257,7 +257,7 @@ public class TickCounterTest {
                         // when
                         tickCounter.reset();
                         //then
-                        assertEquals(0, tickCounter.getDownticks());
+                        assertEquals(1, tickCounter.downtick());
                     }
                 }
             });
