@@ -13,9 +13,9 @@ class CurrentTrades {
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
     private TradingSimulator tradingSimulator;
 
-    CurrentTrades(List<Trade> trades, TradingSimulator tradingSimulator) {
+    CurrentTrades(List<Trade> newTrades, TradingSimulator tradingSimulator) {
         this.tradingSimulator = tradingSimulator;
-        freeSpaceAndAddTrades(trades);
+        freeSpaceAndAddTrades(newTrades);
     }
 
     void addTrades(List<Trade> tradeList) {

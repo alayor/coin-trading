@@ -2,6 +2,7 @@ package service;
 
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static service.Tool.createTrade;
+import static service.Tool.createTrades;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -91,5 +93,38 @@ public class TradingServiceTest {
         tradingService.updateTrades();
         // then
         verify(currentTrades).addTrades(newTrades);
+    }
+
+    @Test
+    public void shouldReturnTradesBasedOnLimit() throws Exception
+    {
+        // given
+        given(currentTrades.getTrades()).willReturn(createTrades(30));
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades(10);
+        // then
+        assertEquals(10, lastTrades.size());
+    }
+
+    @Test
+    public void shouldReturnTradesBasedOnLimitValidatingMaxLimit() throws Exception
+    {
+        // given
+        given(currentTrades.getTrades()).willReturn(createTrades(5));
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades(10);
+        // then
+        assertEquals(5, lastTrades.size());
+    }
+
+    @Test
+    public void shouldReturnTradesBasedOnLimitIfLimitIsSameAsSize() throws Exception
+    {
+        // given
+        given(currentTrades.getTrades()).willReturn(createTrades(10));
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades(10);
+        // then
+        assertEquals(10, lastTrades.size());
     }
 }

@@ -55,7 +55,8 @@ public class TradingService {
     }
 
     public List<Trade> getLastTrades(int limit) {
-        return currentTrades.getTrades();
+        List<Trade> trades = currentTrades.getTrades();
+        return trades.subList(0, limit > trades.size() ? trades.size() : limit);
     }
 
     void setCurrentTrades(CurrentTrades currentTrades)

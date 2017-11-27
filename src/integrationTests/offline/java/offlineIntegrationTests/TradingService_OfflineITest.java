@@ -109,7 +109,7 @@ public class TradingService_OfflineITest
         );
         Thread.sleep(6000);
         // when
-        List<Trade> lastTrades = tradingService.getLastTrades(25);
+        List<Trade> lastTrades = tradingService.getLastTrades(500);
         // then
         assertEquals(500, lastTrades.size());
         assertEquals("2129343", lastTrades.get(0).getTid());
@@ -123,6 +123,6 @@ public class TradingService_OfflineITest
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then
-        assertEquals(10, lastTrades.size());
+        assertEquals(25, lastTrades.size());
     }
 }
