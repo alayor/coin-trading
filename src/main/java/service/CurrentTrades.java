@@ -12,19 +12,24 @@ import static java.util.Collections.reverse;
 
 class CurrentTrades {
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
-    private final int upticksToSell;
-    private final int downticksToBuy;
-    private SimulatedTrading simulatedTrading = new SimulatedTrading();
+    private SimulatedTrading simulatedTrading;
 
     CurrentTrades(List<Trade> trades, int upticksToSell, int downticksToBuy) {
-        this.upticksToSell = upticksToSell;
-        this.downticksToBuy = downticksToBuy;
+        simulatedTrading = new SimulatedTrading(upticksToSell, downticksToBuy);
         freeSpaceAndAddTrades(trades);
     }
 
     void addTrades(List<Trade> tradeList) {
-        tradeList = simulatedTrading.addSimulatedTrades(tradeList);
+        tradeList = simulatedTrading.addSimulatedTrades(getLast(), tradeList);
         freeSpaceAndAddTrades(tradeList);
+    }
+
+    private Trade getLast() {
+        if (trades.isEmpty()) {
+           return Trade.NULL;
+        } else {
+            return trades.getLast();
+        }
     }
 
     private void freeSpaceAndAddTrades(List<Trade> tradeList) {
@@ -50,7 +55,7 @@ class CurrentTrades {
     }
 
     String getLastTradeId() {
-        return trades.getLast().getTid();
+        return getLast().getTid();
     }
 
     void setSimulatedTrading(SimulatedTrading simulatedTrading) {

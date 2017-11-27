@@ -3,6 +3,7 @@ package service.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trade {
+    public static final Trade NULL = new Trade("", "", "0", "", "0", "");
     private final String book;
     private final String createdAt;
     private final String amount;

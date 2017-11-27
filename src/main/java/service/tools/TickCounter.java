@@ -10,7 +10,7 @@ public class TickCounter {
         synchronized (this) {
             upticks.incrementAndGet();
             downticks.set(0);
-        } //TODO: Investigate why ReentrantLock is not working here
+        }
     }
 
     public void downtick() {
