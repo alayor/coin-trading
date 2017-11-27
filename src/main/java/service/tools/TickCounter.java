@@ -3,8 +3,8 @@ package service.tools;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TickCounter {
-    private AtomicInteger upticks = new AtomicInteger(0);
-    private AtomicInteger downticks = new AtomicInteger(0);
+    private volatile AtomicInteger upticks = new AtomicInteger(0);
+    private volatile AtomicInteger downticks = new AtomicInteger(0);
 
     public synchronized void uptick() {
         upticks.incrementAndGet();
