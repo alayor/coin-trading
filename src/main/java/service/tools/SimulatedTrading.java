@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+
 public class SimulatedTrading {
 
     private final int downticksToBuy;
@@ -19,29 +21,22 @@ public class SimulatedTrading {
     }
 
     public List<Trade> addSimulatedTrades(Trade lastTrade, List<Trade> newTrades) {
-        List<Trade> tradesWithSimulated = new ArrayList<>();
-        tradesWithSimulated.add(newTrades.get(0));
-        calculateLastTradeTick(lastTrade, newTrades, tradesWithSimulated);
-        for (int i = 1; i < newTrades.size(); i++) {
-            tradesWithSimulated.add(newTrades.get(i));
-            int compare = getPrice(newTrades.get(i)).compareTo(getPrice(newTrades.get(i - 1)));
-            tick(compare);
-            addSimulatedTrade(newTrades.get(i), tradesWithSimulated);
-        }
+        List<Trade> tradesWithSimulated = new ArrayList<>(singletonList(newTrades.get(0)));
+        addSimulatedTradeFromLastTrade(tradesWithSimulated, lastTrade, newTrades);
+        addSimulatedTradesFromNewTrades(tradesWithSimulated, newTrades);
         return tradesWithSimulated;
     }
 
-    private void addSimulatedTrade(Trade currentTrade, List<Trade> tradesWithSimulated)
-    {
-        if(tickCounter.getUpticks() == upticksToSell) {
-            tradesWithSimulated.add(currentTrade.withSimulated(true));
-        } else if(tickCounter.getDownticks() == downticksToBuy) {
-            tradesWithSimulated.add(currentTrade.withSimulated(true));
+    private void addSimulatedTradeFromLastTrade(List<Trade> tradesWithSimulated, Trade lastTrade, List<Trade> tradeList) {
+        if(lastTrade != null) {
+            compareAndTick(tradeList.get(0), lastTrade);
+            addSimulatedTrade(tradeList.get(0), tradesWithSimulated);
         }
     }
 
-    private void tick(int compare)
+    private void compareAndTick(Trade trade, Trade lastTrade)
     {
+        int compare = getPrice(trade).compareTo(getPrice(lastTrade));
         if (compare > 0) {
             tickCounter.uptick();
         } else if (compare < 0) {
@@ -49,15 +44,26 @@ public class SimulatedTrading {
         }
     }
 
-    private void calculateLastTradeTick(Trade lastTrade, List<Trade> tradeList, List<Trade> tradesWithSimulated) {
-        BigDecimal lastTradePrice = getPrice(lastTrade);
-        int compare = getPrice(tradeList.get(0)).compareTo(lastTradePrice);
-        tick(compare);
-        addSimulatedTrade(tradeList.get(0), tradesWithSimulated);
-    }
-
     private BigDecimal getPrice(Trade trade) {
         return new BigDecimal(trade.getPrice());
+    }
+
+    private void addSimulatedTrade(Trade currentTrade, List<Trade> tradesWithSimulated)
+    {
+        if(tickCounter.getUpticks() == upticksToSell) {
+            tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "sell"));
+        } else if(tickCounter.getDownticks() == downticksToBuy) {
+            tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "buy"));
+        }
+    }
+
+    private void addSimulatedTradesFromNewTrades(List<Trade> tradesWithSimulated, List<Trade> newTrades)
+    {
+        for (int i = 1; i < newTrades.size(); i++) {
+            tradesWithSimulated.add(newTrades.get(i));
+            compareAndTick(newTrades.get(i), newTrades.get(i - 1));
+            addSimulatedTrade(newTrades.get(i), tradesWithSimulated);
+        }
     }
 
     void setTickCounter(TickCounter tickCounter) {

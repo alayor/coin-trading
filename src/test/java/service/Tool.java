@@ -15,11 +15,15 @@ public class Tool {
     }
 
     public static Trade createTrade(String id, String price) {
+        return createTrade(id, price, "sell");
+    }
+
+    public static Trade createTrade(String id, String price, String markerSide) {
         return new Trade(
           "btc_mxn",
           "2017-11-26",
           "100",
-          "sell",
+          markerSide,
           price,
           id
         );

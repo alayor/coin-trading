@@ -56,13 +56,13 @@ public class Trade {
         return simulated;
     }
 
-    public Trade withSimulated(boolean simulated)
+    public Trade withSimulatedAndMarkerSide(boolean simulated, String markerSide)
     {
         Trade trade = new Trade(
                 this.book,
                 this.createdAt,
                 this.amount,
-                this.makerSide,
+                markerSide,
                 this.price,
                 this.tid
         );
