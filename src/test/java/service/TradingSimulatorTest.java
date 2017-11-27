@@ -1,4 +1,4 @@
-package service.tools;
+package service;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -18,17 +18,20 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import service.TradingSimulator;
+import service.tools.TickCounter;
 import service.model.Trade;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SimulatedTradingTest {
-    private SimulatedTrading trading;
+public class TradingSimulatorTest
+{
+    private TradingSimulator trading;
     @Mock
     private TickCounter tickCounter;
 
     @Before
     public void setUp() throws Exception {
-        trading = new SimulatedTrading(3, 3);
+        trading = new TradingSimulator(3, 3);
         trading.setTickCounter(tickCounter);
     }
 

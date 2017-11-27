@@ -1,6 +1,7 @@
-package service.tools;
+package service;
 
 import service.model.Trade;
+import service.tools.TickCounter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -8,13 +9,14 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-public class SimulatedTrading {
+public class TradingSimulator
+{
 
     private final int downticksToBuy;
     private final int upticksToSell;
     private TickCounter tickCounter;
 
-    public SimulatedTrading(int upticksToSell, int downticksToBuy) {
+    public TradingSimulator(int upticksToSell, int downticksToBuy) {
         tickCounter = new TickCounter();
         this.upticksToSell = upticksToSell;
         this.downticksToBuy = downticksToBuy;

@@ -1,7 +1,6 @@
 package service;
 
 import service.model.Trade;
-import service.tools.SimulatedTrading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +11,10 @@ import static java.util.Collections.reverse;
 
 class CurrentTrades {
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
-    private SimulatedTrading simulatedTrading;
+    private TradingSimulator simulatedTrading;
 
     CurrentTrades(List<Trade> trades, int upticksToSell, int downticksToBuy) {
-        simulatedTrading = new SimulatedTrading(upticksToSell, downticksToBuy);
+        simulatedTrading = new TradingSimulator(upticksToSell, downticksToBuy);
         freeSpaceAndAddTrades(trades);
     }
 
@@ -58,7 +57,7 @@ class CurrentTrades {
         return getLast().getTid();
     }
 
-    void setSimulatedTrading(SimulatedTrading simulatedTrading) {
+    void setSimulatedTrading(TradingSimulator simulatedTrading) {
         this.simulatedTrading = simulatedTrading;
     }
 }

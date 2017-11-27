@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.model.Trade;
-import service.tools.SimulatedTrading;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import static service.Tool.createTrades;
 public class CurrentTradesTest {
     private CurrentTrades currentTrades;
     @Mock
-    private SimulatedTrading simulatedTrading;
+    private TradingSimulator simulatedTrading;
 
     @Before
     public void setUp() throws Exception {
