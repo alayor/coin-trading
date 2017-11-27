@@ -20,6 +20,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+import static service.Tool.createTrade;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TradingServiceTest {
@@ -30,11 +31,11 @@ public class TradingServiceTest {
     @Mock
     private TradeResult tradeResult;
     @Mock
-    private TradeResult tradeResultSince;
-    @Mock
     private ScheduledExecutorService scheduleExecutorService;
     @Mock
     private ScheduledFuture future;
+    @Mock
+    private TradingSimulator tradingSimulator;
 
     @Before
     public void setUp() throws Exception {
@@ -44,7 +45,7 @@ public class TradingServiceTest {
     @Test
     public void shouldGetInitialTrades() throws Exception {
         // when
-        tradingService = new TradingService(bitsoApiRequester);
+        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
         // then
         verify(bitsoApiRequester).getTrades(100);
     }
@@ -52,7 +53,7 @@ public class TradingServiceTest {
     @Test
     public void shouldScheduleTradesUpdatingProcess() throws Exception {
         // when
-        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService, tradingSimulator);
         // then
         verify(scheduleExecutorService).scheduleWithFixedDelay(
           tradingService.getUpdateTradesRunnable(), 5, 5, SECONDS);
@@ -63,7 +64,7 @@ public class TradingServiceTest {
         // given
         doReturn(future).when(scheduleExecutorService).scheduleWithFixedDelay(
           any(), anyLong(), anyLong(), any());
-        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService, tradingSimulator);
         // when
         tradingService.stop();
         // then
@@ -74,23 +75,14 @@ public class TradingServiceTest {
     public void shouldAddNewTradesToArrayQueue() throws Exception {
         // given
         given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResult);
-        List<Trade> trades = singletonList(createTrade("6789"));
-        given(tradeResult.getTradeList()).willReturn(trades);
-        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService);
-        // when
+        List<Trade> newTrades = singletonList(createTrade("6789", "100"));
+        given(tradeResult.getTradeList()).willReturn(newTrades);
+        given(tradingSimulator.addSimulatedTrades(any(), anyListOf(Trade.class))).willReturn(newTrades);
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService, tradingSimulator);
         tradingService.updateTrades();
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades();
         // then
-        assertEquals(2, tradingService.getLastTrades().size());
-    }
-
-    private Trade createTrade(String id) {
-        return new Trade(
-          "btc_mxn",
-          "2017-11-26",
-          "100",
-          "buy",
-          "200",
-          id
-        );
+        assertEquals(2, lastTrades.size());
     }
 }

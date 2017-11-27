@@ -25,13 +25,13 @@ public class TradingService {
         return scheduledThreadPoolExecutor;
     }
 
-    public TradingService(BitsoApiRequester bitsoApiRequester) {
-        this(bitsoApiRequester, getScheduledThreadPoolExecutor());
+    public TradingService(BitsoApiRequester bitsoApiRequester, TradingSimulator tradingSimulator) {
+        this(bitsoApiRequester, getScheduledThreadPoolExecutor(), tradingSimulator);
     }
 
-    TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor) {
+    TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor, TradingSimulator tradingSimulator) {
         this.bitsoApiRequester = bitsoApiRequester;
-        currentTrades = new CurrentTrades(getTradesFromApi(bitsoApiRequester), 3, 3);
+        currentTrades = new CurrentTrades(getTradesFromApi(bitsoApiRequester), tradingSimulator);
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 

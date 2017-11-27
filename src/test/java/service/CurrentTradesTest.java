@@ -23,18 +23,17 @@ import static service.Tool.createTrades;
 public class CurrentTradesTest {
     private CurrentTrades currentTrades;
     @Mock
-    private TradingSimulator simulatedTrading;
+    private TradingSimulator tradingSimulator;
 
     @Before
     public void setUp() throws Exception {
-        currentTrades = new CurrentTrades(emptyList(), 3, 3);
-        currentTrades.setSimulatedTrading(simulatedTrading);
+        currentTrades = new CurrentTrades(emptyList(), tradingSimulator);
     }
 
     @Test
     public void shouldNotThrowExceptionIfConstructorArgumentIsNull() throws Exception {
         // when
-        currentTrades = new CurrentTrades(null, 3, 3);
+        currentTrades = new CurrentTrades(null, tradingSimulator);
         // then no exception is thrown
     }
 
@@ -48,7 +47,7 @@ public class CurrentTradesTest {
     @Test
     public void shouldReturnTradesInReverseOrderAsAdded() throws Exception {
         // given
-        given(simulatedTrading.addSimulatedTrades(any(), any())).willReturn(asList(
+        given(tradingSimulator.addSimulatedTrades(any(), any())).willReturn(asList(
           createTrade("1233", "1000"),
           createTrade("1244", "1000")
         ));
@@ -63,7 +62,7 @@ public class CurrentTradesTest {
     @Test
     public void shouldGetLastTradeId() throws Exception {
         // given
-        given(simulatedTrading.addSimulatedTrades(any(), any())).willReturn(asList(
+        given(tradingSimulator.addSimulatedTrades(any(), any())).willReturn(asList(
           createTrade("1233", "1000"),
           createTrade("1244", "1000")
         ));
@@ -77,9 +76,9 @@ public class CurrentTradesTest {
     @Test
     public void shouldFreeSpaceFromQueueIfEmpty() throws Exception {
         // given
-        currentTrades = new CurrentTrades(createTrades(500), 3, 3);
-        currentTrades.setSimulatedTrading(simulatedTrading);
-        given(simulatedTrading.addSimulatedTrades(any(), any())).willReturn(
+        currentTrades = new CurrentTrades(createTrades(500), tradingSimulator);
+        currentTrades.setTradingSimulator(tradingSimulator);
+        given(tradingSimulator.addSimulatedTrades(any(), any())).willReturn(
           singletonList(createTrade("501", "100")));
         // when
         currentTrades.addTrades(emptyList());
@@ -92,7 +91,7 @@ public class CurrentTradesTest {
     @Test
     public void shouldBeCreatedWithInitialTrades() throws Exception {
         // given
-        currentTrades = new CurrentTrades(createTrades(3), 3, 3);
+        currentTrades = new CurrentTrades(createTrades(3), tradingSimulator);
         // when
         List<Trade> trades = currentTrades.getTrades();
         // then
@@ -103,23 +102,23 @@ public class CurrentTradesTest {
     public void shouldCallContrarianSimulatedTrading() throws Exception {
         // given
         Trade trade = createTrade("1", "100");
-        currentTrades = new CurrentTrades(singletonList(trade), 3, 3);
-        currentTrades.setSimulatedTrading(simulatedTrading);
+        currentTrades = new CurrentTrades(singletonList(trade), tradingSimulator);
+        currentTrades.setTradingSimulator(tradingSimulator);
         List<Trade> tradeList = singletonList(createTrade("2", "1002"));
         currentTrades.addTrades(tradeList);
         // when
         currentTrades.getTrades();
         // then
-        verify(simulatedTrading).addSimulatedTrades(trade, tradeList);
+        verify(tradingSimulator).addSimulatedTrades(trade, tradeList);
     }
 
     @Test
     public void addTradesFromSimulatedTradesToCurrentTrades() throws Exception {
         // given
-        currentTrades = new CurrentTrades(emptyList(), 3, 3);
-        currentTrades.setSimulatedTrading(simulatedTrading);
+        currentTrades = new CurrentTrades(emptyList(), tradingSimulator);
+        currentTrades.setTradingSimulator(tradingSimulator);
         List<Trade> trades = singletonList(createTrade("2", "200"));
-        given(simulatedTrading.addSimulatedTrades(any(), any())).willReturn(trades);
+        given(tradingSimulator.addSimulatedTrades(any(), any())).willReturn(trades);
         currentTrades.addTrades(emptyList());
         // when
         List<Trade> actualTrades = currentTrades.getTrades();

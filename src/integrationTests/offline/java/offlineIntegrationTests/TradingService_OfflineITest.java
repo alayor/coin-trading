@@ -3,6 +3,7 @@ package offlineIntegrationTests;
 import offlineIntegrationTests.tools.MockedServer;
 import org.junit.*;
 import service.TradingService;
+import service.TradingSimulator;
 import service.model.Trade;
 import service.tools.BitsoApiRequester;
 
@@ -15,6 +16,7 @@ public class TradingService_OfflineITest
 {
 
     private BitsoApiRequester bitsoApiRequester;
+    private TradingSimulator tradingSimulator;
     private static MockedServer mockedServer = new MockedServer();
     private TradingService tradingService;
 
@@ -31,6 +33,7 @@ public class TradingService_OfflineITest
     @Before
     public void setUp() throws Exception {
         bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/threeTradesFixture.json");
+        tradingSimulator = new TradingSimulator(3, 3);
     }
 
     @After
@@ -48,7 +51,7 @@ public class TradingService_OfflineITest
     @Test
     public void shouldReturnLastTradesInDescOrder() throws Exception {
         // given
-        tradingService = new TradingService(bitsoApiRequester);
+        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
         // when
         List<Trade> lastTrades = tradingService.getLastTrades();
         // then
@@ -60,7 +63,7 @@ public class TradingService_OfflineITest
     @Test
     public void shouldIncludeNewTradeAfterUpdating() throws Exception {
         // given
-        tradingService = new TradingService(bitsoApiRequester);
+        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
         copy(
           getPath("tools/fixtures/singleTradeFixture.json"),
           getPath("tools/fixtures/threeTradesFixture.json")
@@ -99,7 +102,7 @@ public class TradingService_OfflineITest
     public void shouldRemoveOldTradeWhenTradingArrayIsFull() throws Exception {
         // given
         bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/fiveHundredTradesFixture.json");
-        tradingService = new TradingService(bitsoApiRequester);
+        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
         copy(
           getPath("tools/fixtures/singleTradeFixture.json"),
           getPath("tools/fixtures/fiveHundredTradesFixture.json")

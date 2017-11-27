@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import service.TradingService;
+import service.TradingSimulator;
 import service.tools.BitsoApiRequester;
 
 public class Main extends Application {
@@ -13,7 +14,7 @@ public class Main extends Application {
     private TradingService tradingService;
     @Override
     public void start(Stage primaryStage) throws Exception{
-        tradingService = new TradingService(new BitsoApiRequester());
+        tradingService = new TradingService(new BitsoApiRequester(), new TradingSimulator(3, 3));
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));

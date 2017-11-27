@@ -11,15 +11,15 @@ import static java.util.Collections.reverse;
 
 class CurrentTrades {
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
-    private TradingSimulator simulatedTrading;
+    private TradingSimulator tradingSimulator;
 
-    CurrentTrades(List<Trade> trades, int upticksToSell, int downticksToBuy) {
-        simulatedTrading = new TradingSimulator(upticksToSell, downticksToBuy);
+    CurrentTrades(List<Trade> trades, TradingSimulator tradingSimulator) {
+        this.tradingSimulator = tradingSimulator;
         freeSpaceAndAddTrades(trades);
     }
 
     void addTrades(List<Trade> tradeList) {
-        tradeList = simulatedTrading.addSimulatedTrades(getLast(), tradeList);
+        tradeList = tradingSimulator.addSimulatedTrades(getLast(), tradeList);
         freeSpaceAndAddTrades(tradeList);
     }
 
@@ -57,7 +57,7 @@ class CurrentTrades {
         return getLast().getTid();
     }
 
-    void setSimulatedTrading(TradingSimulator simulatedTrading) {
-        this.simulatedTrading = simulatedTrading;
+    void setTradingSimulator(TradingSimulator tradingSimulator) {
+        this.tradingSimulator = tradingSimulator;
     }
 }
