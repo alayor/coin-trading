@@ -11,7 +11,6 @@ import static java.util.Collections.singletonList;
 
 public class TradingSimulator
 {
-
     private final int downticksToBuy;
     private final int upticksToSell;
     private TickCounter tickCounter;
@@ -54,8 +53,10 @@ public class TradingSimulator
     {
         if(tickCounter.getUpticks() == upticksToSell) {
             tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "sell"));
+            tickCounter.reset();
         } else if(tickCounter.getDownticks() == downticksToBuy) {
             tradesWithSimulated.add(currentTrade.withSimulatedAndMarkerSide(true, "buy"));
+            tickCounter.reset();
         }
     }
 

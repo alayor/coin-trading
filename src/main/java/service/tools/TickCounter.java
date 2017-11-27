@@ -6,18 +6,14 @@ public class TickCounter {
     private AtomicInteger upticks = new AtomicInteger(0);
     private AtomicInteger downticks = new AtomicInteger(0);
 
-    public void uptick() {
-        synchronized (this) {
-            upticks.incrementAndGet();
-            downticks.set(0);
-        }
+    public synchronized void uptick() {
+        upticks.incrementAndGet();
+        downticks.set(0);
     }
 
-    public void downtick() {
-        synchronized (this) {
-            downticks.incrementAndGet();
-            upticks.set(0);
-        }
+    public synchronized void downtick() {
+        downticks.incrementAndGet();
+        upticks.set(0);
     }
 
     public int getUpticks() {
@@ -26,5 +22,11 @@ public class TickCounter {
 
     public int getDownticks() {
         return downticks.get();
+    }
+
+    public synchronized void reset()
+    {
+        upticks.set(0);
+        downticks.set(0);
     }
 }

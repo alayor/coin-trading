@@ -225,4 +225,35 @@ public class TradingSimulatorTest
         // then
         assertEquals("buy", trades.get(3).getMakerSide());
     }
+
+    @Test
+    public void shouldResetTickCounterWhenNewSellTradeIsAdded() throws Exception {
+        // given
+        Trade lastTrade = createTrade("1", "100");
+        List<Trade> newTrades = asList(
+                createTrade("2", "200"),
+                createTrade("3", "300"),
+                createTrade("4", "400", "buy")
+        );
+        givenGetUpticksWillReturnAtCall(3, 3);
+        // when
+        trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        verify(tickCounter).reset();
+    }
+
+    @Test
+    public void shouldResetTickCounterWhenNewBuyTradeIsAdded() throws Exception {
+        // given
+        Trade lastTrade = createTrade("1", "100");
+        List<Trade> newTrades = asList(
+                createTrade("2", "200"),
+                createTrade("3", "300"),
+                createTrade("4", "400", "sell")
+        );
+        givenGetDownticksWillReturnAtCall(3, 3);
+        // when
+        trading.addSimulatedTrades(lastTrade, newTrades);
+        // then
+        verify(tickCounter).reset();    }
 }
