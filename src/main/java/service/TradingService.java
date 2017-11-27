@@ -14,7 +14,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class TradingService {
 
     private final BitsoApiRequester bitsoApiRequester;
-    private ScheduledFuture<?> scheduledFuture;
+    private final ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
 
@@ -44,12 +44,12 @@ public class TradingService {
     void updateTrades() {
         TradeResult tradesSince = bitsoApiRequester.getTradesSince(trades.peekLast().getTid());
         List<Trade> tradeList = tradesSince.getTradeList();
-        int tradesToPoll = tradeList.size() - trades.remainingCapacity();
-        freeSpace(tradesToPoll);
+        freeSpace(tradeList);
         trades.addAll(tradeList);
     }
 
-    private void freeSpace(int tradesToPoll) {
+    private void freeSpace(List<Trade> tradeList) {
+        int tradesToPoll = tradeList.size() - trades.remainingCapacity();
         if(tradesToPoll > 0) {
             for (int i = 0; i < tradesToPoll; i++) {
                 trades.poll();
