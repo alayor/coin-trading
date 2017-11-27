@@ -14,7 +14,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TradingService {
 
-    private final CurrentTrades currentTrades;
+    private CurrentTrades currentTrades;
     private final BitsoApiRequester bitsoApiRequester;
     private final ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
@@ -54,7 +54,12 @@ public class TradingService {
         scheduledFuture.cancel(false);
     }
 
-    public List<Trade> getLastTrades() {
+    public List<Trade> getLastTrades(int limit) {
         return currentTrades.getTrades();
+    }
+
+    void setCurrentTrades(CurrentTrades currentTrades)
+    {
+        this.currentTrades = currentTrades;
     }
 }

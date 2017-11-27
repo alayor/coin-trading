@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 
 public class TradingService_OfflineITest
 {
-
     private BitsoApiRequester bitsoApiRequester;
     private TradingSimulator tradingSimulator;
     private static MockedServer mockedServer = new MockedServer();
@@ -32,7 +31,6 @@ public class TradingService_OfflineITest
 
     @Before
     public void setUp() throws Exception {
-        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/threeTradesFixture.json");
         tradingSimulator = new TradingSimulator(3, 3);
     }
 
@@ -51,9 +49,10 @@ public class TradingService_OfflineITest
     @Test
     public void shouldReturnLastTradesInDescOrder() throws Exception {
         // given
+        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/threeTradesFixture.json");
         tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
         // when
-        List<Trade> lastTrades = tradingService.getLastTrades();
+        List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then
         assertEquals("2129342", lastTrades.get(0).getTid());
         assertEquals("2129339", lastTrades.get(1).getTid());
@@ -63,6 +62,7 @@ public class TradingService_OfflineITest
     @Test
     public void shouldIncludeNewTradeAfterUpdating() throws Exception {
         // given
+        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/threeTradesFixture.json");
         tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
         copy(
           getPath("tools/fixtures/singleTradeFixture.json"),
@@ -70,7 +70,7 @@ public class TradingService_OfflineITest
         );
         Thread.sleep(6000);
         // when
-        List<Trade> lastTrades = tradingService.getLastTrades();
+        List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then
         assertEquals(4, lastTrades.size());
         assertEquals("2129343", lastTrades.get(0).getTid());
@@ -109,9 +109,20 @@ public class TradingService_OfflineITest
         );
         Thread.sleep(6000);
         // when
-        List<Trade> lastTrades = tradingService.getLastTrades();
+        List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then
         assertEquals(500, lastTrades.size());
         assertEquals("2129343", lastTrades.get(0).getTid());
+    }
+
+    @Test
+    public void shouldReturnLastTradesAccordingToLimit() throws Exception {
+        // given
+        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/fiveHundredTradesFixture.json");
+        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
+        // when
+        List<Trade> lastTrades = tradingService.getLastTrades(25);
+        // then
+        assertEquals(10, lastTrades.size());
     }
 }
