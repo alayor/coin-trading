@@ -6,32 +6,22 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Properties;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static service.tools.AppProperties.getProperty;
 
 public class BitsoApiRequester {
 
     private final String uri;
     private Client client = ClientBuilder.newClient();
     private static UriArgumentAppender appender = new UriArgumentAppender();
-    private static Properties properties = new Properties();
-    static {
-        try {
-            properties.load(BitsoApiRequester.class.getClassLoader()
-              .getResourceAsStream("config.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
 
     public BitsoApiRequester(String uri) throws IOException {
         this.uri = uri;
     }
 
     public BitsoApiRequester() {
-        this.uri = properties.getProperty("trade_url");
+        this.uri = getProperty("trade_url");
     }
 
     public TradeResult getTrades(int limit) {
@@ -41,7 +31,7 @@ public class BitsoApiRequester {
     }
 
     private TradeResult getTradeResult(URI uri) {
-        uri = appender.appendArgument(uri, "book", properties.getProperty("default_book"));
+        uri = appender.appendArgument(uri, "book", getProperty("default_book"));
         return client
           .target(uri)
           .request(APPLICATION_JSON_TYPE)
