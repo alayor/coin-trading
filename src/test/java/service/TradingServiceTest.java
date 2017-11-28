@@ -83,6 +83,18 @@ public class TradingServiceTest {
     }
 
     @Test
+    public void shouldShutdownExecutor() throws Exception {
+        // given
+        doReturn(future).when(scheduleExecutorService).scheduleWithFixedDelay(
+          any(), anyLong(), anyLong(), any());
+        tradingService = new TradingService(bitsoApiRequester, scheduleExecutorService, tradingSimulator);
+        // when
+        tradingService.stop();
+        // then
+        verify(scheduleExecutorService).shutdown();
+    }
+
+    @Test
     public void shouldAddNewTradesToCurrentTrades() throws Exception {
         // given
         given(bitsoApiRequester.getTradesSince(anyString())).willReturn(tradeResult);
@@ -126,4 +138,5 @@ public class TradingServiceTest {
         // then
         assertEquals(10, lastTrades.size());
     }
+
 }

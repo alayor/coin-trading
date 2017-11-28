@@ -19,6 +19,7 @@ public class TradingService {
     private final BitsoApiRequester bitsoApiRequester;
     private final ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
+    private final ScheduledExecutorService executor;
 
     private static ScheduledThreadPoolExecutor getScheduledThreadPoolExecutor() {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -33,6 +34,7 @@ public class TradingService {
     TradingService(BitsoApiRequester bitsoApiRequester, ScheduledExecutorService executor, TradingSimulator tradingSimulator) {
         this.bitsoApiRequester = bitsoApiRequester;
         currentTrades = new CurrentTrades(getTradesFromApi(bitsoApiRequester), tradingSimulator);
+        this.executor = executor;
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 
@@ -52,7 +54,8 @@ public class TradingService {
     }
 
     public void stop() {
-        scheduledFuture.cancel(false);
+        scheduledFuture.cancel(true);
+        executor.shutdown();
     }
 
     public List<Trade> getLastTrades(int limit) {
