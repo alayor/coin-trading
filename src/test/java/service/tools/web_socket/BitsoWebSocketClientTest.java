@@ -1,4 +1,4 @@
-package service.tools;
+package service.tools.web_socket;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.junit.Before;
@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.tools.web_socket.BitsoWebSocketClient;
 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.Endpoint;

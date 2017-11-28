@@ -16,8 +16,9 @@ public class BitsoWebSocketClient {
     private Endpoint endpoint;
     private ClientEndpointConfig config = ClientEndpointConfig.Builder.create().build();
 
-    public BitsoWebSocketClient() throws URISyntaxException {
+    public BitsoWebSocketClient(Endpoint endpoint) throws URISyntaxException {
         uri = new URI("wss://ws.bitso.com/");
+        this.endpoint = endpoint;
     }
 
     public BitsoWebSocketClient(URI uri) {
@@ -28,15 +29,15 @@ public class BitsoWebSocketClient {
        clientManager.connectToServer(endpoint, config, uri);
     }
 
-    public void setClientManager(ClientManager clientManager) {
+    void setClientManager(ClientManager clientManager) {
         this.clientManager = clientManager;
     }
 
-    public void setEndpoint(Endpoint endpoint) {
+    void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
     }
 
-    public void setConfig(ClientEndpointConfig config) {
+    void setConfig(ClientEndpointConfig config) {
         this.config = config;
     }
 }

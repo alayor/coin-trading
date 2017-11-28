@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import java.util.Map;
 
 import static service.tools.AppProperties.getProperty;
 
-public class WebSocketEndpoint extends Endpoint {
+public class BitsoEndpoint extends Endpoint {
     private static Map<String, String> subscriptionInfo = new HashMap<>();
 
     static {
@@ -21,9 +20,15 @@ public class WebSocketEndpoint extends Endpoint {
         subscriptionInfo.put("type", "trades");
     }
 
+    private final BitsoMessageHandler messageHandler;
+
+    public BitsoEndpoint(BitsoMessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
+
     @Override
     public void onOpen(Session session, EndpointConfig config) {
-        session.addMessageHandler(new Handler());
+        session.addMessageHandler(messageHandler);
         sendMessage(session, new JSONObject(subscriptionInfo).toString());
     }
 
@@ -33,14 +38,6 @@ public class WebSocketEndpoint extends Endpoint {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
-        }
-    }
-
-    private class Handler implements MessageHandler.Whole<String> {
-
-        @Override
-        public void onMessage(String message) {
-
         }
     }
 }
