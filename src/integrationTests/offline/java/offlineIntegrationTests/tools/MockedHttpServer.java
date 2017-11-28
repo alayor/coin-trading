@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-public class MockedServer extends NanoHTTPD {
+public class MockedHttpServer extends NanoHTTPD {
 
-    public MockedServer() {
+    public MockedHttpServer() {
         super(9999);
     }
 

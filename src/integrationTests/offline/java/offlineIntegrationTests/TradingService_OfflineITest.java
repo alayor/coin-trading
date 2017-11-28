@@ -1,6 +1,6 @@
 package offlineIntegrationTests;
 
-import offlineIntegrationTests.tools.MockedServer;
+import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.*;
 import service.TradingService;
 import service.TradingSimulator;
@@ -12,11 +12,10 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class TradingService_OfflineITest
-{
+public class TradingService_OfflineITest {
     private BitsoApiRequester bitsoApiRequester;
     private TradingSimulator tradingSimulator;
-    private static MockedServer mockedServer = new MockedServer();
+    private static MockedHttpServer mockedServer = new MockedHttpServer();
     private TradingService tradingService;
 
     @BeforeClass

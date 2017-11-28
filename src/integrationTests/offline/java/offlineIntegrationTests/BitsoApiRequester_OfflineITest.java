@@ -1,6 +1,6 @@
 package offlineIntegrationTests;
 
-import offlineIntegrationTests.tools.MockedServer;
+import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class BitsoApiRequester_OfflineITest
 {
     private BitsoApiRequester bitsoApiRequester;
-    private static MockedServer mockedServer = new MockedServer();
+    private static MockedHttpServer mockedServer = new MockedHttpServer();
 
     @BeforeClass
     public static void setUp() {
