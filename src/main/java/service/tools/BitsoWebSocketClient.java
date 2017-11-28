@@ -1,86 +1,42 @@
 package service.tools;
 
-import javax.websocket.*;
+import org.glassfish.tyrus.client.ClientManager;
+
+import javax.websocket.ClientEndpointConfig;
+import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
-@ClientEndpoint
 public class BitsoWebSocketClient {
-    Session userSession = null;
-    private MessageHandler messageHandler;
 
-    public BitsoWebSocketClient(URI endpointURI) {
-        try {
-            WebSocketContainer container = ContainerProvider
-              .getWebSocketContainer();
-            container.connectToServer(this, endpointURI);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private URI uri;
+    private ClientManager clientManager = ClientManager.createClient();
+    private Endpoint endpoint;
+    private ClientEndpointConfig config = ClientEndpointConfig.Builder.create().build();
+
+    public BitsoWebSocketClient() throws URISyntaxException {
+        uri = new URI("wss://ws.bitso.com/");
     }
 
-    /**
-     * Callback hook for Connection open events.
-     *
-     * @param userSession
-     *            the userSession which is opened.
-     */
-    @OnOpen
-    public void onOpen(Session userSession) {
-        this.userSession = userSession;
-        userSession.getAsyncRemote().sendText("");
+    public BitsoWebSocketClient(URI uri) {
+        this.uri = uri;
     }
 
-    /**
-     * Callback hook for Connection close events.
-     *
-     * @param userSession
-     *            the userSession which is getting closed.
-     * @param reason
-     *            the reason for connection close
-     */
-    @OnClose
-    public void onClose(Session userSession, CloseReason reason) {
-        this.userSession = null;
+    public void connect() throws IOException, DeploymentException {
+       clientManager.connectToServer(endpoint, config, uri);
     }
 
-    /**
-     * Callback hook for Message Events. This method will be invoked when a
-     * client send a message.
-     *
-     * @param message
-     *            The text message
-     */
-    @OnMessage
-    public void onMessage(String message) {
-        if (this.messageHandler != null)
-            this.messageHandler.handleMessage(message);
+    public void setClientManager(ClientManager clientManager) {
+        this.clientManager = clientManager;
     }
 
-    /**
-     * register message handler
-     *
-     * @param message
-     */
-    public void addMessageHandler(MessageHandler msgHandler) {
-        this.messageHandler = msgHandler;
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
-    /**
-     * Send a message.
-     *
-     * @param user
-     * @param message
-     */
-    public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
-    }
-
-    /**
-     * Message handler.
-     *
-     * @author Jiji_Sasidharan
-     */
-    public static interface MessageHandler {
-        public void handleMessage(String message);
+    public void setConfig(ClientEndpointConfig config) {
+        this.config = config;
     }
 }

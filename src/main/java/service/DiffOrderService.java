@@ -24,9 +24,7 @@ public class DiffOrderService {
     public static void main(String [] args){
         try {
             messageLatch = new CountDownLatch(1);
-
             final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
-
             ClientManager client = ClientManager.createClient();
             client.connectToServer(new Endpoint() {
 
