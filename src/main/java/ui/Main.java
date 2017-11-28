@@ -19,9 +19,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         mockedServer.start();
         tradingService = new TradingService(new BitsoApiRequester("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setMainApp(this);
+        primaryStage.setTitle("Coin Trading");
+        primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.show();
     }
 
@@ -30,6 +33,11 @@ public class Main extends Application {
         System.out.println("Stage is closing");
         tradingService.stop();
         mockedServer.stop();
+    }
+
+    public TradingService getTradingService()
+    {
+        return tradingService;
     }
 
     public static void main(String[] args) {
