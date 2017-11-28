@@ -7,11 +7,20 @@ import javafx.scene.control.TableView;
 import ui.data.Trade;
 
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Controller {
     @FXML
     private TableView<Trade> tableView;
     private Main mainApp;
+
+    @FXML
+    public void initialize() {
+        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+        scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
+        scheduledThreadPoolExecutor.scheduleWithFixedDelay(this::getTrades, 5, 5, TimeUnit.SECONDS);
+    }
 
     void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
@@ -21,14 +30,17 @@ public class Controller {
     public void getTrades() {
         List<service.model.Trade> lastTrades = mainApp.getTradingService().getLastTrades(25);
         ObservableList<Trade> data = tableView.getItems();
-        service.model.Trade trade = lastTrades.get(0);
-        data.add(new Trade(
-                trade.getCreatedAt(),
-                trade.getAmount(),
-                trade.getMakerSide(),
-                trade.getPrice(),
-                trade.getTid(),
-                Boolean.toString(trade.isSimulated())
-        ));
+        data.clear();
+        for (service.model.Trade lastTrade : lastTrades)
+        {
+            data.add(new Trade(
+                    lastTrade.getCreatedAt(),
+                    lastTrade.getAmount(),
+                    lastTrade.getMakerSide(),
+                    lastTrade.getPrice(),
+                    lastTrade.getTid(),
+                    Boolean.toString(lastTrade.isSimulated())
+            ));
+        }
     }
 }
