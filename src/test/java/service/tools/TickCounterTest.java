@@ -1,16 +1,24 @@
 package service.tools;
 
+import org.junit.Before;
+import org.junit.Test;
+import service.UnitTestTool.AsyncTester;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 public class TickCounterTest {
+
+    private TickCounter tickCounter;
+
+    @Before
+    public void setUp() throws Exception {
+        tickCounter = TickCounter.getInstance();
+    }
 
     @Test
     public void uptickShouldIncrementUptickCount() throws Exception {
         // when
-        TickCounter tickCounter = new TickCounter();
         int uptick = tickCounter.uptick();
         // then
         assertEquals(1, uptick);
@@ -19,7 +27,6 @@ public class TickCounterTest {
     @Test
     public void downTickShouldIncrementDowntickCount() throws Exception {
         // when
-        TickCounter tickCounter = new TickCounter();
         int downtick = tickCounter.downtick();
         // then
         assertEquals(1, downtick);
@@ -28,7 +35,6 @@ public class TickCounterTest {
     @Test
     public void uptickShouldResetDownticksCount() throws Exception {
         // given
-        TickCounter tickCounter = new TickCounter();
         tickCounter.downtick();
         tickCounter.downtick();
         //when
@@ -40,7 +46,6 @@ public class TickCounterTest {
     @Test
     public void downtickShouldResetUpticksCount() throws Exception {
         // given
-        TickCounter tickCounter = new TickCounter();
         tickCounter.uptick();
         tickCounter.uptick();
         // when
@@ -51,25 +56,17 @@ public class TickCounterTest {
 
     @Test
     public void shouldUptickAtomically() throws Exception {
-        TickCounter tickCounter = new TickCounter();
         int threadsCount = 5;
         AsyncTester[] testers = new AsyncTester[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
             testers[i] = new AsyncTester(() -> {
-                synchronized (this)
-                {
-                    // given
-                    tickCounter.uptick();
-                    int last = tickCounter.uptick();
-                    for (int i1 = 0; i1 < 1000000; i1++)
-                    {
-                        // when
-                        tickCounter.uptick();
-                        int value = tickCounter.uptick();
-                        //then
-                        assertTrue(value > last);
-                        last = value;
-                    }
+                // given
+                for (int i1 = 0; i1 < 1000000; i1++) {
+                    // when
+                    int uptick1 = tickCounter.uptick();
+                    int uptick2 = tickCounter.uptick();
+                    //then
+                    assertTrue(uptick2 > uptick1);
                 }
             });
             testers[i].start();
@@ -80,25 +77,17 @@ public class TickCounterTest {
 
     @Test
     public void shouldDowntickAtomically() throws Exception {
-        TickCounter tickCounter = new TickCounter();
         int threadsCount = 5;
         AsyncTester[] testers = new AsyncTester[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
             testers[i] = new AsyncTester(() -> {
-                synchronized (this)
-                {
-                    // given
-                    tickCounter.downtick();
-                    int last = tickCounter.downtick();
-                    for (int i1 = 0; i1 < 1000000; i1++)
-                    {
-                        // when
-                        tickCounter.downtick();
-                        int value = tickCounter.downtick();
-                        //then
-                        assertTrue(value > last);
-                        last = value;
-                    }
+                // given
+                for (int i1 = 0; i1 < 1000000; i1++) {
+                    // when
+                    int downtick1 = tickCounter.downtick();
+                    int downtick2 = tickCounter.downtick();
+                    //then
+                    assertTrue(downtick2 > downtick1);
                 }
             });
             testers[i].start();
@@ -109,17 +98,14 @@ public class TickCounterTest {
 
     @Test
     public void shouldClearUpticksAtomically() throws Exception {
-        TickCounter tickCounter = new TickCounter();
         int threadsCount = 5;
         AsyncTester[] testers = new AsyncTester[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
             testers[i] = new AsyncTester(() -> {
-                synchronized (this)
-                {
+                synchronized (this) {
                     // given
                     tickCounter.uptick();
-                    for (int i1 = 0; i1 < 1000000; i1++)
-                    {
+                    for (int i1 = 0; i1 < 1000000; i1++) {
                         // when
                         tickCounter.downtick();
                         //then
@@ -135,17 +121,14 @@ public class TickCounterTest {
 
     @Test
     public void shouldClearDownticksAtomically() throws Exception {
-        TickCounter tickCounter = new TickCounter();
         int threadsCount = 5;
         AsyncTester[] testers = new AsyncTester[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
             testers[i] = new AsyncTester(() -> {
-                synchronized (this)
-                {
+                synchronized (this) {
                     // given
                     tickCounter.downtick();
-                    for (int i1 = 0; i1 < 1000000; i1++)
-                    {
+                    for (int i1 = 0; i1 < 1000000; i1++) {
                         // when
                         tickCounter.uptick();
                         //then
@@ -159,41 +142,9 @@ public class TickCounterTest {
             tester.test();
     }
 
-    private static class AsyncTester {
-        private Thread thread;
-        private volatile Error error;
-        private volatile RuntimeException runtimeExc;
-
-        AsyncTester(final Runnable runnable) {
-            thread = new Thread(() -> {
-                try {
-                    runnable.run();
-                } catch (Error e) {
-                    error = e;
-                } catch (RuntimeException e) {
-                    runtimeExc = e;
-                }
-            });
-        }
-
-        void start() {
-            thread.start();
-        }
-
-        void test() throws InterruptedException {
-            thread.join();
-            if (error != null)
-                throw error;
-            if (runtimeExc != null)
-                throw runtimeExc;
-        }
-    }
-
     @Test
-    public void shouldResetUpticks() throws Exception
-    {
+    public void shouldResetUpticks() throws Exception {
         // given
-        TickCounter tickCounter = new TickCounter();
         tickCounter.uptick();
         tickCounter.uptick();
         // when
@@ -203,10 +154,8 @@ public class TickCounterTest {
     }
 
     @Test
-    public void shouldResetDownticks() throws Exception
-    {
+    public void shouldResetDownticks() throws Exception {
         // given
-        TickCounter tickCounter = new TickCounter();
         tickCounter.downtick();
         tickCounter.downtick();
         // when
@@ -217,17 +166,14 @@ public class TickCounterTest {
 
     @Test
     public void shouldResetUpticksAtomically() throws Exception {
-        TickCounter tickCounter = new TickCounter();
         int threadsCount = 5;
         AsyncTester[] testers = new AsyncTester[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
             testers[i] = new AsyncTester(() -> {
-                synchronized (this)
-                {
+                synchronized (this) {
                     // given
                     tickCounter.uptick();
-                    for (int i1 = 0; i1 < 1000000; i1++)
-                    {
+                    for (int i1 = 0; i1 < 1000000; i1++) {
                         // when
                         tickCounter.reset();
                         //then
@@ -243,17 +189,14 @@ public class TickCounterTest {
 
     @Test
     public void shouldResetDownticksAtomically() throws Exception {
-        TickCounter tickCounter = new TickCounter();
         int threadsCount = 5;
         AsyncTester[] testers = new AsyncTester[threadsCount];
         for (int i = 0; i < threadsCount; i++) {
             testers[i] = new AsyncTester(() -> {
-                synchronized (this)
-                {
+                synchronized (this) {
                     // given
                     tickCounter.downtick();
-                    for (int i1 = 0; i1 < 1000000; i1++)
-                    {
+                    for (int i1 = 0; i1 < 1000000; i1++) {
                         // when
                         tickCounter.reset();
                         //then

@@ -1,33 +1,31 @@
-/* Copyright 2017 Sabre Holdings */
 package offlineIntegrationTests;
-
-import static java.util.Arrays.asList;
-import static offlineIntegrationTests.tools.TraderCreator.createTrade;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import service.TradingSimulator;
 import service.model.Trade;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static offlineIntegrationTests.tools.TraderCreator.createTrade;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class TradingSimulator_OfflineITest
 {
     private TradingSimulator tradingSimulator;
 
     @Before
-    public void setUp() throws Exception
-    {
-
+    public void setUp() throws Exception {
+        tradingSimulator = new TradingSimulator(3, 3);
+        tradingSimulator.resetCounter();
     }
 
     @Test
     public void shouldNotReturnSimulatedTradeIfUpticksLessThanUpticksToSell() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(3, 3);
         List<Trade> newTrades = asList(
                 createTrade("2", "100"),
                 createTrade("3", "101"),
@@ -40,11 +38,14 @@ public class TradingSimulator_OfflineITest
         assertEquals(4, trades.size());
     }
 
+    private TradingSimulator getTradingSimulator(int upticksToSell, int downticksToBuy) {
+        return new TradingSimulator(upticksToSell, downticksToBuy);
+    }
+
     @Test
     public void shouldAddSellSimulatedTradeIfUpticksEqualToUpticksToSell() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(3, 3);
         List<Trade> newTrades = asList(
                 createTrade("2", "101", "buy"),
                 createTrade("3", "102", "buy"),
@@ -63,7 +64,7 @@ public class TradingSimulator_OfflineITest
     public void shouldAddBuySimulatedTradeIfDownticksEqualToDownticksToBuy() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(3, 2);
+        tradingSimulator.setDownticksToBuy(2);
         List<Trade> newTrades = asList(
                 createTrade("2", "102", "sell"),
                 createTrade("3", "101", "sell"),
@@ -81,7 +82,7 @@ public class TradingSimulator_OfflineITest
     public void shouldAddMultipleSellSimulatedTradeIfUpticksEqualToUpticksToSell() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(2, 3);
+        tradingSimulator.setUpticksToSell(2);
         List<Trade> newTrades = asList(
                 createTrade("2", "101", "buy"),
                 createTrade("3", "102", "buy"),
@@ -102,7 +103,7 @@ public class TradingSimulator_OfflineITest
     public void shouldAddMultipleBuySimulatedTradeIfUpticksEqualToDownticksToBuy() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(3, 2);
+        tradingSimulator.setDownticksToBuy(2);
         List<Trade> newTrades = asList(
                 createTrade("2", "103", "sell"),
                 createTrade("3", "102", "sell"),
@@ -123,7 +124,8 @@ public class TradingSimulator_OfflineITest
     public void shouldNotAddAnyTradesIfUpticksToSellIsZero() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(0, 2);
+        tradingSimulator.setUpticksToSell(0);
+        tradingSimulator.setDownticksToBuy(2);
         List<Trade> newTrades = asList(
                 createTrade("2", "100", "buy"),
                 createTrade("3", "100", "buy"),
@@ -140,7 +142,8 @@ public class TradingSimulator_OfflineITest
     public void shouldNotAddAnyTradesIfDownticksToBuyIsZero() throws Exception
     {
         // given
-        tradingSimulator = new TradingSimulator(2, 0);
+        tradingSimulator.setUpticksToSell(2);
+        tradingSimulator.setDownticksToBuy(0);
         List<Trade> newTrades = asList(
                 createTrade("2", "100", "buy"),
                 createTrade("3", "100", "buy"),

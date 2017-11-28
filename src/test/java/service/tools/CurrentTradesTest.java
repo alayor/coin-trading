@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.TradingSimulator;
 import service.model.Trade;
-import service.tools.CurrentTrades;
 
 import java.util.List;
 
@@ -18,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static service.Tool.createTrade;
-import static service.Tool.createTrades;
+import static service.UnitTestTool.createTrade;
+import static service.UnitTestTool.createTrades;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CurrentTradesTest {
