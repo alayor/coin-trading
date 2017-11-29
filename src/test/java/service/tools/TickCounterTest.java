@@ -3,6 +3,7 @@ package service.tools;
 import org.junit.Before;
 import org.junit.Test;
 import service.UnitTestTool.AsyncTester;
+import service.trades.tools.TickCounter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

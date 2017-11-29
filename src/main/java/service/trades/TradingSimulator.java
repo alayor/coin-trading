@@ -1,7 +1,7 @@
 package service.trades;
 
 import service.model.Trade;
-import service.tools.TickCounter;
+import service.trades.tools.TickCounter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
