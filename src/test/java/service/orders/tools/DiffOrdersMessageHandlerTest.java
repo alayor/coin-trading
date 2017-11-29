@@ -21,14 +21,14 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BitsoMessageHandlerTest {
-    private BitsoMessageHandler handler;
+public class DiffOrdersMessageHandlerTest {
+    private DiffOrdersMessageHandler handler;
     @Mock
     private CurrentDiffOrdersHolder orderHolder;
 
     @Before
     public void setUp() throws Exception {
-        handler = new BitsoMessageHandler(orderHolder);
+        handler = new DiffOrdersMessageHandler(orderHolder);
     }
 
     @Test

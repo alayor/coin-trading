@@ -1,7 +1,7 @@
 package service.orders.tools.web_socket;
 
 import org.json.JSONObject;
-import service.orders.tools.BitsoMessageHandler;
+import service.orders.tools.DiffOrdersMessageHandler;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static service.tools.AppProperties.getProperty;
 
-public class BitsoEndpoint extends Endpoint {
+public class DiffOrdersEndpoint extends Endpoint {
     private static Map<String, String> subscriptionInfo = new HashMap<>();
     private Session session;
     static {
@@ -21,9 +21,9 @@ public class BitsoEndpoint extends Endpoint {
         subscriptionInfo.put("type", "diff-orders");
     }
 
-    private final BitsoMessageHandler messageHandler;
+    private final DiffOrdersMessageHandler messageHandler;
 
-    public BitsoEndpoint(BitsoMessageHandler messageHandler) {
+    public DiffOrdersEndpoint(DiffOrdersMessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
 

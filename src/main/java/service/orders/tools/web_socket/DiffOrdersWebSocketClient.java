@@ -9,32 +9,32 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class BitsoWebSocketClient {
-    private static BitsoWebSocketClient bitsoWebSocketClient;
+public class DiffOrdersWebSocketClient {
+    private static DiffOrdersWebSocketClient diffOrdersWebSocketClient;
     private URI uri;
     private ClientManager clientManager = ClientManager.createClient();
     private Endpoint endpoint;
     private ClientEndpointConfig config = ClientEndpointConfig.Builder.create().build();
 
-    public static BitsoWebSocketClient getInstance(Endpoint endpoint) throws URISyntaxException {
-        if (bitsoWebSocketClient == null) {
-            bitsoWebSocketClient = new BitsoWebSocketClient(endpoint);
+    public static DiffOrdersWebSocketClient getInstance(Endpoint endpoint) throws URISyntaxException {
+        if (diffOrdersWebSocketClient == null) {
+            diffOrdersWebSocketClient = new DiffOrdersWebSocketClient(endpoint);
         }
-        return bitsoWebSocketClient;
+        return diffOrdersWebSocketClient;
     }
 
-    public static BitsoWebSocketClient getInstance(URI uri, Endpoint endpoint) throws URISyntaxException {
-        if (bitsoWebSocketClient == null) {
-            bitsoWebSocketClient = new BitsoWebSocketClient(uri, endpoint);
+    public static DiffOrdersWebSocketClient getInstance(URI uri, Endpoint endpoint) throws URISyntaxException {
+        if (diffOrdersWebSocketClient == null) {
+            diffOrdersWebSocketClient = new DiffOrdersWebSocketClient(uri, endpoint);
         }
-        return bitsoWebSocketClient;
+        return diffOrdersWebSocketClient;
     }
 
-    private BitsoWebSocketClient(Endpoint endpoint) throws URISyntaxException {
+    private DiffOrdersWebSocketClient(Endpoint endpoint) throws URISyntaxException {
         this(new URI("wss://ws.bitso.com/"), endpoint);
     }
 
-    private BitsoWebSocketClient(URI uri, Endpoint endpoint) {
+    private DiffOrdersWebSocketClient(URI uri, Endpoint endpoint) {
         this.uri = uri;
         this.endpoint = endpoint;
     }
@@ -52,6 +52,6 @@ public class BitsoWebSocketClient {
     }
 
     public static void clearInstance() {
-        bitsoWebSocketClient = null;
+        diffOrdersWebSocketClient = null;
     }
 }

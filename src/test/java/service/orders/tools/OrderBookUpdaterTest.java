@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.orders.tools.web_socket.BitsoWebSocketClient;
+import service.orders.tools.web_socket.DiffOrdersWebSocketClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 public class OrderBookUpdaterTest {
 
     @Mock
-    private BitsoWebSocketClient bitsoWebSocketClient;
+    private DiffOrdersWebSocketClient diffOrdersWebSocketClient;
 
     @Before
     public void setUp() throws Exception {
@@ -43,10 +43,17 @@ public class OrderBookUpdaterTest {
     @Test
     public void shouldConnectToWebSocketWhenStarting() throws Exception {
         // given
-        OrderBookUpdater orderBookUpdater = OrderBookUpdater.getInstance(bitsoWebSocketClient);
+        OrderBookUpdater orderBookUpdater = OrderBookUpdater.getInstance(diffOrdersWebSocketClient);
         // when
         orderBookUpdater.start();
         // then
-        verify(bitsoWebSocketClient).connect();
+        verify(diffOrdersWebSocketClient).connect();
+    }
+
+    @Test
+    public void shouldGetOrderBookResult() throws Exception {
+        // given
+        OrderBookUpdater orderBookUpdater =
+          OrderBookUpdater.getInstance(diffOrdersWebSocketClient);
     }
 }

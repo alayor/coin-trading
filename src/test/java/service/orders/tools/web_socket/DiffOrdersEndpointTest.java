@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.orders.tools.BitsoMessageHandler;
+import service.orders.tools.DiffOrdersMessageHandler;
 
 import javax.websocket.EndpointConfig;
 import javax.websocket.RemoteEndpoint;
@@ -18,8 +18,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BitsoEndpointTest {
-    private BitsoEndpoint bitsoEndpoint;
+public class DiffOrdersEndpointTest {
+    private DiffOrdersEndpoint diffOrdersEndpoint;
     @Mock
     private Session session;
     @Mock
@@ -27,18 +27,18 @@ public class BitsoEndpointTest {
     @Mock
     private RemoteEndpoint.Basic basic;
     @Mock
-    private BitsoMessageHandler messageHandler;
+    private DiffOrdersMessageHandler messageHandler;
 
     @Before
     public void setUp() throws Exception {
-        bitsoEndpoint = new BitsoEndpoint(messageHandler);
+        diffOrdersEndpoint = new DiffOrdersEndpoint(messageHandler);
         given(session.getBasicRemote()).willReturn(basic);
     }
 
     @Test
     public void shouldAddSessionMessageHandler() throws Exception {
         // when
-        bitsoEndpoint.onOpen(session, config);
+        diffOrdersEndpoint.onOpen(session, config);
         // then
         verify(session).addMessageHandler(messageHandler);
     }
@@ -46,7 +46,7 @@ public class BitsoEndpointTest {
     @Test
     public void shouldSendSubscriptionMessage() throws Exception {
         // when
-        bitsoEndpoint.onOpen(session, config);
+        diffOrdersEndpoint.onOpen(session, config);
         // then
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(basic).sendText(captor.capture());

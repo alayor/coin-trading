@@ -14,8 +14,8 @@ import java.net.URI;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BitsoWebSocketClientTest {
-    private BitsoWebSocketClient client;
+public class DiffOrdersWebSocketClientTest {
+    private DiffOrdersWebSocketClient client;
     @Mock
     private ClientManager clientManager;
     @Mock
@@ -27,7 +27,7 @@ public class BitsoWebSocketClientTest {
     @Before
     public void setUp() throws Exception {
         uri = new URI("wss://ws.bitso.com/");
-        client = BitsoWebSocketClient.getInstance(uri, endpoint);
+        client = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
         client.setClientManager(clientManager);
         client.setConfig(config);
     }

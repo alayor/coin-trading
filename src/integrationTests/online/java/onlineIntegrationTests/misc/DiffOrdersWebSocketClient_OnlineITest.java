@@ -2,20 +2,20 @@ package onlineIntegrationTests.misc;
 
 import org.junit.Before;
 import org.junit.Test;
-import service.orders.tools.BitsoMessageHandler;
-import service.orders.tools.web_socket.BitsoEndpoint;
-import service.orders.tools.web_socket.BitsoWebSocketClient;
+import service.orders.tools.DiffOrdersMessageHandler;
+import service.orders.tools.web_socket.DiffOrdersEndpoint;
+import service.orders.tools.web_socket.DiffOrdersWebSocketClient;
 
-public class BitsoWebSocketClient_OnlineITest {
-    private BitsoWebSocketClient client;
-    private BitsoEndpoint endpoint;
-    private BitsoMessageHandler messageHandler;
+public class DiffOrdersWebSocketClient_OnlineITest {
+    private DiffOrdersWebSocketClient client;
+    private DiffOrdersEndpoint endpoint;
+    private DiffOrdersMessageHandler messageHandler;
 
     @Before
     public void setUp() throws Exception {
-        messageHandler = new BitsoMessageHandler();
-        endpoint = new BitsoEndpoint(messageHandler);
-        client = BitsoWebSocketClient.getInstance(endpoint);
+        messageHandler = new DiffOrdersMessageHandler();
+        endpoint = new DiffOrdersEndpoint(messageHandler);
+        client = DiffOrdersWebSocketClient.getInstance(endpoint);
     }
 
     @Test

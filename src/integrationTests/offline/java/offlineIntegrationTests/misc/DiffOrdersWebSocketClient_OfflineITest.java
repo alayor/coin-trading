@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import service.model.diff_orders.DiffOrder;
 import service.model.diff_orders.DiffOrderResult;
-import service.orders.tools.BitsoMessageHandler;
-import service.orders.tools.web_socket.BitsoEndpoint;
-import service.orders.tools.web_socket.BitsoWebSocketClient;
+import service.orders.tools.DiffOrdersMessageHandler;
+import service.orders.tools.web_socket.DiffOrdersEndpoint;
+import service.orders.tools.web_socket.DiffOrdersWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
@@ -25,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class BitsoWebSocketClient_OfflineITest {
-    private BitsoWebSocketClient client;
-    private BitsoMessageHandler clientMessageHandler;
+public class DiffOrdersWebSocketClient_OfflineITest {
+    private DiffOrdersWebSocketClient client;
+    private DiffOrdersMessageHandler clientMessageHandler;
     private static Server server = new Server("localhost", 8025, "/bitso", null, MockedWebSocketServer.class);
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
     private ScheduledFuture<?> schedule;
@@ -39,16 +39,16 @@ public class BitsoWebSocketClient_OfflineITest {
 
     @Before
     public void setUp() throws Exception {
-        BitsoWebSocketClient.clearInstance();
-        clientMessageHandler = new BitsoMessageHandler();
+        DiffOrdersWebSocketClient.clearInstance();
+        clientMessageHandler = new DiffOrdersMessageHandler();
         clientMessageHandler.clearDiffOrders();
         DiffOrderCreator.sequenceCount = 0;
         DiffOrderCreator.isCancelled = false;
     }
 
     private void initializeWebSocketClient() throws URISyntaxException {
-        BitsoEndpoint clientEndpoint = new BitsoEndpoint(clientMessageHandler);
-        client = BitsoWebSocketClient.getInstance(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
+        DiffOrdersEndpoint clientEndpoint = new DiffOrdersEndpoint(clientMessageHandler);
+        client = DiffOrdersWebSocketClient.getInstance(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
     }
 
     @After

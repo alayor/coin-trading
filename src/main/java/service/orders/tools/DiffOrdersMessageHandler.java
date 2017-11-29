@@ -7,15 +7,15 @@ import service.model.diff_orders.DiffOrderResult;
 import javax.websocket.MessageHandler;
 import java.util.concurrent.TimeUnit;
 
-public class BitsoMessageHandler implements MessageHandler.Whole<String> {
+public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
     private CurrentDiffOrdersHolder ordersHolder;
     private boolean wasSuccessfullySubscribed;
 
-    BitsoMessageHandler(CurrentDiffOrdersHolder orderHolder) {
+    DiffOrdersMessageHandler(CurrentDiffOrdersHolder orderHolder) {
         ordersHolder = orderHolder;
     }
 
-    public BitsoMessageHandler() {
+    public DiffOrdersMessageHandler() {
         this(CurrentDiffOrdersHolder.getInstance());
     }
 
