@@ -1,6 +1,6 @@
 package offlineIntegrationTests.trades;
 
-import offlineIntegrationTests.trades.tools.MockedHttpServer;
+import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class TradesRestApiClient_OfflineITest
     @Test
     public void shouldParseResultToTradeResult() throws URISyntaxException, IOException {
         // given
-        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/singleTradeFixture.json");
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/singleTradeFixture.json");
         // when
         TradeResult tradeResult = tradesRestApiClient.getTrades(25);
         // then
@@ -47,7 +47,7 @@ public class TradesRestApiClient_OfflineITest
     @Test
     public void shouldParseEmptyFailedTradeResult() throws URISyntaxException, IOException {
         // given
-        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/singleFailedTradeFixture.json");
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/singleFailedTradeFixture.json");
         // when
         TradeResult tradeResult = tradesRestApiClient.getTrades(3);
         // then
@@ -58,7 +58,7 @@ public class TradesRestApiClient_OfflineITest
     @Test
     public void shouldGetTradesSince() throws Exception {
         // given
-        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/multipleTradesFixture.json");
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/multipleTradesFixture.json");
         // when
         TradeResult tradeResult = tradesRestApiClient.getTradesSince("2128418");
         // then
