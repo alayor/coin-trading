@@ -4,7 +4,6 @@ import offlineIntegrationTests.tools.MockedWebSocketEndpoint;
 import org.glassfish.tyrus.server.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import java.net.URI;
 
 public class BitsoWebSocketClient_OfflineITest {
     private BitsoWebSocketClient client;
-    private BitsoEndpoint endpoint;
     private BitsoMessageHandler messageHandler;
     private static Server server =
       new Server("localhost", 8025, "/bitso", null, MockedWebSocketEndpoint.class);
@@ -27,16 +25,11 @@ public class BitsoWebSocketClient_OfflineITest {
         server.start();
     }
 
-    @AfterClass
-    public static void tearDown() {
-        server.stop();
-    }
-
     @Before
     public void setUp() throws Exception
     {
         messageHandler = new BitsoMessageHandler();
-        endpoint = new BitsoEndpoint(messageHandler);
+        BitsoEndpoint endpoint = new BitsoEndpoint(messageHandler);
         client = new BitsoWebSocketClient(new URI("ws://localhost:8025/bitso/mock"), endpoint);
     }
 
@@ -58,8 +51,8 @@ public class BitsoWebSocketClient_OfflineITest {
 
     private boolean isSubscriptionResponse(JSONObject lastMessage) throws JSONException
     {
-        return "ok".equals(lastMessage.getString("response")) &&
-                "subscribe".equals(lastMessage.getString("action")) &&
-                "trades".equals(lastMessage.getString("type"));
+        return "ok".equals(lastMessage.optString("response", "")) &&
+                "subscribe".equals(lastMessage.optString("action", "")) &&
+                "trades".equals(lastMessage.optString("type", ""));
     }
 }

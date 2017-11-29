@@ -9,6 +9,6 @@ public class MockedWebSocketEndpoint
 {
     @OnMessage
     public String onMessage(String message, Session session) {
-        return message;
+        return "{\"response\":\"ok\", \"action\":\"subscribe\", \"type\": \"trades\"}";
     }
 }
