@@ -79,7 +79,7 @@ public class TradingServiceTest {
         // when
         tradingService.stop();
         // then
-        verify(future).cancel(false);
+        verify(future).cancel(true);
     }
 
     @Test

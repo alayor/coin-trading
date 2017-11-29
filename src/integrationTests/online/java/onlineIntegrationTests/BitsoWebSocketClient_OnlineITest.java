@@ -1,7 +1,5 @@
 package onlineIntegrationTests;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import service.tools.web_socket.BitsoEndpoint;
@@ -26,19 +24,12 @@ public class BitsoWebSocketClient_OnlineITest {
         client.connect();
         // then
         int count = 5;
-        while(count-- > 0) {
+        while (count-- > 0) {
             Thread.sleep(1000);
-            JSONObject lastMessage = messageHandler.getLastMessage();
-            if(isSubscriptionResponse(lastMessage)) {
+            if (messageHandler.wasSuccessfullySubscribed()) {
                 return;
             }
         }
         throw new AssertionError("No subscription response message found.");
-    }
-
-    private boolean isSubscriptionResponse(JSONObject lastMessage) throws JSONException {
-        return "ok".equals(lastMessage.optString("response", "")) &&
-          "subscribe".equals(lastMessage.optString("action", "")) &&
-          "trades".equals(lastMessage.optString("type", ""));
     }
 }
