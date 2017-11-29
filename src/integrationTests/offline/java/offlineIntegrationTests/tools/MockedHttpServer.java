@@ -29,7 +29,7 @@ public class MockedHttpServer extends NanoHTTPD {
     }
 
     private String getFixture(IHTTPSession session) {
-        InputStream inputStream = getClass().getResourceAsStream("fixtures" + session.getUri());
+        InputStream inputStream = getClass().getResourceAsStream("fixtures/trades" + session.getUri());
         StringWriter writer = new StringWriter();
         try {
             IOUtils.copy(inputStream, writer, "UTF-8");

@@ -37,12 +37,12 @@ public class TradingService_OfflineITest {
     @After
     public void tearDown() throws Exception {
         copy(
-          getPath("tools/fixtures/threeTradesFixtureBackup.json"),
-          getPath("tools/fixtures/threeTradesFixture.json")
+          getPath("tools/fixtures/trades/threeTradesFixtureBackup.json"),
+          getPath("tools/fixtures/trades/threeTradesFixture.json")
         );
         copy(
-          getPath("tools/fixtures/fiveHundredTradesFixtureBackup.json"),
-          getPath("tools/fixtures/fiveHundredTradesFixture.json")
+          getPath("tools/fixtures/trades/fiveHundredTradesFixtureBackup.json"),
+          getPath("tools/fixtures/trades/fiveHundredTradesFixture.json")
         );
     }
 
@@ -65,8 +65,8 @@ public class TradingService_OfflineITest {
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/threeTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
         copy(
-          getPath("tools/fixtures/singleTradeFixture.json"),
-          getPath("tools/fixtures/threeTradesFixture.json")
+          getPath("tools/fixtures/trades/singleTradeFixture.json"),
+          getPath("tools/fixtures/trades/threeTradesFixture.json")
         );
         Thread.sleep(6000);
         // when
@@ -104,8 +104,8 @@ public class TradingService_OfflineITest {
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/fiveHundredTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
         copy(
-          getPath("tools/fixtures/singleTradeFixture.json"),
-          getPath("tools/fixtures/fiveHundredTradesFixture.json")
+          getPath("tools/fixtures/trades/singleTradeFixture.json"),
+          getPath("tools/fixtures/trades/fiveHundredTradesFixture.json")
         );
         Thread.sleep(6000);
         // when
