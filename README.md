@@ -3,6 +3,8 @@ Application that connects to the Bitso cryptocurrency exchange,
 maintains state between the application and Bitso, and simulates trade
 execution following a simple trading strategy
 
+[![CircleCI](https://circleci.com/gh/alayor/coin-trading/tree/master.svg?style=svg)](https://circleci.com/gh/alayor/coin-trading/tree/master)
+
 ### Assumptions
 * Regarding _"Display the X most recent trades on the same UI"_. The X represents the same number as in the _best bids_
 and _best asks_ configuration.
