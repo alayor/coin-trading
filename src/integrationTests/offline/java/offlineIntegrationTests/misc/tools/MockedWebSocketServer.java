@@ -1,4 +1,4 @@
-package offlineIntegrationTests.trades.tools;
+package offlineIntegrationTests.misc.tools;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,17 +11,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ServerEndpoint(value = "/mock")
-public class MockedServerEndpoint {
+public class MockedWebSocketServer {
     private static Session session;
     public static int sequenceCount;
 
-    public MockedServerEndpoint() {
+    public MockedWebSocketServer() {
     }
 
     @OnMessage
     public String onMessage(String message, Session session) throws JSONException {
-        if (MockedServerEndpoint.session == null) {
-            MockedServerEndpoint.session = session;
+        if (MockedWebSocketServer.session == null) {
+            MockedWebSocketServer.session = session;
         }
         return "{\"response\":\"ok\", \"action\":\"subscribe\", \"type\": \"trades\"}";
     }

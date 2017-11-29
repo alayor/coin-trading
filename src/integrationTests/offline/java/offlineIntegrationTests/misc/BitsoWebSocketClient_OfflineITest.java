@@ -1,6 +1,6 @@
 package offlineIntegrationTests.misc;
 
-import offlineIntegrationTests.trades.tools.MockedServerEndpoint;
+import offlineIntegrationTests.misc.tools.MockedWebSocketServer;
 import org.glassfish.tyrus.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class BitsoWebSocketClient_OfflineITest {
     private BitsoWebSocketClient client;
     private BitsoMessageHandler clientMessageHandler;
-    private static Server server = new Server("localhost", 8025, "/bitso", null, MockedServerEndpoint.class);
+    private static Server server = new Server("localhost", 8025, "/bitso", null, MockedWebSocketServer.class);
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
     private ScheduledFuture<?> schedule;
 
@@ -39,7 +39,7 @@ public class BitsoWebSocketClient_OfflineITest {
         clientMessageHandler = new BitsoMessageHandler();
         BitsoEndpoint clientEndpoint = new BitsoEndpoint(clientMessageHandler);
         client = new BitsoWebSocketClient(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
-        MockedServerEndpoint.sequenceCount = 0;
+        MockedWebSocketServer.sequenceCount = 0;
     }
 
     @After
@@ -52,7 +52,7 @@ public class BitsoWebSocketClient_OfflineITest {
     public void shouldSubscribeSuccessfully() throws Exception {
         // when
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
-          MockedServerEndpoint::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
+          MockedWebSocketServer::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
         client.connect();
         // then
         try {
@@ -73,7 +73,7 @@ public class BitsoWebSocketClient_OfflineITest {
     public void shouldReturnLastOrders() throws Exception {
         // given
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
-          MockedServerEndpoint::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
+          MockedWebSocketServer::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
         client.connect();
         List<DiffOrderResult> list = new ArrayList<>();
         // when
@@ -108,7 +108,7 @@ public class BitsoWebSocketClient_OfflineITest {
     public void shouldNotFailIfMoreThanFiveHundredDiffOrdersAreInserted() throws Exception {
         // given
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
-          MockedServerEndpoint::sendDiffOrderMessage, 2, 2, TimeUnit.MILLISECONDS);
+          MockedWebSocketServer::sendDiffOrderMessage, 2, 2, TimeUnit.MILLISECONDS);
         client.connect();
         Thread.sleep(5000);
         List<DiffOrderResult> list = new ArrayList<>();
