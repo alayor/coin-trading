@@ -1,4 +1,4 @@
-package service.trades.tools;
+package service.orders.tools;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.TradeResult;
+import service.model.OrderBook;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
@@ -20,83 +20,74 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TradesRestApiClientTest {
-    private TradesRestApiClient apiClient;
+public class OrderBookRestApiClientTest {
+    private OrderBookRestApiClient apiClient;
     @Mock
     private Client client;
     @Mock
-    private WebTarget webTarget;
-    @Mock
     private Invocation.Builder builder;
     @Mock
-    private TradeResult tradeResult;
+    private OrderBook orderBook;
+    @Mock
+    private WebTarget webTarget;
 
     @Before
     public void setUp() throws Exception {
-        apiClient = new TradesRestApiClient();
+        apiClient = new OrderBookRestApiClient();
         apiClient.setClient(client);
         given(client.target(any(URI.class))).willReturn(webTarget);
         given(webTarget.request(any(MediaType.class))).willReturn(builder);
     }
 
     @Test
-    public void shouldTargetBitsoTradeUri() throws Exception {
+    public void shouldTargetBitsoOrderBookUri() throws Exception {
         // when
-        apiClient.getTrades(5);
+        apiClient.getOrderBook();
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
-        assertEquals("https://api.bitso.com/v3/trades/?limit=5&book=btc_mxn", captor.getValue().toString());
+        assertEquals("https://api.bitso.com/v3/order_book/?aggregate=false&book=btc_mxn",
+          captor.getValue().toString());
     }
+
 
     @Test
     public void shouldCallUsingUrlFromConstructor() throws Exception {
         // given
-        apiClient = new TradesRestApiClient("http://example.com");
+        apiClient = new OrderBookRestApiClient("http://example.com");
         apiClient.setClient(client);
         // when
-        apiClient.getTrades(25);
+        apiClient.getOrderBook();
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
-        assertEquals("http://example.com?limit=25&book=btc_mxn", captor.getValue().toString());
+        assertEquals("http://example.com?aggregate=false&book=btc_mxn", captor.getValue().toString());
     }
 
     @Test
     public void shouldRequestWithJsonType() throws Exception {
         // when
-        apiClient.getTrades(25);
+        apiClient.getOrderBook();
         // then
         verify(webTarget).request(MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Test
-    public void shouldGetTradeResultFromRequest() throws Exception {
+    public void shouldGetOrderBookFromRequest() throws Exception {
         // when
-        apiClient.getTrades(25);
+        apiClient.getOrderBook();
         // then
-        verify(builder).get(TradeResult.class);
+        verify(builder).get(OrderBook.class);
     }
 
     @Test
-    public void shouldReturnTradeResult() throws Exception {
+    public void shouldReturnOrderBook() throws Exception {
         // given
-        given(builder.get(TradeResult.class)).willReturn(tradeResult);
+        given(builder.get(OrderBook.class)).willReturn(orderBook);
         // when
-        TradeResult actualTradeResult = apiClient.getTrades(25);
-        // then
-        assertEquals(tradeResult, actualTradeResult);
-    }
-
-    @Test
-    public void shouldGetTradesSinceSpecifiedId() throws Exception {
         // when
-        apiClient.getTradesSince("2128419");
+        OrderBook actualOrderBook = apiClient.getOrderBook();
         // then
-        ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
-        verify(client).target(captor.capture());
-        assertEquals(
-          "https://api.bitso.com/v3/trades/?limit=100&marker=2128419&sort=asc&book=btc_mxn",
-          captor.getValue().toString());
+        assertEquals(orderBook, actualOrderBook);
     }
 }
