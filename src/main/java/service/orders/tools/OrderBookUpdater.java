@@ -9,10 +9,14 @@ import java.net.URISyntaxException;
 
 public class OrderBookUpdater {
     private static OrderBookUpdater orderBookUpdater;
+    private final OrderBookRestApiClient orderBookApiClient;
     private DiffOrdersWebSocketClient diffOrdersWebSocketClient;
 
-    private OrderBookUpdater(DiffOrdersWebSocketClient diffOrdersWebSocketClient) {
+    private OrderBookUpdater(
+      DiffOrdersWebSocketClient diffOrdersWebSocketClient,
+      OrderBookRestApiClient orderBookApiClient) {
       this.diffOrdersWebSocketClient = diffOrdersWebSocketClient;
+      this.orderBookApiClient = orderBookApiClient;
     }
 
     public static OrderBookUpdater getInstance() throws URISyntaxException {
@@ -20,12 +24,14 @@ public class OrderBookUpdater {
           new DiffOrdersEndpoint(
             new DiffOrdersMessageHandler()
           )
-        ));
+        ), new OrderBookRestApiClient());
     }
 
-    public static OrderBookUpdater getInstance(DiffOrdersWebSocketClient diffOrdersWebSocketClient) {
+    public static OrderBookUpdater getInstance(
+      DiffOrdersWebSocketClient webSocketClient,
+      OrderBookRestApiClient orderBookApiClient) {
         if (orderBookUpdater == null) {
-            orderBookUpdater = new OrderBookUpdater(diffOrdersWebSocketClient);
+            orderBookUpdater = new OrderBookUpdater(webSocketClient, orderBookApiClient);
         }
         return orderBookUpdater;
     }
@@ -36,5 +42,6 @@ public class OrderBookUpdater {
 
     public void start() throws IOException, DeploymentException {
       diffOrdersWebSocketClient.connect();
+      orderBookApiClient.getOrderBook();
     }
 }

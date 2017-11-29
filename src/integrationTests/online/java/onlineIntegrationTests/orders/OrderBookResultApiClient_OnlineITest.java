@@ -11,18 +11,18 @@ import static org.junit.Assert.*;
 
 public class OrderBookResultApiClient_OnlineITest
 {
-    private OrderBookRestApiClient orderBookRestApiClient;
+    private OrderBookRestApiClient OrderBookRestApiClient;
 
     @Before
     public void setUp() throws Exception {
-        orderBookRestApiClient = new OrderBookRestApiClient(
+        OrderBookRestApiClient = new OrderBookRestApiClient(
           "https://api-dev.bitso.com/v3/order_book?aggregate=false&book=btc_mxn");
     }
 
     @Test
     public void shouldParseResultToOrderBook() throws URISyntaxException {
         // when
-        OrderBookResult orderBookResult = orderBookRestApiClient.getOrderBook();
+        OrderBookResult orderBookResult = OrderBookRestApiClient.getOrderBook();
         // then
         assertNotNull(orderBookResult);
         assertTrue(orderBookResult.isSuccess());

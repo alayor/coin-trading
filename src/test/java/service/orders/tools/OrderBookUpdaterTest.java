@@ -3,7 +3,9 @@ package service.orders.tools;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.orders.tools.web_socket.DiffOrdersWebSocketClient;
 
@@ -15,7 +17,9 @@ import static org.mockito.Mockito.verify;
 public class OrderBookUpdaterTest {
 
     @Mock
-    private DiffOrdersWebSocketClient diffOrdersWebSocketClient;
+    private DiffOrdersWebSocketClient webSocketClient;
+    @Mock
+    private OrderBookRestApiClient orderBookApiClient;
 
     @Before
     public void setUp() throws Exception {
@@ -43,17 +47,22 @@ public class OrderBookUpdaterTest {
     @Test
     public void shouldConnectToWebSocketWhenStarting() throws Exception {
         // given
-        OrderBookUpdater orderBookUpdater = OrderBookUpdater.getInstance(diffOrdersWebSocketClient);
+        OrderBookUpdater orderBookUpdater = OrderBookUpdater.getInstance(webSocketClient, orderBookApiClient);
         // when
         orderBookUpdater.start();
         // then
-        verify(diffOrdersWebSocketClient).connect();
+        verify(webSocketClient).connect();
     }
 
     @Test
     public void shouldGetOrderBookResult() throws Exception {
         // given
         OrderBookUpdater orderBookUpdater =
-          OrderBookUpdater.getInstance(diffOrdersWebSocketClient);
+          OrderBookUpdater.getInstance(webSocketClient, orderBookApiClient);
+        // when
+        orderBookUpdater.start();
+        InOrder inOrder = Mockito.inOrder(webSocketClient, orderBookApiClient);
+        inOrder.verify(webSocketClient).connect();
+        inOrder.verify(orderBookApiClient).getOrderBook();
     }
 }
