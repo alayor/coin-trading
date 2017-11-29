@@ -1,4 +1,4 @@
-package service.tools;
+package service.trades;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +20,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BitsoApiRequesterTest {
-    private BitsoApiRequester bitsoApiRequester;
+public class TradesApiClientTest {
+    private TradesApiClient tradesApiClient;
     @Mock
     private Client client;
     @Mock
@@ -33,8 +33,8 @@ public class BitsoApiRequesterTest {
 
     @Before
     public void setUp() throws Exception {
-        bitsoApiRequester = new BitsoApiRequester();
-        bitsoApiRequester.setClient(client);
+        tradesApiClient = new TradesApiClient();
+        tradesApiClient.setClient(client);
         given(client.target(any(URI.class))).willReturn(webTarget);
         given(webTarget.request(any(MediaType.class))).willReturn(builder);
     }
@@ -42,7 +42,7 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldTargetBitsoTradeUrl() throws Exception {
         // when
-        bitsoApiRequester.getTrades(5);
+        tradesApiClient.getTrades(5);
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
@@ -52,10 +52,10 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldCallUsingUrlFromConstructor() throws Exception {
         // given
-        bitsoApiRequester = new BitsoApiRequester("http://example.com");
-        bitsoApiRequester.setClient(client);
+        tradesApiClient = new TradesApiClient("http://example.com");
+        tradesApiClient.setClient(client);
         // when
-        bitsoApiRequester.getTrades(25);
+        tradesApiClient.getTrades(25);
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());
@@ -65,7 +65,7 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldRequestWithJsonType() throws Exception {
         // when
-        bitsoApiRequester.getTrades(25);
+        tradesApiClient.getTrades(25);
         // then
         verify(webTarget).request(MediaType.APPLICATION_JSON_TYPE);
     }
@@ -73,7 +73,7 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldGetTradeResultFromRequest() throws Exception {
         // when
-        bitsoApiRequester.getTrades(25);
+        tradesApiClient.getTrades(25);
         // then
         verify(builder).get(TradeResult.class);
     }
@@ -83,7 +83,7 @@ public class BitsoApiRequesterTest {
         // given
         given(builder.get(TradeResult.class)).willReturn(tradeResult);
         // when
-        TradeResult actualTradeResult = bitsoApiRequester.getTrades(25);
+        TradeResult actualTradeResult = tradesApiClient.getTrades(25);
         // then
         assertEquals(tradeResult, actualTradeResult);
     }
@@ -91,7 +91,7 @@ public class BitsoApiRequesterTest {
     @Test
     public void shouldGetTradesSinceSpecifiedId() throws Exception {
         // when
-        bitsoApiRequester.getTradesSince("2128419");
+        tradesApiClient.getTradesSince("2128419");
         // then
         ArgumentCaptor<URI> captor = ArgumentCaptor.forClass(URI.class);
         verify(client).target(captor.capture());

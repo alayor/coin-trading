@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import service.tools.BitsoApiRequester;
+import service.trades.TradesApiClient;
 import service.trades.TradingService;
 import service.trades.TradingSimulator;
 import ui.tools.MockedHttpServer;
@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         mockedServer.start();
-        tradingService = new TradingService(new BitsoApiRequester("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
+        tradingService = new TradingService(new TradesApiClient("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();

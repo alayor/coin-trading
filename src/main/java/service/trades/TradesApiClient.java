@@ -1,6 +1,7 @@
-package service.tools;
+package service.trades;
 
 import service.model.TradeResult;
+import service.tools.UriArgumentAppender;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -10,17 +11,17 @@ import java.net.URI;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static service.tools.AppProperties.getProperty;
 
-public class BitsoApiRequester {
+public class TradesApiClient {
 
     private final String uri;
     private Client client = ClientBuilder.newClient();
     private static UriArgumentAppender appender = new UriArgumentAppender();
 
-    public BitsoApiRequester(String uri) throws IOException {
+    public TradesApiClient(String uri) throws IOException {
         this.uri = uri;
     }
 
-    public BitsoApiRequester() {
+    public TradesApiClient() {
         this.uri = getProperty("trade_url");
     }
 

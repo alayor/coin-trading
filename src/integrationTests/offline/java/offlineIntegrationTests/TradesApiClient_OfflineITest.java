@@ -5,16 +5,16 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.model.TradeResult;
-import service.tools.BitsoApiRequester;
+import service.trades.TradesApiClient;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.*;
 
-public class BitsoApiRequester_OfflineITest
+public class TradesApiClient_OfflineITest
 {
-    private BitsoApiRequester bitsoApiRequester;
+    private TradesApiClient tradesApiClient;
     private static MockedHttpServer mockedServer = new MockedHttpServer();
 
     @BeforeClass
@@ -30,9 +30,9 @@ public class BitsoApiRequester_OfflineITest
     @Test
     public void shouldParseResultToTradeResult() throws URISyntaxException, IOException {
         // given
-        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/singleTradeFixture.json");
+        tradesApiClient = new TradesApiClient("http://localhost:9999/singleTradeFixture.json");
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTrades(25);
+        TradeResult tradeResult = tradesApiClient.getTrades(25);
         // then
         assertTrue(tradeResult.isSuccess());
         assertEquals(1, tradeResult.getTradeList().size());
@@ -47,9 +47,9 @@ public class BitsoApiRequester_OfflineITest
     @Test
     public void shouldParseEmptyFailedTradeResult() throws URISyntaxException, IOException {
         // given
-        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/singleFailedTradeFixture.json");
+        tradesApiClient = new TradesApiClient("http://localhost:9999/singleFailedTradeFixture.json");
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTrades(3);
+        TradeResult tradeResult = tradesApiClient.getTrades(3);
         // then
         assertFalse(tradeResult.isSuccess());
         assertEquals(0, tradeResult.getTradeList().size());
@@ -58,9 +58,9 @@ public class BitsoApiRequester_OfflineITest
     @Test
     public void shouldGetTradesSince() throws Exception {
         // given
-        bitsoApiRequester = new BitsoApiRequester("http://localhost:9999/multipleTradesFixture.json");
+        tradesApiClient = new TradesApiClient("http://localhost:9999/multipleTradesFixture.json");
         // when
-        TradeResult tradeResult = bitsoApiRequester.getTradesSince("2128418");
+        TradeResult tradeResult = tradesApiClient.getTradesSince("2128418");
         // then
         assertTrue(tradeResult.isSuccess());
         assertEquals(25, tradeResult.getTradeList().size());

@@ -3,9 +3,9 @@ package service.tools;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-class UriArgumentAppender {
+public class UriArgumentAppender {
 
-    URI appendArgument(URI uri, String parameterKey, String parameterValue) {
+    public URI appendArgument(URI uri, String parameterKey, String parameterValue) {
         String newQuery = uri.getQuery();
         String appendQuery = parameterKey + "=" + parameterValue;
         if (newQuery == null) {

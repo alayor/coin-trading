@@ -2,7 +2,7 @@ package onlineIntegrationTests;
 
 import org.junit.Before;
 import org.junit.Test;
-import service.tools.BitsoApiRequester;
+import service.trades.TradesApiClient;
 import service.trades.TradingService;
 import service.trades.TradingSimulator;
 
@@ -14,19 +14,19 @@ import static org.junit.Assert.assertNotNull;
 public class TradingService_OnlineITest
 {
     private TradingService tradingService;
-    private BitsoApiRequester bitsoApiRequester;
+    private TradesApiClient tradesApiClient;
     private TradingSimulator tradingSimulator;
 
     @Before
     public void setUp() throws Exception {
-        bitsoApiRequester = new BitsoApiRequester();
+        tradesApiClient = new TradesApiClient();
         tradingSimulator = new TradingSimulator(3, 3);
     }
 
     @Test
     public void shouldParseResultToTradeResult() throws URISyntaxException {
         // when
-        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
+        tradingService = new TradingService(tradesApiClient, tradingSimulator);
         // then
         assertNotNull(tradingService);
     }
@@ -34,7 +34,7 @@ public class TradingService_OnlineITest
     @Test
     public void shouldHaveInitialTrades() throws URISyntaxException {
         // when
-        tradingService = new TradingService(bitsoApiRequester, tradingSimulator);
+        tradingService = new TradingService(tradesApiClient, tradingSimulator);
         // then
         assertEquals(100, tradingService.getLastTrades(100).size());
     }
