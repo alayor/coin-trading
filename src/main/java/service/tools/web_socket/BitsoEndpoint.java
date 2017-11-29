@@ -13,7 +13,7 @@ import static service.tools.AppProperties.getProperty;
 
 public class BitsoEndpoint extends Endpoint {
     private static Map<String, String> subscriptionInfo = new HashMap<>();
-
+    private Session session;
     static {
         subscriptionInfo.put("action", "subscribe");
         subscriptionInfo.put("book", getProperty("default_book"));
@@ -28,11 +28,12 @@ public class BitsoEndpoint extends Endpoint {
 
     @Override
     public void onOpen(Session session, EndpointConfig config) {
+        this.session = session;
         session.addMessageHandler(messageHandler);
-        sendMessage(session, new JSONObject(subscriptionInfo).toString());
+        sendMessage(new JSONObject(subscriptionInfo).toString());
     }
 
-    private void sendMessage(Session session, String text) {
+    public void sendMessage(String text) {
         try {
             session.getBasicRemote().sendText(text);
         } catch (IOException e) {

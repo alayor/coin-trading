@@ -31,7 +31,8 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
     }
 
     private void addOrderResult(JSONObject jsonObject) {
-        diffOrderResults.addFirst(DiffOrderResult.parse(jsonObject));
+        DiffOrderResult diffOrderResult = DiffOrderResult.parse(jsonObject);
+        diffOrderResults.addFirst(diffOrderResult);
     }
 
     private boolean isDiffOrderMessage(JSONObject jsonObject) throws JSONException {
@@ -58,5 +59,9 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
 
     public DiffOrderResult getLastDiffResultOrder() {
         return diffOrderResults.getLast();
+    }
+
+    public DiffOrderResult getNext() throws InterruptedException {
+        return diffOrderResults.takeLast();
     }
 }

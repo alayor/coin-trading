@@ -1,22 +1,28 @@
 package offlineIntegrationTests;
 
-import offlineIntegrationTests.tools.MockedWebSocketEndpoint;
+import offlineIntegrationTests.tools.MockedServerEndpoint;
 import org.glassfish.tyrus.server.Server;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import service.model.DiffOrderResult;
 import service.tools.web_socket.BitsoEndpoint;
 import service.tools.web_socket.BitsoMessageHandler;
 import service.tools.web_socket.BitsoWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class BitsoWebSocketClient_OfflineITest {
     private BitsoWebSocketClient client;
-    private BitsoMessageHandler messageHandler;
+    private BitsoMessageHandler clientMessageHandler;
+    private BitsoEndpoint clientEndpoint;
     private static Server server =
-      new Server("localhost", 8025, "/bitso", null, MockedWebSocketEndpoint.class);
+      new Server("localhost", 8025, "/bitso", null, MockedServerEndpoint.class);
 
     @BeforeClass
     public static void beforeClass() throws DeploymentException {
@@ -26,9 +32,9 @@ public class BitsoWebSocketClient_OfflineITest {
     @Before
     public void setUp() throws Exception
     {
-        messageHandler = new BitsoMessageHandler();
-        BitsoEndpoint endpoint = new BitsoEndpoint(messageHandler);
-        client = new BitsoWebSocketClient(new URI("ws://localhost:8025/bitso/mock"), endpoint);
+        clientMessageHandler = new BitsoMessageHandler();
+        clientEndpoint = new BitsoEndpoint(clientMessageHandler);
+        client = new BitsoWebSocketClient(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
     }
 
     @Test
@@ -39,7 +45,7 @@ public class BitsoWebSocketClient_OfflineITest {
         int count = 5;
         while(count-- > 0) {
             Thread.sleep(1000);
-            if( messageHandler.wasSuccessfullySubscribed()) {
+            if( clientMessageHandler.wasSuccessfullySubscribed()) {
                 return;
             }
         }
@@ -50,9 +56,13 @@ public class BitsoWebSocketClient_OfflineITest {
     public void shouldReturnLastOrders() throws Exception {
         // given
         client.connect();
-        Thread.sleep(2000);
+        List<DiffOrderResult> list = new ArrayList<>();
         // when
-        messageHandler.getLastDiffResultOrder();
+        list.add(clientMessageHandler.getNext());
+        list.add(clientMessageHandler.getNext());
+        clientEndpoint.sendMessage("{\"stop\": \"true\"}");
+        // then
+        assertEquals(2, list.size());
     }
 
 }
