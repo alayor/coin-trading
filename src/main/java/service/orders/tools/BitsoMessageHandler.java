@@ -10,8 +10,12 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
     private CurrentDiffOrdersHolder ordersHolder;
     private boolean wasSuccessfullySubscribed;
 
-    public BitsoMessageHandler(CurrentDiffOrdersHolder orderHolder) {
+    BitsoMessageHandler(CurrentDiffOrdersHolder orderHolder) {
         ordersHolder = orderHolder;
+    }
+
+    public BitsoMessageHandler() {
+        this(CurrentDiffOrdersHolder.getInstance());
     }
 
     @Override

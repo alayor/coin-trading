@@ -3,7 +3,6 @@ package onlineIntegrationTests;
 import org.junit.Before;
 import org.junit.Test;
 import service.orders.tools.BitsoMessageHandler;
-import service.orders.tools.CurrentDiffOrdersHolder;
 import service.orders.tools.web_socket.BitsoEndpoint;
 import service.orders.tools.web_socket.BitsoWebSocketClient;
 
@@ -11,12 +10,10 @@ public class BitsoWebSocketClient_OnlineITest {
     private BitsoWebSocketClient client;
     private BitsoEndpoint endpoint;
     private BitsoMessageHandler messageHandler;
-    private CurrentDiffOrdersHolder diffOrderHolder;
 
     @Before
     public void setUp() throws Exception {
-        diffOrderHolder = new CurrentDiffOrdersHolder();
-        messageHandler = new BitsoMessageHandler(diffOrderHolder);
+        messageHandler = new BitsoMessageHandler();
         endpoint = new BitsoEndpoint(messageHandler);
         client = new BitsoWebSocketClient(endpoint);
     }

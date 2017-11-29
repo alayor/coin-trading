@@ -34,7 +34,7 @@ public class BitsoEndpoint extends Endpoint {
         sendMessage(new JSONObject(subscriptionInfo).toString());
     }
 
-    public void sendMessage(String text) {
+    private void sendMessage(String text) {
         try {
             session.getBasicRemote().sendText(text);
         } catch (IOException e) {

@@ -9,45 +9,28 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 @ServerEndpoint(value = "/mock")
 public class MockedServerEndpoint {
-    private Session session;
-    private ScheduledFuture<?> schedule;
-    ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
+    private static Session session;
+    public static int sequenceCount;
 
     public MockedServerEndpoint() {
-        scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-        scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
-        schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
-          this::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
     }
 
     @OnMessage
     public String onMessage(String message, Session session) throws JSONException {
-        if (this.session == null) {
-            this.session = session;
+        if (MockedServerEndpoint.session == null) {
+            MockedServerEndpoint.session = session;
         }
-        checkIfShouldStop(message);
         return "{\"response\":\"ok\", \"action\":\"subscribe\", \"type\": \"trades\"}";
     }
 
-    private void checkIfShouldStop(String message) throws JSONException {
-        JSONObject jsonObject = new JSONObject(message);
-        if (schedule != null && "true".equals(jsonObject.optString("stop", ""))) {
-            schedule.cancel(true);
-            scheduledThreadPoolExecutor.shutdown();
-        }
-    }
-
-    private void sendDiffOrderMessage() {
-        if (this.session != null) {
+    public static void sendDiffOrderMessage() {
+        if (session != null) {
             try {
                 String diffOrder = createDiffOrder();
-                this.session.getBasicRemote().sendText(diffOrder);
+                session.getBasicRemote().sendText(diffOrder);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -55,16 +38,16 @@ public class MockedServerEndpoint {
         }
     }
 
-    private String createDiffOrder() throws JSONException {
+    private static String createDiffOrder() {
         Map<String, String> diffOrders = new HashMap<>();
         diffOrders.put("type", "diff-orders");
         diffOrders.put("book", "btc_mxn");
         diffOrders.put("payload", createOrder());
-        diffOrders.put("sequence", "43760505");
+        diffOrders.put("sequence", String.valueOf(++sequenceCount));
         return new JSONObject(diffOrders).toString();
     }
 
-    private String createOrder() throws JSONException {
+    private static String createOrder() {
         Map<String, String> order = new HashMap<>();
         order.put("o", "4cCTdGxIo8iyhH5Z");
         order.put("d", "1511918888029");
