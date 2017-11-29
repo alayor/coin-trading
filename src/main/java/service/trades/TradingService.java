@@ -2,8 +2,8 @@ package service.trades;
 
 import service.model.Trade;
 import service.model.TradeResult;
-import service.tools.CurrentTrades;
-import service.trades.tools.TradesApiClient;
+import service.trades.tools.CurrentTradesHolder;
+import service.trades.tools.TradesRestApiClient;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,8 +15,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TradingService {
 
-    private CurrentTrades currentTrades;
-    private final TradesApiClient tradesApiClient;
+    private CurrentTradesHolder currentTradesHolder;
+    private final TradesRestApiClient tradesRestApiClient;
     private final ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
     private final ScheduledExecutorService executor;
@@ -27,26 +27,26 @@ public class TradingService {
         return scheduledThreadPoolExecutor;
     }
 
-    public TradingService(TradesApiClient tradesApiClient, TradingSimulator tradingSimulator) {
-        this(tradesApiClient, getScheduledThreadPoolExecutor(), tradingSimulator);
+    public TradingService(TradesRestApiClient tradesRestApiClient, TradingSimulator tradingSimulator) {
+        this(tradesRestApiClient, getScheduledThreadPoolExecutor(), tradingSimulator);
     }
 
-    TradingService(TradesApiClient tradesApiClient, ScheduledExecutorService executor, TradingSimulator tradingSimulator) {
-        this.tradesApiClient = tradesApiClient;
-        currentTrades = new CurrentTrades(getTradesFromApi(tradesApiClient), tradingSimulator);
+    TradingService(TradesRestApiClient tradesRestApiClient, ScheduledExecutorService executor, TradingSimulator tradingSimulator) {
+        this.tradesRestApiClient = tradesRestApiClient;
+        currentTradesHolder = new CurrentTradesHolder(getTradesFromApi(tradesRestApiClient), tradingSimulator);
         this.executor = executor;
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 
-    private List<Trade> getTradesFromApi(TradesApiClient tradesApiClient) {
-        List<Trade> tradeList = tradesApiClient.getTrades(100).getTradeList();
+    private List<Trade> getTradesFromApi(TradesRestApiClient tradesRestApiClient) {
+        List<Trade> tradeList = tradesRestApiClient.getTrades(100).getTradeList();
         reverse(tradeList);
         return tradeList;
     }
 
     void updateTrades() {
-        TradeResult tradesSince = tradesApiClient.getTradesSince(currentTrades.getLastTradeId());
-        currentTrades.addTrades(tradesSince.getTradeList());
+        TradeResult tradesSince = tradesRestApiClient.getTradesSince(currentTradesHolder.getLastTradeId());
+        currentTradesHolder.addTrades(tradesSince.getTradeList());
     }
 
     Runnable getUpdateTradesRunnable() {
@@ -59,12 +59,12 @@ public class TradingService {
     }
 
     public List<Trade> getLastTrades(int limit) {
-        List<Trade> trades = currentTrades.getTrades();
+        List<Trade> trades = currentTradesHolder.getTrades();
         return trades.subList(0, limit > trades.size() ? trades.size() : limit);
     }
 
-    void setCurrentTrades(CurrentTrades currentTrades)
+    void setCurrentTradesHolder(CurrentTradesHolder currentTradesHolder)
     {
-        this.currentTrades = currentTrades;
+        this.currentTradesHolder = currentTradesHolder;
     }
 }

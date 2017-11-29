@@ -1,4 +1,4 @@
-package service.tools;
+package service.trades.tools;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,27 +21,27 @@ import static service.UnitTestTool.createTrade;
 import static service.UnitTestTool.createTrades;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CurrentTradesTest {
-    private CurrentTrades currentTrades;
+public class CurrentTradesHolderTest {
+    private CurrentTradesHolder currentTradesHolder;
     @Mock
     private TradingSimulator tradingSimulator;
 
     @Before
     public void setUp() throws Exception {
-        currentTrades = new CurrentTrades(emptyList(), tradingSimulator);
+        currentTradesHolder = new CurrentTradesHolder(emptyList(), tradingSimulator);
     }
 
     @Test
     public void shouldNotThrowExceptionIfConstructorArgumentIsNull() throws Exception {
         // when
-        currentTrades = new CurrentTrades(null, tradingSimulator);
+        currentTradesHolder = new CurrentTradesHolder(null, tradingSimulator);
         // then no exception is thrown
     }
 
     @Test
     public void shouldNotThrowExceptionIfParameterIsNull() throws Exception {
         // when
-        currentTrades.addTrades(null);
+        currentTradesHolder.addTrades(null);
         // then no exception is thrown
     }
 
@@ -52,9 +52,9 @@ public class CurrentTradesTest {
           createTrade("1233", "1000"),
           createTrade("1244", "1000")
         ));
-        currentTrades.addTrades(emptyList());
+        currentTradesHolder.addTrades(emptyList());
         // when
-        List<Trade> trades = currentTrades.getTrades();
+        List<Trade> trades = currentTradesHolder.getTrades();
         // then
         assertEquals("1244", trades.get(0).getTid());
         assertEquals("1233", trades.get(1).getTid());
@@ -67,9 +67,9 @@ public class CurrentTradesTest {
           createTrade("1233", "1000"),
           createTrade("1244", "1000")
         ));
-        currentTrades.addTrades(emptyList());
+        currentTradesHolder.addTrades(emptyList());
         // when
-        String lastTradeId = currentTrades.getLastTradeId();
+        String lastTradeId = currentTradesHolder.getLastTradeId();
         // then
         assertEquals("1244", lastTradeId);
     }
@@ -77,14 +77,14 @@ public class CurrentTradesTest {
     @Test
     public void shouldFreeSpaceFromQueueIfEmpty() throws Exception {
         // given
-        currentTrades = new CurrentTrades(createTrades(500), tradingSimulator);
-        currentTrades.setTradingSimulator(tradingSimulator);
+        currentTradesHolder = new CurrentTradesHolder(createTrades(500), tradingSimulator);
+        currentTradesHolder.setTradingSimulator(tradingSimulator);
         given(tradingSimulator.addSimulatedTrades(any(), any())).willReturn(
           singletonList(createTrade("501", "100")));
         // when
-        currentTrades.addTrades(emptyList());
+        currentTradesHolder.addTrades(emptyList());
         // then
-        List<Trade> trades = currentTrades.getTrades();
+        List<Trade> trades = currentTradesHolder.getTrades();
         assertEquals(500, trades.size());
         assertEquals("501", trades.get(0).getTid());
     }
@@ -92,9 +92,9 @@ public class CurrentTradesTest {
     @Test
     public void shouldBeCreatedWithInitialTrades() throws Exception {
         // given
-        currentTrades = new CurrentTrades(createTrades(3), tradingSimulator);
+        currentTradesHolder = new CurrentTradesHolder(createTrades(3), tradingSimulator);
         // when
-        List<Trade> trades = currentTrades.getTrades();
+        List<Trade> trades = currentTradesHolder.getTrades();
         // then
         assertEquals(3, trades.size());
     }
@@ -103,12 +103,12 @@ public class CurrentTradesTest {
     public void shouldCallContrarianSimulatedTrading() throws Exception {
         // given
         Trade trade = createTrade("1", "100");
-        currentTrades = new CurrentTrades(singletonList(trade), tradingSimulator);
-        currentTrades.setTradingSimulator(tradingSimulator);
+        currentTradesHolder = new CurrentTradesHolder(singletonList(trade), tradingSimulator);
+        currentTradesHolder.setTradingSimulator(tradingSimulator);
         List<Trade> tradeList = singletonList(createTrade("2", "1002"));
-        currentTrades.addTrades(tradeList);
+        currentTradesHolder.addTrades(tradeList);
         // when
-        currentTrades.getTrades();
+        currentTradesHolder.getTrades();
         // then
         verify(tradingSimulator).addSimulatedTrades(trade, tradeList);
     }
@@ -116,13 +116,13 @@ public class CurrentTradesTest {
     @Test
     public void addTradesFromSimulatedTradesToCurrentTrades() throws Exception {
         // given
-        currentTrades = new CurrentTrades(emptyList(), tradingSimulator);
-        currentTrades.setTradingSimulator(tradingSimulator);
+        currentTradesHolder = new CurrentTradesHolder(emptyList(), tradingSimulator);
+        currentTradesHolder.setTradingSimulator(tradingSimulator);
         List<Trade> trades = singletonList(createTrade("2", "200"));
         given(tradingSimulator.addSimulatedTrades(any(), any())).willReturn(trades);
-        currentTrades.addTrades(emptyList());
+        currentTradesHolder.addTrades(emptyList());
         // when
-        List<Trade> actualTrades = currentTrades.getTrades();
+        List<Trade> actualTrades = currentTradesHolder.getTrades();
         // then
         assertEquals(trades.get(0).getTid(), actualTrades.get(0).getTid());
     }

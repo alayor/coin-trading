@@ -5,7 +5,7 @@ import org.junit.*;
 import service.model.Trade;
 import service.trades.TradingService;
 import service.trades.TradingSimulator;
-import service.trades.tools.TradesApiClient;
+import service.trades.tools.TradesRestApiClient;
 
 import java.io.*;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class TradingService_OfflineITest {
-    private TradesApiClient tradesApiClient;
+    private TradesRestApiClient tradesRestApiClient;
     private TradingSimulator tradingSimulator;
     private static MockedHttpServer mockedServer = new MockedHttpServer();
     private TradingService tradingService;
@@ -48,8 +48,8 @@ public class TradingService_OfflineITest {
     @Test
     public void shouldReturnLastTradesInDescOrder() throws Exception {
         // given
-        tradesApiClient = new TradesApiClient("http://localhost:9999/threeTradesFixture.json");
-        tradingService = new TradingService(tradesApiClient, tradingSimulator);
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/threeTradesFixture.json");
+        tradingService = new TradingService(tradesRestApiClient, tradingSimulator);
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then
@@ -61,8 +61,8 @@ public class TradingService_OfflineITest {
     @Test
     public void shouldIncludeNewTradeAfterUpdating() throws Exception {
         // given
-        tradesApiClient = new TradesApiClient("http://localhost:9999/threeTradesFixture.json");
-        tradingService = new TradingService(tradesApiClient, tradingSimulator);
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/threeTradesFixture.json");
+        tradingService = new TradingService(tradesRestApiClient, tradingSimulator);
         copy(
           getPath("tools/fixtures/singleTradeFixture.json"),
           getPath("tools/fixtures/threeTradesFixture.json")
@@ -100,8 +100,8 @@ public class TradingService_OfflineITest {
     @Test
     public void shouldRemoveOldTradeWhenTradingArrayIsFull() throws Exception {
         // given
-        tradesApiClient = new TradesApiClient("http://localhost:9999/fiveHundredTradesFixture.json");
-        tradingService = new TradingService(tradesApiClient, tradingSimulator);
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/fiveHundredTradesFixture.json");
+        tradingService = new TradingService(tradesRestApiClient, tradingSimulator);
         copy(
           getPath("tools/fixtures/singleTradeFixture.json"),
           getPath("tools/fixtures/fiveHundredTradesFixture.json")
@@ -117,8 +117,8 @@ public class TradingService_OfflineITest {
     @Test
     public void shouldReturnLastTradesAccordingToLimit() throws Exception {
         // given
-        tradesApiClient = new TradesApiClient("http://localhost:9999/fiveHundredTradesFixture.json");
-        tradingService = new TradingService(tradesApiClient, tradingSimulator);
+        tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/fiveHundredTradesFixture.json");
+        tradingService = new TradingService(tradesRestApiClient, tradingSimulator);
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then

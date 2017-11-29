@@ -11,17 +11,17 @@ import java.net.URI;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static service.tools.AppProperties.getProperty;
 
-public class TradesApiClient {
+public class TradesRestApiClient {
 
     private final String uri;
     private Client client = ClientBuilder.newClient();
     private static UriArgumentAppender appender = new UriArgumentAppender();
 
-    public TradesApiClient(String uri) throws IOException {
+    public TradesRestApiClient(String uri) throws IOException {
         this.uri = uri;
     }
 
-    public TradesApiClient() {
+    public TradesRestApiClient() {
         this.uri = getProperty("trade_url");
     }
 

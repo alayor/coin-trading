@@ -1,4 +1,4 @@
-package service.tools;
+package service.trades.tools;
 
 import service.model.Trade;
 import service.trades.TradingSimulator;
@@ -10,11 +10,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import static java.util.Collections.reverse;
 
-public class CurrentTrades {
+public class CurrentTradesHolder {
     private final BlockingDeque<Trade> trades = new LinkedBlockingDeque<>(500);
     private TradingSimulator tradingSimulator;
 
-    public CurrentTrades(List<Trade> newTrades, TradingSimulator tradingSimulator) {
+    public CurrentTradesHolder(List<Trade> newTrades, TradingSimulator tradingSimulator) {
         this.tradingSimulator = tradingSimulator;
         freeSpaceAndAddTrades(newTrades);
     }

@@ -1,6 +1,6 @@
 package service.tools;
 
-import service.trades.tools.TradesApiClient;
+import service.trades.tools.TradesRestApiClient;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -9,7 +9,7 @@ public class AppProperties {
     private static Properties properties = new Properties();
     static {
         try {
-            properties.load(TradesApiClient.class.getClassLoader()
+            properties.load(TradesRestApiClient.class.getClassLoader()
               .getResourceAsStream("config.properties"));
         } catch (IOException e) {
             e.printStackTrace();
