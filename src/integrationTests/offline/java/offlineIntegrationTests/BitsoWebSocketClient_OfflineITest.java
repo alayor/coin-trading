@@ -19,7 +19,8 @@ public class BitsoWebSocketClient_OfflineITest {
     private BitsoWebSocketClient client;
     private BitsoEndpoint endpoint;
     private BitsoMessageHandler messageHandler;
-    private static Server server = new Server("localhost", 8025, "/bitso", null, MockedWebSocketEndpoint.class);
+    private static Server server =
+      new Server("localhost", 8025, "/bitso", null, MockedWebSocketEndpoint.class);
 
     @BeforeClass
     public static void beforeClass() throws DeploymentException {

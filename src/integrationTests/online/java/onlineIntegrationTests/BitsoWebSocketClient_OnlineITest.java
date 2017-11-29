@@ -2,9 +2,7 @@ package onlineIntegrationTests;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import service.tools.web_socket.BitsoEndpoint;
 import service.tools.web_socket.BitsoMessageHandler;
@@ -39,8 +37,8 @@ public class BitsoWebSocketClient_OnlineITest {
     }
 
     private boolean isSubscriptionResponse(JSONObject lastMessage) throws JSONException {
-        return "ok".equals(lastMessage.getString("response")) &&
-          "subscribe".equals(lastMessage.getString("action")) &&
-          "trades".equals(lastMessage.getString("type"));
+        return "ok".equals(lastMessage.optString("response", "")) &&
+          "subscribe".equals(lastMessage.optString("action", "")) &&
+          "trades".equals(lastMessage.optString("type", ""));
     }
 }
