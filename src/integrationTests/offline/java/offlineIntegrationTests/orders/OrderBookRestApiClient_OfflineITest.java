@@ -10,6 +10,7 @@ import service.orders.tools.OrderBookRestApiClient;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -50,25 +51,13 @@ public class OrderBookRestApiClient_OfflineITest
         assertEquals("po5JlwTy1kQWrH9N", orderBookResult.getOrderBook().getAsks().get(0).getOrderId());
     }
 
-//    @Test
-//    public void shouldParseEmptyFailedTradeResult() throws URISyntaxException, IOException {
-//        // given
-//        orderBookRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/singleFailedTradeFixture.json");
-//        // when
-//        TradeResult tradeResult = orderBookRestApiClient.getTrades(3);
-//        // then
-//        assertFalse(tradeResult.isSuccess());
-//        assertEquals(0, tradeResult.getTradeList().size());
-//    }
-//
-//    @Test
-//    public void shouldGetTradesSince() throws Exception {
-//        // given
-//        orderBookRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/multipleTradesFixture.json");
-//        // when
-//        TradeResult tradeResult = orderBookRestApiClient.getTradesSince("2128418");
-//        // then
-//        assertTrue(tradeResult.isSuccess());
-//        assertEquals(25, tradeResult.getTradeList().size());
-//    }
+    @Test
+    public void shouldParseEmptyFailedOrderBookResult() throws URISyntaxException, IOException {
+        // given
+        orderBookRestApiClient = new OrderBookRestApiClient("http://localhost:9999/orders/singleFailedOrderBookFixture.json");
+        // when
+        OrderBookResult orderBookResult = orderBookRestApiClient.getOrderBook();
+        // then
+        assertFalse(orderBookResult.isSuccess());
+    }
 }
