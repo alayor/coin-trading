@@ -1,4 +1,4 @@
-package offlineIntegrationTests;
+package offlineIntegrationTests.trades;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import service.trades.TradingSimulator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static offlineIntegrationTests.tools.TraderCreator.createTrade;
+import static offlineIntegrationTests.trades.tools.TraderCreator.createTrade;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

@@ -1,6 +1,6 @@
-package offlineIntegrationTests;
+package offlineIntegrationTests.trades;
 
-import offlineIntegrationTests.tools.MockedHttpServer;
+import offlineIntegrationTests.trades.tools.MockedHttpServer;
 import org.junit.*;
 import service.model.trades.Trade;
 import service.trades.TradingService;
@@ -30,20 +30,25 @@ public class TradingService_OfflineITest {
 
     @Before
     public void setUp() throws Exception {
+        fixFixtures();
         TradingService.clearInstance();
         tradingSimulator = new TradingSimulator(3, 3);
     }
 
+    private void fixFixtures() {
+        copy(
+          getPath("tools/fixtures/threeTradesFixtureBackup.json"),
+          getPath("tools/fixtures/threeTradesFixture.json")
+        );
+        copy(
+          getPath("tools/fixtures/fiveHundredTradesFixtureBackup.json"),
+          getPath("tools/fixtures/fiveHundredTradesFixture.json")
+        );
+    }
+
     @After
     public void tearDown() throws Exception {
-        copy(
-          getPath("tools/fixtures/trades/threeTradesFixtureBackup.json"),
-          getPath("tools/fixtures/trades/threeTradesFixture.json")
-        );
-        copy(
-          getPath("tools/fixtures/trades/fiveHundredTradesFixtureBackup.json"),
-          getPath("tools/fixtures/trades/fiveHundredTradesFixture.json")
-        );
+        fixFixtures();
     }
 
     @Test
@@ -65,8 +70,8 @@ public class TradingService_OfflineITest {
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/threeTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
         copy(
-          getPath("tools/fixtures/trades/singleTradeFixture.json"),
-          getPath("tools/fixtures/trades/threeTradesFixture.json")
+          getPath("tools/fixtures/singleTradeFixture.json"),
+          getPath("tools/fixtures/threeTradesFixture.json")
         );
         Thread.sleep(6000);
         // when
@@ -104,8 +109,8 @@ public class TradingService_OfflineITest {
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/fiveHundredTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
         copy(
-          getPath("tools/fixtures/trades/singleTradeFixture.json"),
-          getPath("tools/fixtures/trades/fiveHundredTradesFixture.json")
+          getPath("tools/fixtures/singleTradeFixture.json"),
+          getPath("tools/fixtures/fiveHundredTradesFixture.json")
         );
         Thread.sleep(6000);
         // when

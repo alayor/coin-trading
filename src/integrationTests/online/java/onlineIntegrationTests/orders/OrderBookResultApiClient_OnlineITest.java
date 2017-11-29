@@ -1,4 +1,4 @@
-package onlineIntegrationTests;
+package onlineIntegrationTests.orders;
 
 import org.junit.Before;
 import org.junit.Test;

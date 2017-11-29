@@ -1,4 +1,4 @@
-package offlineIntegrationTests.tools;
+package offlineIntegrationTests.trades.tools;
 
 import service.model.trades.Trade;
 

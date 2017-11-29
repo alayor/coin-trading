@@ -1,6 +1,6 @@
-package offlineIntegrationTests;
+package offlineIntegrationTests.trades;
 
-import offlineIntegrationTests.tools.MockedHttpServer;
+import offlineIntegrationTests.trades.tools.MockedHttpServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

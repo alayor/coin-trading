@@ -1,6 +1,6 @@
-package offlineIntegrationTests;
+package offlineIntegrationTests.misc;
 
-import offlineIntegrationTests.tools.MockedServerEndpoint;
+import offlineIntegrationTests.trades.tools.MockedServerEndpoint;
 import org.glassfish.tyrus.server.Server;
 import org.junit.After;
 import org.junit.Before;

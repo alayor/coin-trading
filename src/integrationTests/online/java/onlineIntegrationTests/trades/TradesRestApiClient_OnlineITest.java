@@ -1,4 +1,4 @@
-package onlineIntegrationTests;
+package onlineIntegrationTests.trades;
 
 import org.junit.Before;
 import org.junit.Test;

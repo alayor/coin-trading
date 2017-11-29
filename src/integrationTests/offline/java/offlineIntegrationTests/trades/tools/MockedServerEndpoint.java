@@ -1,4 +1,4 @@
-package offlineIntegrationTests.tools;
+package offlineIntegrationTests.trades.tools;
 
 import org.json.JSONArray;
 import org.json.JSONException;
