@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import service.model.diff_orders.DiffOrderResult;
 
 import javax.websocket.MessageHandler;
+import java.util.concurrent.TimeUnit;
 
 public class BitsoMessageHandler implements MessageHandler.Whole<String> {
     private CurrentDiffOrdersHolder ordersHolder;
@@ -65,7 +66,11 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
     }
 
 
-    public DiffOrderResult getNext() throws InterruptedException {
-        return ordersHolder.consume();
+    public DiffOrderResult getNext(int timeout, TimeUnit seconds) throws InterruptedException {
+        return ordersHolder.getNext(timeout, seconds);
+    }
+
+    public void clearDiffOrders() throws InterruptedException {
+        ordersHolder.clear();
     }
 }

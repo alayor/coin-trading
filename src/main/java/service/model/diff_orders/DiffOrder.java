@@ -76,14 +76,15 @@ public class DiffOrder {
     }
 
     private static DiffOrder parse(JSONObject jsonObject) throws JSONException {
-       return new DiffOrder(
-         jsonObject.getString("d"),
-         jsonObject.getString("r"),
-         jsonObject.getString("t"),
-         jsonObject.getString("a"),
-         jsonObject.getString("v"),
-         jsonObject.getString("o"),
-         jsonObject.getString("s")
-       );
+        String status = jsonObject.getString("s");
+        return new DiffOrder(
+          jsonObject.getString("d"),
+          jsonObject.getString("r"),
+          jsonObject.getString("t"),
+          "open".equals(status) ? jsonObject.getString("a") : "",
+          "open".equals(status) ? jsonObject.getString("v") : "",
+          jsonObject.getString("o"),
+          status
+        );
     }
 }

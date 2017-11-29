@@ -4,6 +4,7 @@ import service.model.diff_orders.DiffOrderResult;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 public class CurrentDiffOrdersHolder {
     private static final CurrentDiffOrdersHolder currentDiffOrdersHolder = new CurrentDiffOrdersHolder();
@@ -21,5 +22,13 @@ public class CurrentDiffOrdersHolder {
 
     public DiffOrderResult consume() throws InterruptedException {
         return diffOrders.takeLast();
+    }
+
+    public DiffOrderResult getNext(int timeout, TimeUnit timeUnit) throws InterruptedException {
+        return diffOrders.pollLast(timeout, timeUnit);
+    }
+
+    void clear() {
+        diffOrders.clear();
     }
 }
