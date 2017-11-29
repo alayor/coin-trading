@@ -1,6 +1,6 @@
 package service.trades.tools;
 
-import service.model.Trade;
+import service.model.trades.Trade;
 import service.trades.TradingSimulator;
 
 import java.util.ArrayList;

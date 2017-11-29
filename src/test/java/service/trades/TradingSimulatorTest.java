@@ -9,7 +9,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import service.UnitTestTool;
-import service.model.Trade;
+import service.model.trades.Trade;
 import service.trades.tools.TickCounter;
 
 import java.util.List;

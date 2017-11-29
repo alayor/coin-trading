@@ -2,7 +2,7 @@ package onlineIntegrationTests;
 
 import org.junit.Before;
 import org.junit.Test;
-import service.model.TradeResult;
+import service.model.trades.TradeResult;
 import service.trades.tools.TradesRestApiClient;
 
 import java.net.URISyntaxException;

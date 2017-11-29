@@ -1,7 +1,6 @@
 package ui;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import ui.data.Trade;
@@ -28,10 +27,10 @@ public class Controller {
 
     @FXML
     public void getTrades() {
-        List<service.model.Trade> lastTrades = mainApp.getTradingService().getLastTrades(25);
+        List<service.model.trades.Trade> lastTrades = mainApp.getTradingService().getLastTrades(25);
         ObservableList<Trade> data = tableView.getItems();
         data.clear();
-        for (service.model.Trade lastTrade : lastTrades)
+        for (service.model.trades.Trade lastTrade : lastTrades)
         {
             data.add(new Trade(
                     lastTrade.getCreatedAt(),

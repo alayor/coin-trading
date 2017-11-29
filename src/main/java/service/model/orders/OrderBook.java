@@ -1,4 +1,4 @@
-package service.model;
+package service.model.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

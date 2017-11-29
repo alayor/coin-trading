@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.Trade;
-import service.model.TradeResult;
+import service.model.trades.Trade;
+import service.model.trades.TradeResult;
 import service.trades.tools.CurrentTradesHolder;
 import service.trades.tools.TradesRestApiClient;
 

@@ -1,6 +1,6 @@
 package service.orders.tools;
 
-import service.model.DiffOrderResult;
+import service.model.diff_orders.DiffOrderResult;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;

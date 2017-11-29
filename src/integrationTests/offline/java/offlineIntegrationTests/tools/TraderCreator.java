@@ -1,9 +1,9 @@
 package offlineIntegrationTests.tools;
 
+import service.model.trades.Trade;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import service.model.Trade;
 
 public class TraderCreator
 {

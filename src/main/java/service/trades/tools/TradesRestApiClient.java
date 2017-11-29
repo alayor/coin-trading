@@ -1,6 +1,6 @@
 package service.trades.tools;
 
-import service.model.TradeResult;
+import service.model.trades.TradeResult;
 import service.tools.UriArgumentAppender;
 
 import javax.ws.rs.client.Client;

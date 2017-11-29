@@ -2,7 +2,7 @@ package offlineIntegrationTests;
 
 import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.*;
-import service.model.Trade;
+import service.model.trades.Trade;
 import service.trades.TradingService;
 import service.trades.TradingSimulator;
 import service.trades.tools.TradesRestApiClient;

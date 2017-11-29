@@ -2,7 +2,7 @@ package service.orders.tools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import service.model.DiffOrderResult;
+import service.model.diff_orders.DiffOrderResult;
 
 import javax.websocket.MessageHandler;
 

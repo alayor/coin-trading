@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.Trade;
+import service.model.trades.Trade;
 import service.trades.TradingSimulator;
 
 import java.util.List;

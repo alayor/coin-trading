@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.DiffOrderResult;
+import service.model.diff_orders.DiffOrderResult;
 
 import java.util.HashMap;
 import java.util.Map;

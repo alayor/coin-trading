@@ -1,6 +1,6 @@
 package service.orders.tools;
 
-import service.model.OrderBookResult;
+import service.model.orders.OrderBookResult;
 import service.tools.UriArgumentAppender;
 
 import javax.ws.rs.client.Client;

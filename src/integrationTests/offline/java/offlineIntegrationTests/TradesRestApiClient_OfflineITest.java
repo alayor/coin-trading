@@ -4,7 +4,7 @@ import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import service.model.TradeResult;
+import service.model.trades.TradeResult;
 import service.trades.tools.TradesRestApiClient;
 
 import java.io.IOException;

@@ -2,7 +2,7 @@ package onlineIntegrationTests;
 
 import org.junit.Before;
 import org.junit.Test;
-import service.model.OrderBookResult;
+import service.model.orders.OrderBookResult;
 import service.orders.tools.OrderBookRestApiClient;
 
 import java.net.URISyntaxException;

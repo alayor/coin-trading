@@ -1,4 +1,4 @@
-package service.model;
+package service.model.diff_orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.json.JSONArray;

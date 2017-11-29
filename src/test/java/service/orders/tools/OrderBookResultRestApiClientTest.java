@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.OrderBookResult;
+import service.model.orders.OrderBookResult;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
