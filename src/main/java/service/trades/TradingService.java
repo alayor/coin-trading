@@ -14,24 +14,51 @@ import static java.util.Collections.reverse;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TradingService {
-
+    private static TradingService tradingService;
     private CurrentTradesHolder currentTradesHolder;
-    private final TradesRestApiClient tradesRestApiClient;
-    private final ScheduledFuture<?> scheduledFuture;
+    private TradesRestApiClient tradesRestApiClient;
+    private ScheduledFuture<?> scheduledFuture;
     private final Runnable updateTradesRunnable = this::updateTrades;
-    private final ScheduledExecutorService executor;
+    private ScheduledExecutorService executor;
 
-    private static ScheduledThreadPoolExecutor getScheduledThreadPoolExecutor() {
+    private static ScheduledThreadPoolExecutor getScheduledExecutor() {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
         scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
         return scheduledThreadPoolExecutor;
     }
 
-    public TradingService(TradesRestApiClient tradesRestApiClient, TradingSimulator tradingSimulator) {
-        this(tradesRestApiClient, getScheduledThreadPoolExecutor(), tradingSimulator);
+    private TradingService() {
     }
 
-    TradingService(TradesRestApiClient tradesRestApiClient, ScheduledExecutorService executor, TradingSimulator tradingSimulator) {
+    public static TradingService getInstance(
+      TradesRestApiClient tradesRestApiClient,
+      TradingSimulator tradingSimulator) {
+        if (tradingService == null) {
+            tradingService = new TradingService(tradesRestApiClient, getScheduledExecutor(), tradingSimulator);
+        }
+        return tradingService;
+    }
+
+    static TradingService getInstance(
+      TradesRestApiClient tradesRestApiClient,
+      ScheduledExecutorService executor,
+      TradingSimulator tradingSimulator,
+      CurrentTradesHolder currentTradesHolder) {
+        if (tradingService == null) {
+            tradingService = new TradingService(tradesRestApiClient, executor, tradingSimulator);
+            tradingService.currentTradesHolder = currentTradesHolder;
+        }
+        return tradingService;
+    }
+
+    private TradingService(TradesRestApiClient tradesRestApiClient, TradingSimulator tradingSimulator) {
+        this(tradesRestApiClient, getScheduledExecutor(), tradingSimulator);
+    }
+
+    private TradingService(
+      TradesRestApiClient tradesRestApiClient,
+      ScheduledExecutorService executor,
+      TradingSimulator tradingSimulator) {
         this.tradesRestApiClient = tradesRestApiClient;
         currentTradesHolder = new CurrentTradesHolder(getTradesFromApi(tradesRestApiClient), tradingSimulator);
         this.executor = executor;
@@ -63,8 +90,7 @@ public class TradingService {
         return trades.subList(0, limit > trades.size() ? trades.size() : limit);
     }
 
-    void setCurrentTradesHolder(CurrentTradesHolder currentTradesHolder)
-    {
-        this.currentTradesHolder = currentTradesHolder;
+    public static void clearInstance() {
+        tradingService = null;
     }
 }

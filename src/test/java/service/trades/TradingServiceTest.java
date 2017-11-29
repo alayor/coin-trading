@@ -45,9 +45,8 @@ public class TradingServiceTest {
 
     @Before
     public void setUp() throws Exception {
+        TradingService.clearInstance();
         given(tradesRestApiClient.getTrades(anyInt())).willReturn(tradeResult);
-        tradingService = new TradingService(tradesRestApiClient, scheduleExecutorService, tradingSimulator);
-        tradingService.setCurrentTradesHolder(currentTradesHolder);
     }
 
     @Test
@@ -56,7 +55,7 @@ public class TradingServiceTest {
         TradesRestApiClient localTradesRestApiClient = mock(TradesRestApiClient.class);
         given(localTradesRestApiClient.getTrades(anyInt())).willReturn(tradeResult);
         // when
-        tradingService = new TradingService(localTradesRestApiClient, tradingSimulator);
+        tradingService = TradingService.getInstance(localTradesRestApiClient, scheduleExecutorService, tradingSimulator, currentTradesHolder);
         // then
         verify(localTradesRestApiClient).getTrades(100);
     }
@@ -64,7 +63,7 @@ public class TradingServiceTest {
     @Test
     public void shouldScheduleTradesUpdatingProcess() throws Exception {
         // when
-        tradingService = new TradingService(tradesRestApiClient, scheduleExecutorService, tradingSimulator);
+        initializeTradesService();
         // then
         verify(scheduleExecutorService).scheduleWithFixedDelay(
           tradingService.getUpdateTradesRunnable(), 5, 5, SECONDS);
@@ -75,7 +74,7 @@ public class TradingServiceTest {
         // given
         doReturn(future).when(scheduleExecutorService).scheduleWithFixedDelay(
           any(), anyLong(), anyLong(), any());
-        tradingService = new TradingService(tradesRestApiClient, scheduleExecutorService, tradingSimulator);
+        initializeTradesService();
         // when
         tradingService.stop();
         // then
@@ -87,7 +86,7 @@ public class TradingServiceTest {
         // given
         doReturn(future).when(scheduleExecutorService).scheduleWithFixedDelay(
           any(), anyLong(), anyLong(), any());
-        tradingService = new TradingService(tradesRestApiClient, scheduleExecutorService, tradingSimulator);
+        initializeTradesService();
         // when
         tradingService.stop();
         // then
@@ -97,6 +96,7 @@ public class TradingServiceTest {
     @Test
     public void shouldAddNewTradesToCurrentTrades() throws Exception {
         // given
+        initializeTradesService();
         given(tradesRestApiClient.getTradesSince(anyString())).willReturn(tradeResult);
         List<Trade> newTrades = singletonList(createTrade("6789", "100"));
         given(tradeResult.getTradeList()).willReturn(newTrades);
@@ -107,9 +107,9 @@ public class TradingServiceTest {
     }
 
     @Test
-    public void shouldReturnTradesBasedOnLimit() throws Exception
-    {
+    public void shouldReturnTradesBasedOnLimit() throws Exception {
         // given
+        initializeTradesService();
         given(currentTradesHolder.getTrades()).willReturn(createTrades(30));
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(10);
@@ -118,9 +118,9 @@ public class TradingServiceTest {
     }
 
     @Test
-    public void shouldReturnTradesBasedOnLimitValidatingMaxLimit() throws Exception
-    {
+    public void shouldReturnTradesBasedOnLimitValidatingMaxLimit() throws Exception {
         // given
+        initializeTradesService();
         given(currentTradesHolder.getTrades()).willReturn(createTrades(5));
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(10);
@@ -129,14 +129,22 @@ public class TradingServiceTest {
     }
 
     @Test
-    public void shouldReturnTradesBasedOnLimitIfLimitIsSameAsSize() throws Exception
-    {
+    public void shouldReturnTradesBasedOnLimitIfLimitIsSameAsSize() throws Exception {
         // given
+        initializeTradesService();
         given(currentTradesHolder.getTrades()).willReturn(createTrades(10));
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(10);
         // then
         assertEquals(10, lastTrades.size());
+    }
+
+    private void initializeTradesService() {
+        tradingService = TradingService.getInstance(
+          tradesRestApiClient,
+          scheduleExecutorService,
+          tradingSimulator,
+          currentTradesHolder);
     }
 
 }

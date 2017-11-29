@@ -26,7 +26,7 @@ public class TradingService_OnlineITest
     @Test
     public void shouldParseResultToTradeResult() throws URISyntaxException {
         // when
-        tradingService = new TradingService(tradesRestApiClient, tradingSimulator);
+        tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
         // then
         assertNotNull(tradingService);
     }
@@ -34,7 +34,7 @@ public class TradingService_OnlineITest
     @Test
     public void shouldHaveInitialTrades() throws URISyntaxException {
         // when
-        tradingService = new TradingService(tradesRestApiClient, tradingSimulator);
+        tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
         // then
         assertEquals(100, tradingService.getLastTrades(100).size());
     }
