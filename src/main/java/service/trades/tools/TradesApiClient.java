@@ -1,4 +1,4 @@
-package service.trades;
+package service.trades.tools;
 
 import service.model.TradeResult;
 import service.tools.UriArgumentAppender;

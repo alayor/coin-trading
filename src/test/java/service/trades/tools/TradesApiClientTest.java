@@ -1,4 +1,4 @@
-package service.trades;
+package service.trades.tools;
 
 import org.junit.Before;
 import org.junit.Test;

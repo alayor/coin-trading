@@ -3,9 +3,9 @@ package offlineIntegrationTests;
 import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.*;
 import service.model.Trade;
-import service.trades.TradesApiClient;
 import service.trades.TradingService;
 import service.trades.TradingSimulator;
+import service.trades.tools.TradesApiClient;
 
 import java.io.*;
 import java.util.List;

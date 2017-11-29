@@ -1,6 +1,6 @@
 package service.tools;
 
-import service.trades.TradesApiClient;
+import service.trades.tools.TradesApiClient;
 
 import java.io.IOException;
 import java.util.Properties;

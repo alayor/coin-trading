@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import service.model.Trade;
 import service.model.TradeResult;
 import service.tools.CurrentTrades;
+import service.trades.tools.TradesApiClient;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;

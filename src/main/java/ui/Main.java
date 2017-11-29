@@ -5,9 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import service.trades.TradesApiClient;
 import service.trades.TradingService;
 import service.trades.TradingSimulator;
+import service.trades.tools.TradesApiClient;
 import ui.tools.MockedHttpServer;
 
 public class Main extends Application {
