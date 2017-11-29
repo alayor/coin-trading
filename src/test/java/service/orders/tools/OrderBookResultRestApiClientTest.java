@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.OrderBook;
+import service.model.OrderBookResult;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
@@ -20,14 +20,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OrderBookRestApiClientTest {
+public class OrderBookResultRestApiClientTest {
     private OrderBookRestApiClient apiClient;
     @Mock
     private Client client;
     @Mock
     private Invocation.Builder builder;
     @Mock
-    private OrderBook orderBook;
+    private OrderBookResult orderBookResult;
     @Mock
     private WebTarget webTarget;
 
@@ -77,17 +77,17 @@ public class OrderBookRestApiClientTest {
         // when
         apiClient.getOrderBook();
         // then
-        verify(builder).get(OrderBook.class);
+        verify(builder).get(OrderBookResult.class);
     }
 
     @Test
     public void shouldReturnOrderBook() throws Exception {
         // given
-        given(builder.get(OrderBook.class)).willReturn(orderBook);
+        given(builder.get(OrderBookResult.class)).willReturn(orderBookResult);
         // when
         // when
-        OrderBook actualOrderBook = apiClient.getOrderBook();
+        OrderBookResult actualOrderBookResult = apiClient.getOrderBook();
         // then
-        assertEquals(orderBook, actualOrderBook);
+        assertEquals(orderBookResult, actualOrderBookResult);
     }
 }

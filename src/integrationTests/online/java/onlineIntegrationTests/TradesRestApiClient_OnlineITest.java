@@ -7,8 +7,7 @@ import service.trades.tools.TradesRestApiClient;
 
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class TradesRestApiClient_OnlineITest
 {
@@ -25,6 +24,8 @@ public class TradesRestApiClient_OnlineITest
         TradeResult tradeResult = tradesRestApiClient.getTrades(25);
         // then
         assertNotNull(tradeResult);
+        assertTrue(tradeResult.isSuccess());
+        assertTrue(tradeResult.getTradeList().size() > 0);
     }
 
     @Test
