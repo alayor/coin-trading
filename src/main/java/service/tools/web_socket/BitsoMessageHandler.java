@@ -32,7 +32,7 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
 
     private void addOrderResult(JSONObject jsonObject) {
         DiffOrderResult diffOrderResult = DiffOrderResult.parse(jsonObject);
-        diffOrderResults.addFirst(diffOrderResult);
+        diffOrderResults.offerFirst(diffOrderResult);
     }
 
     private boolean isDiffOrderMessage(JSONObject jsonObject) throws JSONException {

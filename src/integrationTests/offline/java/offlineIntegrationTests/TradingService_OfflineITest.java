@@ -2,10 +2,10 @@ package offlineIntegrationTests;
 
 import offlineIntegrationTests.tools.MockedHttpServer;
 import org.junit.*;
-import service.TradingService;
-import service.TradingSimulator;
 import service.model.Trade;
 import service.tools.BitsoApiRequester;
+import service.trades.TradingService;
+import service.trades.TradingSimulator;
 
 import java.io.*;
 import java.util.List;

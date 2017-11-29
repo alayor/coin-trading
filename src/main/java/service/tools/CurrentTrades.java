@@ -1,7 +1,7 @@
 package service.tools;
 
-import service.TradingSimulator;
 import service.model.Trade;
+import service.trades.TradingSimulator;
 
 import java.util.ArrayList;
 import java.util.List;

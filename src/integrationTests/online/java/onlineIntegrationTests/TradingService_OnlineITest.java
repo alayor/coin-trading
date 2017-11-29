@@ -2,9 +2,9 @@ package onlineIntegrationTests;
 
 import org.junit.Before;
 import org.junit.Test;
-import service.TradingService;
-import service.TradingSimulator;
 import service.tools.BitsoApiRequester;
+import service.trades.TradingService;
+import service.trades.TradingSimulator;
 
 import java.net.URISyntaxException;
 

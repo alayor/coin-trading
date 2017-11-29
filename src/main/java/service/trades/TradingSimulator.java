@@ -1,4 +1,4 @@
-package service;
+package service.trades;
 
 import service.model.Trade;
 import service.tools.TickCounter;

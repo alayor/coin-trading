@@ -1,4 +1,4 @@
-package service;
+package service.trades;
 
 import org.junit.Before;
 import org.junit.Test;
