@@ -7,8 +7,7 @@ import service.orders.tools.OrderBookRestApiClient;
 
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class OrderBookResultApiClient_OnlineITest
 {
@@ -27,15 +26,18 @@ public class OrderBookResultApiClient_OnlineITest
         // then
         assertNotNull(orderBookResult);
         assertTrue(orderBookResult.isSuccess());
+        assertNotNull(orderBookResult.getOrderBook());
+        assertTrue(orderBookResult.getOrderBook().getSequence().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getUpdatedAt().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getAsks().size() > 0);
+        assertEquals("btc_mxn", orderBookResult.getOrderBook().getAsks().get(0).getBook());
+        assertTrue(orderBookResult.getOrderBook().getAsks().get(0).getOrderId().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getAsks().get(0).getPrice().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getAsks().get(0).getAmount().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getBids().size() > 0);
+        assertEquals("btc_mxn", orderBookResult.getOrderBook().getAsks().get(0).getBook());
+        assertTrue(orderBookResult.getOrderBook().getBids().get(0).getOrderId().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getBids().get(0).getPrice().length() > 0);
+        assertTrue(orderBookResult.getOrderBook().getBids().get(0).getAmount().length() > 0);
     }
-
-//    @Test
-//    public void shouldReturnResultsAccordingToLimit() throws Exception {
-//        //given
-//        orderBookRestApiClient = new TradesRestApiClient("https://api-dev.bitso.com/v3/trades?book=btc_mxn");
-//        // when
-//        TradeResult tradeResult = orderBookRestApiClient.getTrades(5);
-//        // then
-//        assertEquals(5, tradeResult.getTradeList().size());
-//    }
 }

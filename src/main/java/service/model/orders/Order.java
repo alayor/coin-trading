@@ -18,4 +18,20 @@ public class Order {
         this.price = price;
         this.amount = amount;
     }
+
+    public String getBook() {
+        return book;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
 }

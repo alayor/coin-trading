@@ -16,4 +16,8 @@ public class OrderBookResult {
     public boolean isSuccess() {
         return success;
     }
+
+    public OrderBook getOrderBook() {
+        return orderBook;
+    }
 }

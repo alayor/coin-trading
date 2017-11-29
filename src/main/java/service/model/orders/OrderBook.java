@@ -20,4 +20,20 @@ public class OrderBook {
         this.asks = asks;
         this.bids = bids;
     }
+
+    public String getSequence() {
+        return sequence;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public List<Order> getAsks() {
+        return asks;
+    }
+
+    public List<Order> getBids() {
+        return bids;
+    }
 }
