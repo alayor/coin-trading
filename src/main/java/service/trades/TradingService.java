@@ -2,8 +2,9 @@ package service.trades;
 
 import service.model.trades.Trade;
 import service.model.trades.TradeResult;
-import service.trades.tools.CurrentTradesHolder;
-import service.trades.tools.TradesRestApiClient;
+import service.trades._tools.holders.CurrentTradesHolder;
+import service.trades._tools.rest_client.TradesRestApiClient;
+import service.trades._tools.simulator.TradingSimulator;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;

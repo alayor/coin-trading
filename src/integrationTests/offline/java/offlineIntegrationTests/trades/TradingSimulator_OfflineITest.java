@@ -3,7 +3,7 @@ package offlineIntegrationTests.trades;
 import org.junit.Before;
 import org.junit.Test;
 import service.model.trades.Trade;
-import service.trades.TradingSimulator;
+import service.trades._tools.simulator.TradingSimulator;
 
 import java.util.List;
 

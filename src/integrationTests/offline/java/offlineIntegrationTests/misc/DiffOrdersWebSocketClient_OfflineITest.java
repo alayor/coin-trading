@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import service.model.diff_orders.DiffOrder;
 import service.model.diff_orders.DiffOrderResult;
-import service.orders.tools.DiffOrdersMessageHandler;
-import service.orders.tools.web_socket.DiffOrdersEndpoint;
-import service.orders.tools.web_socket.DiffOrdersWebSocketClient;
+import service.orders._tools.web_socket.DiffOrdersEndpoint;
+import service.orders._tools.web_socket.DiffOrdersMessageHandler;
+import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;

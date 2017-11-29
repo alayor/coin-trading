@@ -5,7 +5,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.model.trades.TradeResult;
-import service.trades.tools.TradesRestApiClient;
+import service.trades._tools.rest_client.TradesRestApiClient;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

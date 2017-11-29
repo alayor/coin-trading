@@ -2,8 +2,8 @@ package onlineIntegrationTests.orders;
 
 import org.junit.Test;
 import service.model.diff_orders.DiffOrderResult;
-import service.orders.tools.CurrentDiffOrdersHolder;
-import service.orders.tools.OrderBookUpdater;
+import service.orders._tools.OrderBookUpdater;
+import service.orders._tools.holders.CurrentDiffOrdersHolder;
 
 import java.util.ArrayList;
 import java.util.List;

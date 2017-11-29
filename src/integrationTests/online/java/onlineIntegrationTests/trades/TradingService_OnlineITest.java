@@ -3,8 +3,8 @@ package onlineIntegrationTests.trades;
 import org.junit.Before;
 import org.junit.Test;
 import service.trades.TradingService;
-import service.trades.TradingSimulator;
-import service.trades.tools.TradesRestApiClient;
+import service.trades._tools.rest_client.TradesRestApiClient;
+import service.trades._tools.simulator.TradingSimulator;
 
 import java.net.URISyntaxException;
 
