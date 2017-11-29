@@ -27,7 +27,7 @@ public class BitsoWebSocketClientTest {
     @Before
     public void setUp() throws Exception {
         uri = new URI("wss://ws.bitso.com/");
-        client = new BitsoWebSocketClient(uri, endpoint);
+        client = BitsoWebSocketClient.getInstance(uri, endpoint);
         client.setClientManager(clientManager);
         client.setConfig(config);
     }

@@ -15,7 +15,7 @@ public class BitsoWebSocketClient_OnlineITest {
     public void setUp() throws Exception {
         messageHandler = new BitsoMessageHandler();
         endpoint = new BitsoEndpoint(messageHandler);
-        client = new BitsoWebSocketClient(endpoint);
+        client = BitsoWebSocketClient.getInstance(endpoint);
     }
 
     @Test

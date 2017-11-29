@@ -14,6 +14,7 @@ import service.orders.tools.web_socket.BitsoWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -36,10 +37,14 @@ public class BitsoWebSocketClient_OfflineITest {
 
     @Before
     public void setUp() throws Exception {
+        BitsoWebSocketClient.clearInstance();
         clientMessageHandler = new BitsoMessageHandler();
-        BitsoEndpoint clientEndpoint = new BitsoEndpoint(clientMessageHandler);
-        client = new BitsoWebSocketClient(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
         MockedWebSocketServer.sequenceCount = 0;
+    }
+
+    private void initializeWebSocketClient() throws URISyntaxException {
+        BitsoEndpoint clientEndpoint = new BitsoEndpoint(clientMessageHandler);
+        client = BitsoWebSocketClient.getInstance(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
     }
 
     @After
@@ -50,6 +55,8 @@ public class BitsoWebSocketClient_OfflineITest {
 
     @Test
     public void shouldSubscribeSuccessfully() throws Exception {
+        // given
+        initializeWebSocketClient();
         // when
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
           MockedWebSocketServer::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
@@ -72,6 +79,7 @@ public class BitsoWebSocketClient_OfflineITest {
     @Test
     public void shouldReturnLastOrders() throws Exception {
         // given
+        initializeWebSocketClient();
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
           MockedWebSocketServer::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
         client.connect();
@@ -107,6 +115,7 @@ public class BitsoWebSocketClient_OfflineITest {
     @Test
     public void shouldNotFailIfMoreThanFiveHundredDiffOrdersAreInserted() throws Exception {
         // given
+        initializeWebSocketClient();
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
           MockedWebSocketServer::sendDiffOrderMessage, 2, 2, TimeUnit.MILLISECONDS);
         client.connect();
