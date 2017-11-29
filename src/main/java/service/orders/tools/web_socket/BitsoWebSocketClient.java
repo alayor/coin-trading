@@ -1,4 +1,4 @@
-package service.tools.web_socket;
+package service.orders.tools.web_socket;
 
 import org.glassfish.tyrus.client.ClientManager;
 

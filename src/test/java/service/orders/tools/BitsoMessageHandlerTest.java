@@ -1,4 +1,4 @@
-package service.tools.web_socket;
+package service.orders.tools;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -6,8 +6,8 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.DiffOrder;
 import service.model.DiffOrderResult;
 
 import java.util.HashMap;
@@ -15,14 +15,18 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BitsoMessageHandlerTest {
-  private BitsoMessageHandler handler;
+    private BitsoMessageHandler handler;
+    @Mock
+    private CurrentDiffOrdersHolder orderHolder;
 
     @Before
     public void setUp() throws Exception {
-        handler = new BitsoMessageHandler();
+        handler = new BitsoMessageHandler(orderHolder);
     }
 
     @Test
@@ -56,22 +60,24 @@ public class BitsoMessageHandlerTest {
     }
 
     @Test
-    public void shouldReturnLastDiffResultOrder() throws Exception {
+    public void shouldAddNewDiffOrder() throws Exception {
         // given
-        handler.onMessage(createDiffOrder());
+        String diffOrder = createDiffOrder();
         // when
-        DiffOrderResult lastDiffResultOrder = handler.getLastDiffResultOrder();
+        handler.onMessage(diffOrder);
         // then
-        assertEquals("diff-orders", lastDiffResultOrder.getType());
-        assertEquals("btc_mxn", lastDiffResultOrder.getBook());
-        assertEquals("43760505", lastDiffResultOrder.getSequence());
-        DiffOrder diffOrder = lastDiffResultOrder.getDiffOrderList().get(0);
-        assertEquals("4cCTdGxIo8iyhH5Z", diffOrder.getOrderId());
-        assertEquals("1511918888029", diffOrder.getTimestamp());
-        assertEquals("185775.36", diffOrder.getRate());
-        assertEquals("0.00039985", diffOrder.getAmount());
-        assertEquals("74.2822777", diffOrder.getValue());
-        assertEquals("open", diffOrder.getStatus());
+        verify(orderHolder).produce(any(DiffOrderResult.class));
+    }
+
+    @Test
+    public void shouldReturnNextDiffOrder() throws Exception {
+        // given
+        String diffOrder = createDiffOrder();
+        handler.onMessage(diffOrder);
+        // when
+        handler.getNext();
+        // then
+        verify(orderHolder).consume();
     }
 
     private String createDiffOrder() throws JSONException {

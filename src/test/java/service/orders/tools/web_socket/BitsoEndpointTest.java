@@ -1,4 +1,4 @@
-package service.tools.web_socket;
+package service.orders.tools.web_socket;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.orders.tools.BitsoMessageHandler;
 
 import javax.websocket.EndpointConfig;
 import javax.websocket.RemoteEndpoint;

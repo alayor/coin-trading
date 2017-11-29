@@ -1,6 +1,7 @@
-package service.tools.web_socket;
+package service.orders.tools.web_socket;
 
 import org.json.JSONObject;
+import service.orders.tools.BitsoMessageHandler;
 
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;

@@ -1,16 +1,19 @@
-package service.tools.web_socket;
+package service.orders.tools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import service.model.DiffOrderResult;
 
 import javax.websocket.MessageHandler;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class BitsoMessageHandler implements MessageHandler.Whole<String> {
-    private final BlockingDeque<DiffOrderResult> diffOrderResults = new LinkedBlockingDeque<>(500);
+    private CurrentDiffOrdersHolder ordersHolder;
     private boolean wasSuccessfullySubscribed;
+
+    public BitsoMessageHandler(CurrentDiffOrdersHolder orderHolder) {
+        ordersHolder = orderHolder;
+    }
+
     @Override
     public void onMessage(String message) {
         try {
@@ -32,7 +35,7 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
 
     private void addOrderResult(JSONObject jsonObject) {
         DiffOrderResult diffOrderResult = DiffOrderResult.parse(jsonObject);
-        diffOrderResults.offerFirst(diffOrderResult);
+        ordersHolder.produce(diffOrderResult);
     }
 
     private boolean isDiffOrderMessage(JSONObject jsonObject) throws JSONException {
@@ -57,11 +60,8 @@ public class BitsoMessageHandler implements MessageHandler.Whole<String> {
         return wasSuccessfullySubscribed;
     }
 
-    public DiffOrderResult getLastDiffResultOrder() {
-        return diffOrderResults.getLast();
-    }
 
     public DiffOrderResult getNext() throws InterruptedException {
-        return diffOrderResults.takeLast();
+        return ordersHolder.consume();
     }
 }
