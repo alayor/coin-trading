@@ -19,7 +19,7 @@ public class CurrentDiffOrdersHolder {
         diffOrders.offerFirst(diffOrderResult);
     }
 
-    DiffOrderResult consume() throws InterruptedException {
+    public DiffOrderResult consume() throws InterruptedException {
         return diffOrders.takeLast();
     }
 }

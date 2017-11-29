@@ -30,8 +30,6 @@ public class BitsoWebSocketClient {
         return bitsoWebSocketClient;
     }
 
-    private BitsoWebSocketClient() {}
-
     private BitsoWebSocketClient(Endpoint endpoint) throws URISyntaxException {
         this(new URI("wss://ws.bitso.com/"), endpoint);
     }
@@ -42,7 +40,7 @@ public class BitsoWebSocketClient {
     }
 
     public void connect() throws IOException, DeploymentException {
-       clientManager.connectToServer(endpoint, config, uri);
+        clientManager.connectToServer(endpoint, config, uri);
     }
 
     void setClientManager(ClientManager clientManager) {

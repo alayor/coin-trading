@@ -53,6 +53,6 @@ public class BitsoEndpointTest {
         JSONObject jsonObject = new JSONObject(captor.getValue());
         assertEquals("subscribe", jsonObject.get("action"));
         assertEquals("btc_mxn", jsonObject.get("book"));
-        assertEquals("trades", jsonObject.get("type"));
+        assertEquals("diff-orders", jsonObject.get("type"));
     }
 }

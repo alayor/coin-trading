@@ -18,7 +18,7 @@ public class BitsoEndpoint extends Endpoint {
     static {
         subscriptionInfo.put("action", "subscribe");
         subscriptionInfo.put("book", getProperty("default_book"));
-        subscriptionInfo.put("type", "trades");
+        subscriptionInfo.put("type", "diff-orders");
     }
 
     private final BitsoMessageHandler messageHandler;

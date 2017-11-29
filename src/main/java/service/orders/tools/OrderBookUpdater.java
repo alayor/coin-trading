@@ -11,9 +11,6 @@ public class OrderBookUpdater {
     private static OrderBookUpdater orderBookUpdater;
     private BitsoWebSocketClient bitsoWebSocketClient;
 
-    private OrderBookUpdater() {
-    }
-
     private OrderBookUpdater(BitsoWebSocketClient bitsoWebSocketClient) {
       this.bitsoWebSocketClient = bitsoWebSocketClient;
     }
