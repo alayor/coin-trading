@@ -7,14 +7,14 @@ import java.util.List;
 public class OrderBook {
     private final String sequence;
     private final String updatedAt;
-    private final List<Order> asks;
-    private final List<Order> bids;
+    private final List<Ask> asks;
+    private final List<Bid> bids;
 
     public OrderBook(
       @JsonProperty("sequence") String sequence,
       @JsonProperty("updated_at") String updatedAt,
-      @JsonProperty("asks") List<Order> asks,
-      @JsonProperty("bids") List<Order> bids) {
+      @JsonProperty("asks") List<Ask> asks,
+      @JsonProperty("bids") List<Bid> bids) {
         this.sequence = sequence;
         this.updatedAt = updatedAt;
         this.asks = asks;
@@ -29,11 +29,11 @@ public class OrderBook {
         return updatedAt;
     }
 
-    public List<Order> getAsks() {
+    public List<Ask> getAsks() {
         return asks;
     }
 
-    public List<Order> getBids() {
+    public List<Bid> getBids() {
         return bids;
     }
 }

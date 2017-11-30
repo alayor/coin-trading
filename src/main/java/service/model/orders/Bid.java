@@ -2,13 +2,13 @@ package service.model.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Order {
+public class Bid {
     private final String book;
     private final String orderId;
     private final String price;
     private final String amount;
 
-    public Order(
+    public Bid(
       @JsonProperty("book") String book,
       @JsonProperty("oid") String orderId,
       @JsonProperty("price") String price,
