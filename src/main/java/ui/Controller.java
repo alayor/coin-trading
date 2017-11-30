@@ -3,23 +3,28 @@ package ui;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
+import ui.data.Ask;
+import ui.data.Bid;
 import ui.data.Trade;
 
 import java.util.List;
 
-public class TradesTableController
+public class Controller
 {
     @FXML
-    private TableView<Trade> tableView;
+    private TableView<Trade> tradesTableView;
+    @FXML
+    private TableView<Bid> bidsTableView;
+    @FXML
+    private TableView<Ask> asksTableView;
     private Main mainApp;
 
     void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
 
-    @FXML
     public void getTrades() {
-        ObservableList<Trade> data = tableView.getItems();
+        ObservableList<Trade> data = tradesTableView.getItems();
         data.clear();
         for (service.model.trades.Trade lastTrade : mainApp.getTrades(25))
         {
@@ -32,5 +37,25 @@ public class TradesTableController
                     Boolean.toString(lastTrade.isSimulated())
             ));
         }
+    }
+
+    public void getBids() {
+        ObservableList<Bid> data = bidsTableView.getItems();
+        data.clear();
+        data.add(new Bid(
+                "1",
+                "101",
+                "23"
+        ));
+    }
+
+    public void getAsks() {
+        ObservableList<Ask> data = asksTableView.getItems();
+        data.clear();
+        data.add(new Ask(
+                "1",
+                "101",
+                "23"
+        ));
     }
 }

@@ -5,20 +5,20 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.GridPane?>
-<GridPane fx:controller="ui.TradesTableController"
+<GridPane fx:controller="ui.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
   </padding>
   <Label style="-fx-font: NORMAL 20 Tahoma;" text="Last Trades" GridPane.columnIndex="0" GridPane.rowIndex="0">
   </Label>
-  <TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
+  <TableView fx:id="tradesTableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
     <columns>
       <TableColumn text="Id">
         <cellValueFactory><PropertyValueFactory property="tid" />
         </cellValueFactory>
       </TableColumn>
-      <TableColumn fx:id="createdAt" text="Created At">
+      <TableColumn text="Created At">
         <cellValueFactory><PropertyValueFactory property="createdAt" />
         </cellValueFactory>
       </TableColumn>
@@ -43,20 +43,13 @@
       <FXCollections fx:factory="observableArrayList">
       </FXCollections>
     </items>
-    <sortOrder>
-      <fx:reference source="createdAt"/>
-    </sortOrder>
   </TableView>
   <Label style="-fx-font: NORMAL 20 Tahoma;" text="Best Bids" GridPane.columnIndex="0" GridPane.rowIndex="2">
   </Label>
-  <TableView fx:id="tableView2" GridPane.columnIndex="0" GridPane.rowIndex="3">
+  <TableView fx:id="bidsTableView" GridPane.columnIndex="0" GridPane.rowIndex="3">
     <columns>
       <TableColumn text="Id">
-        <cellValueFactory><PropertyValueFactory property="tid" />
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn fx:id="createdAt2" text="Created At">
-        <cellValueFactory><PropertyValueFactory property="createdAt" />
+        <cellValueFactory><PropertyValueFactory property="orderId" />
         </cellValueFactory>
       </TableColumn>
       <TableColumn text="Price">
@@ -67,33 +60,18 @@
         <cellValueFactory><PropertyValueFactory property="amount" />
         </cellValueFactory>
       </TableColumn>
-      <TableColumn text="Type">
-        <cellValueFactory><PropertyValueFactory property="makerSide" />
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Simulated">
-        <cellValueFactory><PropertyValueFactory property="simulated" />
-        </cellValueFactory>
-      </TableColumn>
     </columns>
     <items>
       <FXCollections fx:factory="observableArrayList">
       </FXCollections>
     </items>
-    <sortOrder>
-      <fx:reference source="createdAt"/>
-    </sortOrder>
   </TableView>
   <Label style="-fx-font: NORMAL 20 Tahoma;" text="Best Asks" GridPane.columnIndex="1" GridPane.rowIndex="2">
   </Label>
-  <TableView fx:id="tableView3" GridPane.columnIndex="1" GridPane.rowIndex="3">
+  <TableView fx:id="asksTableView" GridPane.columnIndex="1" GridPane.rowIndex="3">
     <columns>
       <TableColumn text="Id">
-        <cellValueFactory><PropertyValueFactory property="tid" />
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn fx:id="createdAt3" text="Created At">
-        <cellValueFactory><PropertyValueFactory property="createdAt" />
+        <cellValueFactory><PropertyValueFactory property="orderId" />
         </cellValueFactory>
       </TableColumn>
       <TableColumn text="Price">
@@ -104,21 +82,10 @@
         <cellValueFactory><PropertyValueFactory property="amount" />
         </cellValueFactory>
       </TableColumn>
-      <TableColumn text="Type">
-        <cellValueFactory><PropertyValueFactory property="makerSide" />
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Simulated">
-        <cellValueFactory><PropertyValueFactory property="simulated" />
-        </cellValueFactory>
-      </TableColumn>
     </columns>
     <items>
       <FXCollections fx:factory="observableArrayList">
       </FXCollections>
     </items>
-    <sortOrder>
-      <fx:reference source="createdAt"/>
-    </sortOrder>
   </TableView>
 </GridPane>

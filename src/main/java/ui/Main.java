@@ -22,7 +22,7 @@ public class Main extends Application {
     private static MockedHttpServer mockedServer = new MockedHttpServer();
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private ScheduledFuture<?> scheduledFuture;
-    private TradesTableController controller;
+    private Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
