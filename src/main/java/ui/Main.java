@@ -22,19 +22,20 @@ public class Main extends Application {
     private static MockedHttpServer mockedServer = new MockedHttpServer();
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private ScheduledFuture<?> scheduledFuture;
-    private Controller controller;
+    private TradesTableController controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         mockedServer.start();
         startSchedule();
         tradingService = TradingService.getInstance(new TradesRestApiClient("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
         controller = loader.getController();
         controller.setMainApp(this);
         primaryStage.setTitle("Coin Trading");
-        primaryStage.setScene(new Scene(root, 600, 600));
+        primaryStage.setScene(new Scene(root, 1200, 800));
         primaryStage.show();
     }
 

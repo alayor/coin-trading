@@ -7,15 +7,11 @@ import ui.data.Trade;
 
 import java.util.List;
 
-public class Controller {
+public class TradesTableController
+{
     @FXML
     private TableView<Trade> tableView;
     private Main mainApp;
-
-    @FXML
-    public void initialize() {
-
-    }
 
     void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
