@@ -20,6 +20,9 @@ import static org.junit.Assert.assertTrue;
 public class OrderBookHolderTest {
 
     private OrderBookHolder holder;
+    private final String BUY = "0";
+    private final String SELL = "1";
+
     @Before
     public void setUp() throws Exception {
         holder = OrderBookHolder.getInstance();
@@ -175,7 +178,7 @@ public class OrderBookHolderTest {
     public void shouldUpdateCurrentSequenceWhenApplyingDiffOrder() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", "0", "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", BUY, "10"))));
         // when
         String currentSequence = holder.getCurrentSequence();
         // then
@@ -207,7 +210,7 @@ public class OrderBookHolderTest {
     public void shouldNotUpdateMinSequenceWhenApplyingDiffOrder() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", "0", "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", BUY, "10"))));
         // when
         String minSequence = holder.getMinSequence();
         // then
@@ -218,7 +221,7 @@ public class OrderBookHolderTest {
     public void shouldApplyAddDiffOrderToBids() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", "0", "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", BUY, "10"))));
         // when
         List<Bid> bestBids = holder.getBestBids(10);
         // then
@@ -230,7 +233,7 @@ public class OrderBookHolderTest {
     public void shouldApplyAddDiffOrderToAsks() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", "1", "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", SELL, "10"))));
         // when
         List<Ask> bestAsks = holder.getBestAsks(10);
         // then
@@ -245,7 +248,7 @@ public class OrderBookHolderTest {
         String newDiffOrderSequence = "4";
         holder.loadOrderBook(createOrderBookResult(currentSequence));
         holder.applyDiffOrder(createDiffOrderResult(newDiffOrderSequence,
-          singletonList(createDiffOrder("8", "105", "0", "10"))));
+          singletonList(createDiffOrder("8", "105", BUY, "10"))));
         // when
         List<Bid> bestBids = holder.getBestBids(10);
         // then
@@ -273,7 +276,7 @@ public class OrderBookHolderTest {
         // given
         String noAmount = "";
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", "0", noAmount))));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", BUY, noAmount))));
         // when
         List<Bid> bestBids = holder.getBestBids(10);
         // then
@@ -286,7 +289,7 @@ public class OrderBookHolderTest {
         // given
         String noAmount = "";
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", "1", noAmount))));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", SELL, noAmount))));
         // when
         List<Ask> bestAsks = holder.getBestAsks(10);
         // then
@@ -294,12 +297,34 @@ public class OrderBookHolderTest {
         assertEquals("101", bestAsks.get(0).getPrice());
     }
 
+    @Test
+    public void shouldAddDiffOrderBidIdsToSet() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", BUY, "10"))));
+        // when
+        Set<String> orderIds = holder.getCurrentOrderIds();
+        // then
+        assertTrue(orderIds.contains("9"));
+    }
+
+    @Test
+    public void shouldAddDiffOrderAskIdsToSet() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", SELL, "10"))));
+        // when
+        Set<String> orderIds = holder.getCurrentOrderIds();
+        // then
+        assertTrue(orderIds.contains("9"));
+    }
+
 //    @Test
 //    public void shouldApplyRemoveDiffOrderToBids() throws Exception {
 //        // given
 //        String noAmount = "";
 //        holder.loadOrderBook(createOrderBookResult("1"));
-//        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "100", "0", noAmount))));
+//        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "100", BUY, noAmount))));
 //        // when
 //        List<Bid> bestBids = holder.getBestBids(10);
 //        // then

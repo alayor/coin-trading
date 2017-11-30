@@ -98,25 +98,35 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (diffOrder.getAmount().length() > 1) {
-            priorityBids.add(new Bid(
-              diffOrderResult.getBook(),
-              diffOrder.getOrderId(),
-              diffOrder.getRate(),
-              diffOrder.getAmount()
-            ));
+        if (!diffOrder.getAmount().isEmpty()) {
+            addOrderToBids(diffOrderResult, diffOrder);
+            currentOrderIds.add(diffOrder.getOrderId());
         }
     }
 
+    private void addOrderToBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
+        priorityBids.add(new Bid(
+          diffOrderResult.getBook(),
+          diffOrder.getOrderId(),
+          diffOrder.getRate(),
+          diffOrder.getAmount()
+        ));
+    }
+
     private void applyOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (diffOrder.getAmount().length() > 1) {
-            priorityAsks.add(new Ask(
-              diffOrderResult.getBook(),
-              diffOrder.getOrderId(),
-              diffOrder.getRate(),
-              diffOrder.getAmount()
-            ));
+        if (!diffOrder.getAmount().isEmpty()) {
+            addOrderToAsks(diffOrderResult, diffOrder);
+            currentOrderIds.add(diffOrder.getOrderId());
         }
+    }
+
+    private void addOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
+        priorityAsks.add(new Ask(
+          diffOrderResult.getBook(),
+          diffOrder.getOrderId(),
+          diffOrder.getRate(),
+          diffOrder.getAmount()
+        ));
     }
 
     String getCurrentSequence() {
