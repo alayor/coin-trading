@@ -229,6 +229,19 @@ public class OrderBookHolderTest {
     }
 
     @Test
+    public void shouldApplyUpdateDiffOrderToBids() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("3", "100", BUY, "10"))));
+        // when
+        List<Bid> bestBids = holder.getBestBids(10);
+        // then
+        assertEquals(4, bestBids.size());
+        assertEquals("3", bestBids.get(0).getOrderId());
+        assertEquals("100", bestBids.get(0).getPrice());
+    }
+
+    @Test
     public void shouldApplyAddDiffOrderToAsks() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
@@ -237,6 +250,19 @@ public class OrderBookHolderTest {
         List<Ask> bestAsks = holder.getBestAsks(10);
         // then
         assertEquals("9", bestAsks.get(0).getOrderId());
+        assertEquals("100", bestAsks.get(0).getPrice());
+    }
+
+    @Test
+    public void shouldApplyUpdateDiffOrderToAsks() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("6", "100", SELL, "10"))));
+        // when
+        List<Ask> bestAsks = holder.getBestAsks(10);
+        // then
+        assertEquals(4, bestAsks.size());
+        assertEquals("6", bestAsks.get(0).getOrderId());
         assertEquals("100", bestAsks.get(0).getPrice());
     }
 

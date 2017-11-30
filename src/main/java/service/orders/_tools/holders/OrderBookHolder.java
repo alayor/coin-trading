@@ -98,13 +98,33 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId())) {
+        if (shouldRemove(diffOrder)) {
             removeOrderFromBids(diffOrderResult, diffOrder);
             currentOrderIds.remove(diffOrder.getOrderId());
-        } else if(!diffOrder.getAmount().isEmpty()) {
+        }
+        else if (shouldUpdate(diffOrder)) {
+            removeOrderFromBids(diffOrderResult, diffOrder);
+            addOrderToBids(diffOrderResult, diffOrder);
+        }
+        else if (shouldAdd(diffOrder)) {
             addOrderToBids(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
+    }
+
+    private boolean shouldRemove(DiffOrder diffOrder)
+    {
+        return diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId());
+    }
+
+    private boolean shouldUpdate(DiffOrder diffOrder)
+    {
+        return !diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId());
+    }
+
+    private boolean shouldAdd(DiffOrder diffOrder)
+    {
+        return !diffOrder.getAmount().isEmpty();
     }
 
     private void removeOrderFromBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
@@ -126,10 +146,15 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId())) {
+        if (shouldRemove(diffOrder)) {
             removeOrderFromAsks(diffOrderResult, diffOrder);
             currentOrderIds.remove(diffOrder.getOrderId());
-        } else if(!diffOrder.getAmount().isEmpty()) {
+        }
+        else if(shouldUpdate(diffOrder)) {
+            removeOrderFromAsks(diffOrderResult, diffOrder);
+            addOrderToAsks(diffOrderResult, diffOrder);
+        }
+        else if(shouldAdd(diffOrder)) {
             addOrderToAsks(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
