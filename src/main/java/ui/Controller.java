@@ -6,8 +6,6 @@ import javafx.scene.control.TableView;
 import ui.data.Trade;
 
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class Controller {
     @FXML
@@ -16,9 +14,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-        scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
-        scheduledThreadPoolExecutor.scheduleWithFixedDelay(this::getTrades, 5, 5, TimeUnit.SECONDS);
+
     }
 
     void setMainApp(Main mainApp) {
@@ -27,10 +23,9 @@ public class Controller {
 
     @FXML
     public void getTrades() {
-        List<service.model.trades.Trade> lastTrades = mainApp.getTradingService().getLastTrades(25);
         ObservableList<Trade> data = tableView.getItems();
         data.clear();
-        for (service.model.trades.Trade lastTrade : lastTrades)
+        for (service.model.trades.Trade lastTrade : mainApp.getTrades(25))
         {
             data.add(new Trade(
                     lastTrade.getCreatedAt(),
