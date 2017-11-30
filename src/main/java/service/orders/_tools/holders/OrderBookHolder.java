@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import static java.lang.Integer.parseInt;
+import static java.util.concurrent.ConcurrentHashMap.newKeySet;
 
 public class OrderBookHolder {
     private static OrderBookHolder orderBookHolder;
     private String minSequence = "";
     private String currentSequence = "";
-    private Set<String> concurrentHashSet = ConcurrentHashMap.newKeySet();
+    private Set<String> currentOrderIds = newKeySet();
     private BlockingQueue<Bid> priorityBids = new PriorityBlockingQueue<>(1000);
     private BlockingQueue<Ask> priorityAsks = new PriorityBlockingQueue<>(1000);
 
@@ -35,10 +35,12 @@ public class OrderBookHolder {
     }
 
     private void loadAsks(List<Ask> asks) {
+        asks.stream().map(Ask::getOrderId).forEach(id -> currentOrderIds.add(id));
         priorityAsks.addAll(asks);
     }
 
     private void loadBids(List<Bid> bids) {
+        bids.stream().map(Bid::getOrderId).forEach(id -> currentOrderIds.add(id));
         priorityBids.addAll(bids);
     }
 
@@ -123,5 +125,9 @@ public class OrderBookHolder {
 
     String getMinSequence() {
         return minSequence;
+    }
+
+    Set<String> getCurrentOrderIds() {
+        return currentOrderIds;
     }
 }

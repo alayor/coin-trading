@@ -11,9 +11,11 @@ import service.model.orders.OrderBookResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class OrderBookHolderTest {
 
@@ -36,6 +38,23 @@ public class OrderBookHolderTest {
         assertEquals("102", asks.get(1).getPrice());
         assertEquals("103", asks.get(2).getPrice());
         assertEquals("104", asks.get(3).getPrice());
+    }
+
+    @Test
+    public void shouldAddOrderIdsToSet() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        // when
+        Set<String> orderIds = holder.getCurrentOrderIds();
+        // then
+        assertTrue(orderIds.contains("1"));
+        assertTrue(orderIds.contains("2"));
+        assertTrue(orderIds.contains("3"));
+        assertTrue(orderIds.contains("4"));
+        assertTrue(orderIds.contains("5"));
+        assertTrue(orderIds.contains("6"));
+        assertTrue(orderIds.contains("7"));
+        assertTrue(orderIds.contains("8"));
     }
 
     @Test
