@@ -1,6 +1,6 @@
 package service.orders.$tools.rest_client;
 
-import service._tools.UriArgumentAppender;
+import service.$tools.UriArgumentAppender;
 import service.model.orders.OrderBookResult;
 
 import javax.ws.rs.client.Client;
@@ -8,7 +8,7 @@ import javax.ws.rs.client.ClientBuilder;
 import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static service._tools.AppProperties.getProperty;
+import static service.$tools.AppProperties.getProperty;
 
 public class OrderBookRestApiClient {
     private final String uri;

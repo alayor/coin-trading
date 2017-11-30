@@ -1,4 +1,4 @@
-package service._tools;
+package service.$tools;
 
 import java.net.URI;
 import java.net.URISyntaxException;

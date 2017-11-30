@@ -1,4 +1,4 @@
-package ui._tools;
+package ui.$tools;
 
 import fi.iki.elonen.NanoHTTPD;
 import org.apache.commons.io.IOUtils;

@@ -9,7 +9,7 @@ import service.model.trades.Trade;
 import service.trades.TradingService;
 import service.trades._tools.rest_client.TradesRestApiClient;
 import service.trades._tools.simulator.TradingSimulator;
-import ui._tools.MockedHttpServer;
+import ui.$tools.MockedHttpServer;
 
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;

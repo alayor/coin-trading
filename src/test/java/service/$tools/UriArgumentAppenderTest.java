@@ -1,4 +1,4 @@
-package service._tools;
+package service.$tools;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package service._tools;
+package service.$tools;
 
 import service.trades._tools.rest_client.TradesRestApiClient;
 

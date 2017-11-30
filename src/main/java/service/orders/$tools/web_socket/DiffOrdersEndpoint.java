@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static service._tools.AppProperties.getProperty;
+import static service.$tools.AppProperties.getProperty;
 
 public class DiffOrdersEndpoint extends Endpoint {
     private static Map<String, String> subscriptionInfo = new HashMap<>();

@@ -1,6 +1,6 @@
 package service.trades._tools.rest_client;
 
-import service._tools.UriArgumentAppender;
+import service.$tools.UriArgumentAppender;
 import service.model.trades.TradeResult;
 
 import javax.ws.rs.client.Client;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static service._tools.AppProperties.getProperty;
+import static service.$tools.AppProperties.getProperty;
 
 public class TradesRestApiClient {
 
