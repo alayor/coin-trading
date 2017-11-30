@@ -2,7 +2,9 @@ package service.model.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Bid {
+import java.math.BigDecimal;
+
+public class Bid implements Comparable<Bid> {
     private final String book;
     private final String orderId;
     private final String price;
@@ -33,5 +35,25 @@ public class Bid {
 
     public String getAmount() {
         return amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Bid bid = (Bid) o;
+
+        return orderId.equals(bid.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return orderId.hashCode();
+    }
+
+    @Override
+    public int compareTo(Bid o) {
+        return new BigDecimal(o.price).compareTo(new BigDecimal(price));
     }
 }
