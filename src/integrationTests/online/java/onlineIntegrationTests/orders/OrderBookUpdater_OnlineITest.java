@@ -1,5 +1,6 @@
 package onlineIntegrationTests.orders;
 
+import org.junit.Before;
 import org.junit.Test;
 import service.model.diff_orders.DiffOrderResult;
 import service.orders._tools.OrderBookUpdater;
@@ -11,6 +12,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class OrderBookUpdater_OnlineITest {
+
+    @Before
+    public void setUp() throws Exception {
+        OrderBookUpdater.clearInstance();
+    }
 
     @Test
     public void shouldQueueDiffOrders() throws Exception {

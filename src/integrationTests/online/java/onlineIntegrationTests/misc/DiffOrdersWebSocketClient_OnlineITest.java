@@ -8,13 +8,12 @@ import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
 
 public class DiffOrdersWebSocketClient_OnlineITest {
     private DiffOrdersWebSocketClient client;
-    private DiffOrdersEndpoint endpoint;
     private DiffOrdersMessageHandler messageHandler;
 
     @Before
     public void setUp() throws Exception {
-        messageHandler = new DiffOrdersMessageHandler();
-        endpoint = new DiffOrdersEndpoint(messageHandler);
+        messageHandler = DiffOrdersMessageHandler.getInstance();
+        DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
         client = DiffOrdersWebSocketClient.getInstance(endpoint);
     }
 

@@ -28,7 +28,8 @@ public class DiffOrdersMessageHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        handler = new DiffOrdersMessageHandler(orderHolder);
+        DiffOrdersMessageHandler.clearInstance();
+        handler = DiffOrdersMessageHandler.getInstance(orderHolder);
     }
 
     @Test

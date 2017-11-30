@@ -1,8 +1,8 @@
 package offlineIntegrationTests.misc;
 
 import offlineIntegrationTests.misc.tools.DiffOrderCreator;
+import offlineIntegrationTests.misc.tools.MockedWebSocketEndpoint;
 import offlineIntegrationTests.misc.tools.MockedWebSocketServer;
-import org.glassfish.tyrus.server.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,19 +28,18 @@ import static org.junit.Assert.assertEquals;
 public class DiffOrdersWebSocketClient_OfflineITest {
     private DiffOrdersWebSocketClient client;
     private DiffOrdersMessageHandler clientMessageHandler;
-    private static Server server = new Server("localhost", 8025, "/bitso", null, MockedWebSocketServer.class);
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
     private ScheduledFuture<?> schedule;
 
     @BeforeClass
     public static void beforeClass() throws DeploymentException {
-        server.start();
+        MockedWebSocketServer.startServer();
     }
 
     @Before
     public void setUp() throws Exception {
         DiffOrdersWebSocketClient.clearInstance();
-        clientMessageHandler = new DiffOrdersMessageHandler();
+        clientMessageHandler = DiffOrdersMessageHandler.getInstance();
         clientMessageHandler.clearDiffOrders();
         DiffOrderCreator.sequenceCount = 0;
         DiffOrderCreator.isCancelled = false;
@@ -113,7 +112,7 @@ public class DiffOrdersWebSocketClient_OfflineITest {
     private void initializeWebSocketClientAndConnect(TimeUnit timeUnit) throws URISyntaxException, IOException, DeploymentException {
         initializeWebSocketClient();
         schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
-          MockedWebSocketServer::sendDiffOrderMessage, 2, 2, timeUnit);
+          MockedWebSocketEndpoint::sendDiffOrderMessage, 2, 2, timeUnit);
         client.connect();
     }
 

@@ -32,7 +32,7 @@ public class OrderBookUpdater {
     }
 
     public static OrderBookUpdater getInstance() throws URISyntaxException {
-        DiffOrdersMessageHandler messageHandler = new DiffOrdersMessageHandler();
+        DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
         DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
         OrderBookRestApiClient orderBookApiClient = new OrderBookRestApiClient();
         OrderBookHolder orderBookHolder = new OrderBookHolder();
@@ -41,7 +41,7 @@ public class OrderBookUpdater {
     }
 
     public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
-        DiffOrdersMessageHandler messageHandler = new DiffOrdersMessageHandler();
+        DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
         DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
         OrderBookHolder orderBookHolder = new OrderBookHolder();
         DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
@@ -63,7 +63,7 @@ public class OrderBookUpdater {
         return orderBookUpdater;
     }
 
-    public static void stop() {
+    public static void clearInstance() {
         orderBookUpdater = null;
     }
 

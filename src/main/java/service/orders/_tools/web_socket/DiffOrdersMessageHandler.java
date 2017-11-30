@@ -9,16 +9,24 @@ import javax.websocket.MessageHandler;
 import java.util.concurrent.TimeUnit;
 
 public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
+    private static DiffOrdersMessageHandler diffOrdersMessageHandler;
     private CurrentDiffOrdersHolder ordersHolder;
-    private boolean wasSuccessfullySubscribed;
-    private boolean firstDiffOfferHasBeenReceived;
+    private volatile boolean wasSuccessfullySubscribed;
+    private volatile boolean firstDiffOfferHasBeenReceived;
 
-    DiffOrdersMessageHandler(CurrentDiffOrdersHolder orderHolder) {
+    private DiffOrdersMessageHandler(CurrentDiffOrdersHolder orderHolder) {
         ordersHolder = orderHolder;
     }
 
-    public DiffOrdersMessageHandler() {
-        this(CurrentDiffOrdersHolder.getInstance());
+    public static DiffOrdersMessageHandler getInstance(CurrentDiffOrdersHolder orderHolder) {
+        if (diffOrdersMessageHandler == null) {
+            diffOrdersMessageHandler = new DiffOrdersMessageHandler(orderHolder);
+        }
+        return diffOrdersMessageHandler;
+    }
+
+    public static DiffOrdersMessageHandler getInstance() {
+        return getInstance(CurrentDiffOrdersHolder.getInstance());
     }
 
     @Override
@@ -80,5 +88,9 @@ public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
 
     public boolean firstDiffOfferHasBeenReceived() {
         return firstDiffOfferHasBeenReceived;
+    }
+
+    public static void clearInstance() {
+        diffOrdersMessageHandler = null;
     }
 }

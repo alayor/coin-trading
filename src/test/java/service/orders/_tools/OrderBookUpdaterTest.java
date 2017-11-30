@@ -35,7 +35,7 @@ public class OrderBookUpdaterTest {
 
     @Before
     public void setUp() throws Exception {
-        OrderBookUpdater.stop();
+        OrderBookUpdater.clearInstance();
     }
 
     @Test
@@ -59,7 +59,10 @@ public class OrderBookUpdaterTest {
     @Test
     public void shouldConnectToWebSocketWhenStarting() throws Exception {
         // given
-        OrderBookUpdater orderBookUpdater = getInstance(webSocketClient, orderBookApiClient, orderBookHolder, diffOrderMessageHandler);
+        OrderBookUpdater orderBookUpdater =
+          getInstance(webSocketClient, orderBookApiClient, orderBookHolder, diffOrderMessageHandler);
+        given(orderBookApiClient.getOrderBook()).willReturn(orderBookResult);
+        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
         // then
@@ -71,6 +74,8 @@ public class OrderBookUpdaterTest {
         // given
         OrderBookUpdater orderBookUpdater =
           getInstance(webSocketClient, orderBookApiClient, orderBookHolder, diffOrderMessageHandler);
+        given(orderBookApiClient.getOrderBook()).willReturn(orderBookResult);
+        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
         // then
@@ -90,23 +95,5 @@ public class OrderBookUpdaterTest {
         orderBookUpdater.start();
         // then
         verify(orderBookHolder).loadOrderBook(orderBookResult);
-    }
-
-    @Test
-    public void shouldThrowExceptionIfFirstNoDiffOrderHasBeenReceived() throws Exception {
-        // given
-        OrderBookUpdater orderBookUpdater =
-          getInstance(webSocketClient, orderBookApiClient, orderBookHolder, diffOrderMessageHandler);
-        given(orderBookApiClient.getOrderBook()).willReturn(orderBookResult);
-        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(false);
-        try {
-            // when
-            orderBookUpdater.start();
-        } catch (Exception e) {
-            // then
-            assertEquals("Order Book couldn't get loaded. No Diff Offers were received.", e.getMessage());
-            return;
-        }
-        throw new AssertionError("No expected exception was thrown");
     }
 }

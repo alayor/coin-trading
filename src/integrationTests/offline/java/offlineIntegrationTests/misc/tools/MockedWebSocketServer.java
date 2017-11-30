@@ -1,35 +1,17 @@
 package offlineIntegrationTests.misc.tools;
 
-import org.json.JSONException;
+import org.glassfish.tyrus.server.Server;
 
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
+import javax.websocket.DeploymentException;
 
-@ServerEndpoint(value = "/mock")
 public class MockedWebSocketServer {
-    private static Session session;
 
-    public MockedWebSocketServer() {
-    }
+    private static Server mockedWebSocketServer;
 
-    @OnMessage
-    public String onMessage(String message, Session session) throws JSONException {
-        if (MockedWebSocketServer.session == null) {
-            MockedWebSocketServer.session = session;
-        }
-        return "{\"response\":\"ok\", \"action\":\"subscribe\", \"type\": \"trades\"}";
-    }
-
-    public static void sendDiffOrderMessage() {
-        if (session != null) {
-            try {
-                String diffOrder = DiffOrderCreator.createDiffOrder();
-                session.getBasicRemote().sendText(diffOrder);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+    public static void startServer() throws DeploymentException {
+        if (mockedWebSocketServer == null) {
+            mockedWebSocketServer = new Server("localhost", 8025, "/bitso", null, MockedWebSocketEndpoint.class);
+            mockedWebSocketServer.start();
         }
     }
 }
