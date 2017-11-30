@@ -53,5 +53,6 @@ public class DiffOrdersWebSocketClient {
 
     public static void clearInstance() {
         diffOrdersWebSocketClient = null;
+        System.out.println("DiffOrdersWebSocketClient instance was cleared!");
     }
 }

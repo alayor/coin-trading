@@ -26,6 +26,7 @@ public class DiffOrdersWebSocketClientTest {
 
     @Before
     public void setUp() throws Exception {
+        DiffOrdersWebSocketClient.clearInstance();
         uri = new URI("wss://ws.bitso.com/");
         client = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
         client.setClientManager(clientManager);

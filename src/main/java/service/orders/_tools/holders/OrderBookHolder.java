@@ -98,10 +98,10 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (diffOrder.getAmount().isEmpty()) {
+        if (diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId())) {
             removeOrderFromBids(diffOrderResult, diffOrder);
             currentOrderIds.remove(diffOrder.getOrderId());
-        } else {
+        } else if(!diffOrder.getAmount().isEmpty()) {
             addOrderToBids(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
@@ -126,10 +126,10 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (diffOrder.getAmount().isEmpty()) {
+        if (diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId())) {
             removeOrderFromAsks(diffOrderResult, diffOrder);
             currentOrderIds.remove(diffOrder.getOrderId());
-        } else {
+        } else if(!diffOrder.getAmount().isEmpty()) {
             addOrderToAsks(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
