@@ -46,10 +46,10 @@ public class OrderBookHolderTest {
         List<Bid> bids = holder.getBestBids(4);
         // then
         assertEquals(4, bids.size());
-        assertEquals("104", bids.get(0).getPrice());
-        assertEquals("103", bids.get(1).getPrice());
-        assertEquals("102", bids.get(2).getPrice());
-        assertEquals("101", bids.get(3).getPrice());
+        assertEquals("99", bids.get(0).getPrice());
+        assertEquals("98", bids.get(1).getPrice());
+        assertEquals("97", bids.get(2).getPrice());
+        assertEquals("96", bids.get(3).getPrice());
     }
 
     private OrderBookResult createOrderBookResult(String sequence) {
@@ -70,10 +70,10 @@ public class OrderBookHolderTest {
 
     private List<Ask> createAsks() {
         List<Ask> asks = new ArrayList<>();
-        asks.add(createAsk("5", "101"));
-        asks.add(createAsk("6", "102"));
-        asks.add(createAsk("7", "103"));
         asks.add(createAsk("8", "104"));
+        asks.add(createAsk("7", "103"));
+        asks.add(createAsk("6", "102"));
+        asks.add(createAsk("5", "101"));
         return asks;
     }
 
@@ -88,10 +88,10 @@ public class OrderBookHolderTest {
 
     private List<Bid> createBids() {
         List<Bid> bids = new ArrayList<>();
-        bids.add(createBid("1", "101"));
-        bids.add(createBid("2", "102"));
-        bids.add(createBid("3", "103"));
-        bids.add(createBid("4", "104"));
+        bids.add(createBid("1", "96"));
+        bids.add(createBid("2", "97"));
+        bids.add(createBid("3", "98"));
+        bids.add(createBid("4", "99"));
         return bids;
     }
 
@@ -146,37 +146,37 @@ public class OrderBookHolderTest {
         List<Bid> bids = holder.getBestBids(5);
         // then
         assertEquals(4, bids.size());
-        assertEquals("104", bids.get(0).getPrice());
-        assertEquals("103", bids.get(1).getPrice());
-        assertEquals("102", bids.get(2).getPrice());
-        assertEquals("101", bids.get(3).getPrice());
+        assertEquals("99", bids.get(0).getPrice());
+        assertEquals("98", bids.get(1).getPrice());
+        assertEquals("97", bids.get(2).getPrice());
+        assertEquals("96", bids.get(3).getPrice());
     }
 
     @Test
     public void shouldUpdateCurrentSequenceWhenApplyingDiffOrder() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", "0"))));
         // when
         String currentSequence = holder.getCurrentSequence();
         // then
         assertEquals("9", currentSequence);
     }
 
-    private DiffOrderResult createDiffOrderResult(String sequence) {
+    private DiffOrderResult createDiffOrderResult(String sequence, List<DiffOrder> diffOrderList) {
         return new DiffOrderResult(
           "diff-orders",
           "btc_mxn",
           sequence,
-          singletonList(createAddDiffOrder("9", "105"))
+          diffOrderList
         );
     }
 
-    private DiffOrder createAddDiffOrder(String orderId, String rate) {
+    private DiffOrder createDiffOrder(String orderId, String rate, String type) {
         return new DiffOrder(
           "2017",
           rate,
-          "0",
+          type,
           "10",
           "12",
           orderId,
@@ -188,10 +188,64 @@ public class OrderBookHolderTest {
     public void shouldNotUpdateMinSequenceWhenApplyingDiffOrder() throws Exception {
         // given
         holder.loadOrderBook(createOrderBookResult("1"));
-        holder.applyDiffOrder(createDiffOrderResult("9"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", "0"))));
         // when
         String minSequence = holder.getMinSequence();
         // then
         assertEquals("1", minSequence);
+    }
+
+    @Test
+    public void shouldApplyAddDiffOrderToBids() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", "0"))));
+        // when
+        List<Bid> bestBids = holder.getBestBids(10);
+        // then
+        assertEquals("9", bestBids.get(0).getOrderId());
+        assertEquals("100", bestBids.get(0).getPrice());
+    }
+
+    @Test
+    public void shouldApplyAddDiffOrderToAsks() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", "1"))));
+        // when
+        List<Ask> bestAsks = holder.getBestAsks(10);
+        // then
+        assertEquals("9", bestAsks.get(0).getOrderId());
+        assertEquals("100", bestAsks.get(0).getPrice());
+    }
+
+    @Test
+    public void shouldNotApplyAddDiffOrderToBidsWhenSequenceIsLowerThanMin() throws Exception {
+        // given
+        String currentSequence = "5";
+        String newDiffOrderSequence = "4";
+        holder.loadOrderBook(createOrderBookResult(currentSequence));
+        holder.applyDiffOrder(createDiffOrderResult(newDiffOrderSequence,
+          singletonList(createDiffOrder("8", "105", "0"))));
+        // when
+        List<Bid> bestBids = holder.getBestBids(10);
+        // then
+        assertEquals("4", bestBids.get(0).getOrderId());
+        assertEquals("99", bestBids.get(0).getPrice());
+    }
+
+    @Test
+    public void shouldNotApplyAddDiffOrderToAsksWhenSequenceIsLowerThanMin() throws Exception {
+        // given
+        String currentSequence = "5";
+        String newDiffOrderSequence = "4";
+        holder.loadOrderBook(createOrderBookResult(currentSequence));
+        holder.applyDiffOrder(createDiffOrderResult(newDiffOrderSequence,
+          singletonList(createDiffOrder("9", "100", "1"))));
+        // when
+        List<Ask> bestAsks = holder.getBestAsks(10);
+        // then
+        assertEquals("5", bestAsks.get(0).getOrderId());
+        assertEquals("101", bestAsks.get(0).getPrice());
     }
 }

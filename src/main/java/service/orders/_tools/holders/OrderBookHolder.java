@@ -1,5 +1,6 @@
 package service.orders._tools.holders;
 
+import service.model.diff_orders.DiffOrder;
 import service.model.diff_orders.DiffOrderResult;
 import service.model.orders.Ask;
 import service.model.orders.Bid;
@@ -11,6 +12,8 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
+
+import static java.lang.Integer.parseInt;
 
 public class OrderBookHolder {
     private static OrderBookHolder orderBookHolder;
@@ -75,8 +78,39 @@ public class OrderBookHolder {
         priorityAsks.clear();
     }
 
-    public void applyDiffOrder(DiffOrderResult diffOrder) {
-      this.currentSequence = diffOrder.getSequence();
+    public void applyDiffOrder(DiffOrderResult diffOrderResult) {
+        if (parseInt(diffOrderResult.getSequence()) >= parseInt(this.minSequence)) {
+            this.currentSequence = diffOrderResult.getSequence();
+            applyToBidsOrAsks(diffOrderResult);
+        }
+    }
+
+    private void applyToBidsOrAsks(DiffOrderResult diffOrderResult) {
+        for (DiffOrder diffOrder : diffOrderResult.getDiffOrderList()) {
+            if ("0".equals(diffOrder.getType())) {
+                addOrderToBids(diffOrderResult, diffOrder);
+            } else if ("1".equals(diffOrder.getType())) {
+                addOrderToAsks(diffOrderResult, diffOrder);
+            }
+        }
+    }
+
+    private void addOrderToBids(DiffOrderResult diffOrder, DiffOrder order) {
+        priorityBids.add(new Bid(
+          diffOrder.getBook(),
+          order.getOrderId(),
+          order.getRate(),
+          order.getAmount()
+        ));
+    }
+
+    private void addOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
+        priorityAsks.add(new Ask(
+          diffOrderResult.getBook(),
+          diffOrder.getOrderId(),
+          diffOrder.getRate(),
+          diffOrder.getAmount()
+        ));
     }
 
     String getCurrentSequence() {
