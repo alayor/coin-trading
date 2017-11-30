@@ -28,9 +28,6 @@ public class TradingService {
         return scheduledThreadPoolExecutor;
     }
 
-    private TradingService() {
-    }
-
     public static TradingService getInstance(
       TradesRestApiClient tradesRestApiClient,
       TradingSimulator tradingSimulator) {

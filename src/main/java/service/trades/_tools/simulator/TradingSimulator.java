@@ -44,12 +44,11 @@ public class TradingSimulator {
         }
     }
 
-    private void addBuyTrade(Trade trade, List<Trade> tradesWithSimulated, Lock lock) {
+    private void addSellTrade(Trade trade, List<Trade> tradesWithSimulated, Lock lock) {
         try {
             lock.lock();
-            int downtick = tickCounter.downtick();
-            if (downticksToBuy > 0 && downtick == downticksToBuy) {
-                tradesWithSimulated.add(trade.withSimulatedAndMarkerSide(true, "buy"));
+            if (upticksToSell > 0 && tickCounter.uptick() == upticksToSell) {
+                tradesWithSimulated.add(trade.withSimulatedAndMarkerSide(true, "sell"));
                 tickCounter.reset();
             }
         } finally {
@@ -57,12 +56,11 @@ public class TradingSimulator {
         }
     }
 
-    private void addSellTrade(Trade trade, List<Trade> tradesWithSimulated, Lock lock) {
+    private void addBuyTrade(Trade trade, List<Trade> tradesWithSimulated, Lock lock) {
         try {
             lock.lock();
-            int uptick = tickCounter.uptick();
-            if (upticksToSell > 0 && uptick == upticksToSell) {
-                tradesWithSimulated.add(trade.withSimulatedAndMarkerSide(true, "sell"));
+            if (downticksToBuy > 0 && tickCounter.downtick() == downticksToBuy) {
+                tradesWithSimulated.add(trade.withSimulatedAndMarkerSide(true, "buy"));
                 tickCounter.reset();
             }
         } finally {

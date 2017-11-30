@@ -20,8 +20,8 @@ public class OrderBookHolder {
     private String minSequence = "";
     private String currentSequence = "";
     private Set<String> currentOrderIds = newKeySet();
-    private BlockingQueue<Bid> priorityBids = new PriorityBlockingQueue<>(1000);
-    private BlockingQueue<Ask> priorityAsks = new PriorityBlockingQueue<>(1000);
+    private BlockingQueue<Bid> topBids = new PriorityBlockingQueue<>(1000);
+    private BlockingQueue<Ask> topAsks = new PriorityBlockingQueue<>(1000);
 
     private OrderBookHolder() {
 
@@ -36,12 +36,12 @@ public class OrderBookHolder {
 
     private void loadAsks(List<Ask> asks) {
         asks.stream().map(Ask::getOrderId).forEach(id -> currentOrderIds.add(id));
-        priorityAsks.addAll(asks);
+        topAsks.addAll(asks);
     }
 
     private void loadBids(List<Bid> bids) {
         bids.stream().map(Bid::getOrderId).forEach(id -> currentOrderIds.add(id));
-        priorityBids.addAll(bids);
+        topBids.addAll(bids);
     }
 
     public static OrderBookHolder getInstance() {
@@ -54,30 +54,30 @@ public class OrderBookHolder {
     public List<Ask> getBestAsks(int limit) {
         List<Ask> bestAsks = new ArrayList<>();
         for (int i = 0; i < limit; i++) {
-            Ask ask = priorityAsks.poll();
+            Ask ask = topAsks.poll();
             if (ask != null) {
                 bestAsks.add(ask);
             }
         }
-        priorityAsks.addAll(bestAsks);
+        topAsks.addAll(bestAsks);
         return bestAsks;
     }
 
     public List<Bid> getBestBids(int limit) {
         List<Bid> bestBids = new ArrayList<>();
         for (int i = 0; i < limit; i++) {
-            Bid bid = priorityBids.poll();
+            Bid bid = topBids.poll();
             if (bid != null) {
                 bestBids.add(bid);
             }
         }
-        priorityBids.addAll(bestBids);
+        topBids.addAll(bestBids);
         return bestBids;
     }
 
     void clear() {
-        priorityBids.clear();
-        priorityAsks.clear();
+        topBids.clear();
+        topAsks.clear();
     }
 
     public void applyDiffOrder(DiffOrderResult diffOrderResult) {
@@ -98,14 +98,26 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (!diffOrder.getAmount().isEmpty()) {
+        if (diffOrder.getAmount().isEmpty()) {
+            removeOrderFromBids(diffOrderResult, diffOrder);
+            currentOrderIds.remove(diffOrder.getOrderId());
+        } else {
             addOrderToBids(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
     }
 
+    private void removeOrderFromBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
+        topBids.remove(new Bid(
+          diffOrderResult.getBook(),
+          diffOrder.getOrderId(),
+          diffOrder.getRate(),
+          diffOrder.getAmount()
+        ));
+    }
+
     private void addOrderToBids(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        priorityBids.add(new Bid(
+        topBids.add(new Bid(
           diffOrderResult.getBook(),
           diffOrder.getOrderId(),
           diffOrder.getRate(),
@@ -114,14 +126,26 @@ public class OrderBookHolder {
     }
 
     private void applyOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        if (!diffOrder.getAmount().isEmpty()) {
+        if (diffOrder.getAmount().isEmpty()) {
+            removeOrderFromAsks(diffOrderResult, diffOrder);
+            currentOrderIds.remove(diffOrder.getOrderId());
+        } else {
             addOrderToAsks(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
     }
 
+    private void removeOrderFromAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
+        topAsks.remove(new Ask(
+          diffOrderResult.getBook(),
+          diffOrder.getOrderId(),
+          diffOrder.getRate(),
+          diffOrder.getAmount()
+        ));
+    }
+
     private void addOrderToAsks(DiffOrderResult diffOrderResult, DiffOrder diffOrder) {
-        priorityAsks.add(new Ask(
+        topAsks.add(new Ask(
           diffOrderResult.getBook(),
           diffOrder.getOrderId(),
           diffOrder.getRate(),

@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class OrderBookHolderTest {
 
@@ -319,16 +318,53 @@ public class OrderBookHolderTest {
         assertTrue(orderIds.contains("9"));
     }
 
-//    @Test
-//    public void shouldApplyRemoveDiffOrderToBids() throws Exception {
-//        // given
-//        String noAmount = "";
-//        holder.loadOrderBook(createOrderBookResult("1"));
-//        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "100", BUY, noAmount))));
-//        // when
-//        List<Bid> bestBids = holder.getBestBids(10);
-//        // then
-//        assertEquals("3", bestBids.get(0).getOrderId());
-//        assertEquals("98", bestBids.get(0).getPrice());
-//    }
+    @Test
+    public void shouldApplyRemoveDiffOrderToBids() throws Exception {
+        // given
+        String noAmount = "";
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "100", BUY, noAmount))));
+        // when
+        List<Bid> bestBids = holder.getBestBids(10);
+        // then
+        assertEquals("3", bestBids.get(0).getOrderId());
+        assertEquals("98", bestBids.get(0).getPrice());
+    }
+
+    @Test
+    public void shouldApplyRemoveDiffOrderToAsks() throws Exception {
+        // given
+        String noAmount = "";
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("5", "101", SELL, noAmount))));
+        // when
+        List<Ask> bestAsks = holder.getBestAsks(10);
+        // then
+        assertEquals("6", bestAsks.get(0).getOrderId());
+        assertEquals("102", bestAsks.get(0).getPrice());
+    }
+
+    @Test
+    public void shouldRemoveBuyDiffOrderFromOrderIdsSet() throws Exception {
+        // given
+        String noAmount = "";
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "101", BUY, noAmount))));
+        // when
+        Set<String> currentOrderIds = holder.getCurrentOrderIds();
+        // then
+        assertFalse(currentOrderIds.contains("4"));
+    }
+
+    @Test
+    public void shouldRemoveSellDiffOrderFromOrderIdsSet() throws Exception {
+        // given
+        String noAmount = "";
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("5", "101", SELL, noAmount))));
+        // when
+        Set<String> currentOrderIds = holder.getCurrentOrderIds();
+        // then
+        assertFalse(currentOrderIds.contains("5"));
+    }
 }
