@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
     private CurrentDiffOrdersHolder ordersHolder;
     private boolean wasSuccessfullySubscribed;
+    private boolean firstDiffOfferHasBeenReceived;
 
     DiffOrdersMessageHandler(CurrentDiffOrdersHolder orderHolder) {
         ordersHolder = orderHolder;
@@ -32,10 +33,12 @@ public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
 
     private void processMessage(String message) throws JSONException {
         JSONObject jsonObject = new JSONObject(message);
-        if(isSubscriptionMessage(jsonObject)) {
-          checkSubscriptionWasSuccessful(jsonObject);
-        } if(isDiffOrderMessage(jsonObject)) {
-          addOrderResult(jsonObject);
+        if (isSubscriptionMessage(jsonObject)) {
+            checkSubscriptionWasSuccessful(jsonObject);
+        }
+        if (isDiffOrderMessage(jsonObject)) {
+            firstDiffOfferHasBeenReceived = true;
+            addOrderResult(jsonObject);
         }
     }
 
@@ -45,12 +48,12 @@ public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
     }
 
     private boolean isDiffOrderMessage(JSONObject jsonObject) throws JSONException {
-        return jsonObject.has("type") &&
+        return jsonObject.has("payload") && jsonObject.has("type") &&
           "diff-orders".equals(jsonObject.getString("type"));
     }
 
     private void checkSubscriptionWasSuccessful(JSONObject jsonObject) throws JSONException {
-        if("ok".equals(jsonObject.getString("response"))) {
+        if ("ok".equals(jsonObject.getString("response"))) {
             wasSuccessfullySubscribed = true;
         } else {
             throw new RuntimeException("Error connecting to bitso web socket.");
@@ -73,5 +76,9 @@ public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
 
     public void clearDiffOrders() throws InterruptedException {
         ordersHolder.clear();
+    }
+
+    public boolean firstDiffOfferHasBeenReceived() {
+        return firstDiffOfferHasBeenReceived;
     }
 }

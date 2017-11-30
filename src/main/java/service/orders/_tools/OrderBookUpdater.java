@@ -8,37 +8,57 @@ import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+
+import static java.lang.Thread.sleep;
 
 public class OrderBookUpdater {
     private static OrderBookUpdater orderBookUpdater;
     private final OrderBookRestApiClient orderBookApiClient;
     private final OrderBookHolder orderBookHolder;
-    private DiffOrdersWebSocketClient diffOrdersWebSocketClient;
+    private final DiffOrdersMessageHandler diffOrderMessageHandler;
+    private final DiffOrdersWebSocketClient diffOrdersWebSocketClient;
 
     private OrderBookUpdater(
       DiffOrdersWebSocketClient diffOrdersWebSocketClient,
       OrderBookRestApiClient orderBookApiClient,
-      OrderBookHolder orderBookHolder) {
-      this.diffOrdersWebSocketClient = diffOrdersWebSocketClient;
-      this.orderBookApiClient = orderBookApiClient;
-      this.orderBookHolder = orderBookHolder;
+      OrderBookHolder orderBookHolder,
+      DiffOrdersMessageHandler diffOrderMessageHandler) {
+        this.diffOrdersWebSocketClient = diffOrdersWebSocketClient;
+        this.orderBookApiClient = orderBookApiClient;
+        this.orderBookHolder = orderBookHolder;
+        this.diffOrderMessageHandler = diffOrderMessageHandler;
     }
 
     public static OrderBookUpdater getInstance() throws URISyntaxException {
-        return getInstance(DiffOrdersWebSocketClient.getInstance(
-          new DiffOrdersEndpoint(
-            new DiffOrdersMessageHandler()
-          )
-        ), new OrderBookRestApiClient(), new OrderBookHolder());
+        DiffOrdersMessageHandler messageHandler = new DiffOrdersMessageHandler();
+        DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
+        OrderBookRestApiClient orderBookApiClient = new OrderBookRestApiClient();
+        OrderBookHolder orderBookHolder = new OrderBookHolder();
+        DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(endpoint);
+        return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
     }
 
-    public static OrderBookUpdater getInstance(
+    public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
+        DiffOrdersMessageHandler messageHandler = new DiffOrdersMessageHandler();
+        DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
+        OrderBookHolder orderBookHolder = new OrderBookHolder();
+        DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
+        return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
+    }
+
+    static OrderBookUpdater getInstance(
       DiffOrdersWebSocketClient webSocketClient,
       OrderBookRestApiClient orderBookApiClient,
-      OrderBookHolder holder) {
+      OrderBookHolder orderBookHolder,
+      DiffOrdersMessageHandler diffOrderMessageHandler) {
         if (orderBookUpdater == null) {
-            orderBookUpdater = new OrderBookUpdater(webSocketClient, orderBookApiClient, holder);
+            orderBookUpdater = new OrderBookUpdater(
+              webSocketClient,
+              orderBookApiClient,
+              orderBookHolder,
+              diffOrderMessageHandler);
         }
         return orderBookUpdater;
     }
@@ -48,7 +68,24 @@ public class OrderBookUpdater {
     }
 
     public void start() throws IOException, DeploymentException {
-      diffOrdersWebSocketClient.connect();
-      orderBookHolder.loadOrderBook(orderBookApiClient.getOrderBook());
+        diffOrdersWebSocketClient.connect();
+        loadOrderBook();
+    }
+
+    private void loadOrderBook() {
+        int count = 10;
+        while (count-- > 0) {
+            try {
+                sleep(1000);
+            if (diffOrderMessageHandler.firstDiffOfferHasBeenReceived()) {
+                orderBookHolder.loadOrderBook(orderBookApiClient.getOrderBook());
+                return;
+            }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        throw new RuntimeException("Order Book couldn't get loaded. No Diff Offers were received.");
     }
 }

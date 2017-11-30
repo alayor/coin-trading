@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 public class OrderBookRestApiClient_OfflineITest
 {
-    private OrderBookRestApiClient OrderBookRestApiClient;
+    private OrderBookRestApiClient orderBookRestApiClient;
     private static MockedHttpServer mockedServer = new MockedHttpServer();
 
     @BeforeClass
@@ -32,9 +32,9 @@ public class OrderBookRestApiClient_OfflineITest
     @Test
     public void shouldParseResultToTradeResult() throws URISyntaxException, IOException {
         // given
-        OrderBookRestApiClient = new OrderBookRestApiClient("http://localhost:9999/orders/singleOrderBookFixture.json");
+        orderBookRestApiClient = new OrderBookRestApiClient("http://localhost:9999/orders/singleOrderBookFixture.json");
         // when
-        OrderBookResult orderBookResult = OrderBookRestApiClient.getOrderBook();
+        OrderBookResult orderBookResult = orderBookRestApiClient.getOrderBook();
         // then
         assertTrue(orderBookResult.isSuccess());
         assertEquals("2017-11-29T15:58:10+00:00", orderBookResult.getOrderBook().getUpdatedAt());
@@ -54,9 +54,9 @@ public class OrderBookRestApiClient_OfflineITest
     @Test
     public void shouldParseEmptyFailedOrderBookResult() throws URISyntaxException, IOException {
         // given
-        OrderBookRestApiClient = new OrderBookRestApiClient("http://localhost:9999/orders/singleFailedOrderBookFixture.json");
+        orderBookRestApiClient = new OrderBookRestApiClient("http://localhost:9999/orders/singleFailedOrderBookFixture.json");
         // when
-        OrderBookResult orderBookResult = OrderBookRestApiClient.getOrderBook();
+        OrderBookResult orderBookResult = orderBookRestApiClient.getOrderBook();
         // then
         assertFalse(orderBookResult.isSuccess());
     }

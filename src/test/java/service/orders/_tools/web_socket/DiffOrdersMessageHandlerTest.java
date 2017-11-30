@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -75,8 +74,7 @@ public class DiffOrdersMessageHandlerTest {
     @Test
     public void shouldReturnNextDiffOrder() throws Exception {
         // given
-        String diffOrder = createDiffOrder();
-        handler.onMessage(diffOrder);
+        handler.onMessage(createDiffOrder());
         // when
         handler.getNext(10, TimeUnit.SECONDS);
         // then
@@ -104,5 +102,38 @@ public class DiffOrdersMessageHandlerTest {
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(order);
         return jsonArray.toString();
+    }
+
+    @Test
+    public void shouldReturnIfFirstDiffOrderHasBeenReceived() throws Exception {
+        // when
+        handler.onMessage(createDiffOrder());
+        // when
+        boolean received = handler.firstDiffOfferHasBeenReceived();
+        // then
+        assertTrue(received);
+    }
+
+    @Test
+    public void shouldNotReturnIfFirstDiffOrderHasBeenReceived() throws Exception {
+        // when
+        handler.onMessage("{\"type\": \"ka\"}");
+        // when
+        boolean received = handler.firstDiffOfferHasBeenReceived();
+        // then
+        assertFalse(received);
+    }
+
+    @Test
+    public void shouldNotReturnFirstDiffOrderHasBeenReceivedIfSubscribeWasReceived() throws Exception {
+        Map<String, String> subscriptionMessage = new HashMap<>();
+        subscriptionMessage.put("type", "diff-orders");
+        subscriptionMessage.put("action", "subscribe");
+        subscriptionMessage.put("response", "ok");
+        handler.onMessage(new JSONObject(subscriptionMessage).toString());
+        // when
+        boolean received = handler.firstDiffOfferHasBeenReceived();
+        // then
+        assertFalse(received);
     }
 }
