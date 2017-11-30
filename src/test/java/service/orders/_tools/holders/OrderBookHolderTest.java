@@ -2,6 +2,8 @@ package service.orders._tools.holders;
 
 import org.junit.Before;
 import org.junit.Test;
+import service.model.diff_orders.DiffOrder;
+import service.model.diff_orders.DiffOrderResult;
 import service.model.orders.Ask;
 import service.model.orders.Bid;
 import service.model.orders.OrderBook;
@@ -10,6 +12,7 @@ import service.model.orders.OrderBookResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
 public class OrderBookHolderTest {
@@ -24,7 +27,7 @@ public class OrderBookHolderTest {
     @Test
     public void shouldReturnBestAsks() throws Exception {
         // given
-        holder.loadOrderBook(createOrderBookResult());
+        holder.loadOrderBook(createOrderBookResult("1"));
         // when
         List<Ask> asks = holder.getBestAsks(4);
         // then
@@ -38,7 +41,7 @@ public class OrderBookHolderTest {
     @Test
     public void shouldReturnBestBids() throws Exception {
        // given
-        holder.loadOrderBook(createOrderBookResult());
+        holder.loadOrderBook(createOrderBookResult("1"));
         // when
         List<Bid> bids = holder.getBestBids(4);
         // then
@@ -49,16 +52,16 @@ public class OrderBookHolderTest {
         assertEquals("101", bids.get(3).getPrice());
     }
 
-    private OrderBookResult createOrderBookResult() {
+    private OrderBookResult createOrderBookResult(String sequence) {
         return new OrderBookResult(
           true,
-          createOrderBook()
+          createOrderBook(sequence)
         );
     }
 
-    private OrderBook createOrderBook() {
+    private OrderBook createOrderBook(String sequence) {
         return new OrderBook(
-          "1",
+          sequence,
           "2017",
           createAsks(),
           createBids()
@@ -67,10 +70,10 @@ public class OrderBookHolderTest {
 
     private List<Ask> createAsks() {
         List<Ask> asks = new ArrayList<>();
-        asks.add(createAsk("1", "101"));
-        asks.add(createAsk("2", "102"));
-        asks.add(createAsk("3", "103"));
-        asks.add(createAsk("4", "104"));
+        asks.add(createAsk("5", "101"));
+        asks.add(createAsk("6", "102"));
+        asks.add(createAsk("7", "103"));
+        asks.add(createAsk("8", "104"));
         return asks;
     }
 
@@ -102,9 +105,29 @@ public class OrderBookHolderTest {
     }
 
     @Test
+    public void shouldUpdateCurrentSequenceWhenLoadingOrderBook() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("10"));
+        // when
+        String currentSequence = holder.getCurrentSequence();
+        // then
+        assertEquals("10", currentSequence);
+    }
+
+    @Test
+    public void shouldUpdateMinSequenceWhenLoadingOrderBook() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("10"));
+        // when
+        String currentSequence = holder.getMinSequence();
+        // then
+        assertEquals("10", currentSequence);
+    }
+
+    @Test
     public void shouldReturnBestAsksWhenLimitIsGreater() throws Exception {
         // given
-        holder.loadOrderBook(createOrderBookResult());
+        holder.loadOrderBook(createOrderBookResult("1"));
         // when
         List<Ask> asks = holder.getBestAsks(5);
         // then
@@ -118,7 +141,7 @@ public class OrderBookHolderTest {
     @Test
     public void shouldReturnBestBidsIfLimitIsGreater() throws Exception {
         // given
-        holder.loadOrderBook(createOrderBookResult());
+        holder.loadOrderBook(createOrderBookResult("1"));
         // when
         List<Bid> bids = holder.getBestBids(5);
         // then
@@ -127,5 +150,48 @@ public class OrderBookHolderTest {
         assertEquals("103", bids.get(1).getPrice());
         assertEquals("102", bids.get(2).getPrice());
         assertEquals("101", bids.get(3).getPrice());
+    }
+
+    @Test
+    public void shouldUpdateCurrentSequenceWhenApplyingDiffOrder() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9"));
+        // when
+        String currentSequence = holder.getCurrentSequence();
+        // then
+        assertEquals("9", currentSequence);
+    }
+
+    private DiffOrderResult createDiffOrderResult(String sequence) {
+        return new DiffOrderResult(
+          "diff-orders",
+          "btc_mxn",
+          sequence,
+          singletonList(createAddDiffOrder("9", "105"))
+        );
+    }
+
+    private DiffOrder createAddDiffOrder(String orderId, String rate) {
+        return new DiffOrder(
+          "2017",
+          rate,
+          "0",
+          "10",
+          "12",
+          orderId,
+          "open"
+        );
+    }
+
+    @Test
+    public void shouldNotUpdateMinSequenceWhenApplyingDiffOrder() throws Exception {
+        // given
+        holder.loadOrderBook(createOrderBookResult("1"));
+        holder.applyDiffOrder(createDiffOrderResult("9"));
+        // when
+        String minSequence = holder.getMinSequence();
+        // then
+        assertEquals("1", minSequence);
     }
 }

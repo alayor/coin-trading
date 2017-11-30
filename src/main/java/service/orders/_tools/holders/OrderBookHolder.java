@@ -1,5 +1,6 @@
 package service.orders._tools.holders;
 
+import service.model.diff_orders.DiffOrderResult;
 import service.model.orders.Ask;
 import service.model.orders.Bid;
 import service.model.orders.OrderBookResult;
@@ -24,6 +25,8 @@ public class OrderBookHolder {
     }
 
     public void loadOrderBook(OrderBookResult orderBookResult) {
+        this.currentSequence = orderBookResult.getOrderBook().getSequence();
+        this.minSequence = orderBookResult.getOrderBook().getSequence();
         loadAsks(orderBookResult.getOrderBook().getAsks());
         loadBids(orderBookResult.getOrderBook().getBids());
     }
@@ -70,5 +73,17 @@ public class OrderBookHolder {
     void clear() {
         priorityBids.clear();
         priorityAsks.clear();
+    }
+
+    public void applyDiffOrder(DiffOrderResult diffOrder) {
+      this.currentSequence = diffOrder.getSequence();
+    }
+
+    String getCurrentSequence() {
+        return currentSequence;
+    }
+
+    String getMinSequence() {
+        return minSequence;
     }
 }
