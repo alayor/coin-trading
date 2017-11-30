@@ -1,4 +1,4 @@
-package service.orders._tools.holders;
+package service.orders.$tools.holders;
 
 import service.model.diff_orders.DiffOrder;
 import service.model.diff_orders.DiffOrderResult;

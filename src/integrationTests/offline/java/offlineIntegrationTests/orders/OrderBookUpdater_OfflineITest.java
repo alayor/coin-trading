@@ -6,9 +6,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import service.orders._tools.OrderBookUpdater;
-import service.orders._tools.rest_client.OrderBookRestApiClient;
-import service.orders._tools.web_socket.DiffOrdersMessageHandler;
+import service.orders.$tools.OrderBookUpdater;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
+import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
 
 import javax.websocket.DeploymentException;
 import java.net.URI;

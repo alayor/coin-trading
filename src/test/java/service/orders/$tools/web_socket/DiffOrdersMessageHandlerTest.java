@@ -1,4 +1,4 @@
-package service.orders._tools.web_socket;
+package service.orders.$tools.web_socket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.model.diff_orders.DiffOrderResult;
-import service.orders._tools.holders.CurrentDiffOrdersHolder;
+import service.orders.$tools.holders.CurrentDiffOrdersHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class DiffOrdersMessageHandlerTest {
             handler.onMessage(new JSONObject(subscriptionMessage).toString());
         } catch (Exception e) {
             // then
-            assertEquals("Error connecting to bitso web socket.", e.getMessage());
+            assertTrue(e.getMessage().contains("Error connecting to bitso web socket."));
             return;
         }
         throw new AssertionError("No expected exception was thrown");

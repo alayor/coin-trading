@@ -5,7 +5,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.model.orders.OrderBookResult;
-import service.orders._tools.rest_client.OrderBookRestApiClient;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

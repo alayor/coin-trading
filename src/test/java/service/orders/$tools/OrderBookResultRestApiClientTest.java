@@ -1,4 +1,4 @@
-package service.orders._tools;
+package service.orders.$tools;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.model.orders.OrderBookResult;
-import service.orders._tools.rest_client.OrderBookRestApiClient;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;

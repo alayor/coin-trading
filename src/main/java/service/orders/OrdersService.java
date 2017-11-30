@@ -1,6 +1,6 @@
 package service.orders;
 
-import service.orders._tools.OrderBookUpdater;
+import service.orders.$tools.OrderBookUpdater;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;

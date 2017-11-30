@@ -1,10 +1,10 @@
-package service.orders._tools;
+package service.orders.$tools;
 
-import service.orders._tools.holders.OrderBookHolder;
-import service.orders._tools.rest_client.OrderBookRestApiClient;
-import service.orders._tools.web_socket.DiffOrdersEndpoint;
-import service.orders._tools.web_socket.DiffOrdersMessageHandler;
-import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
+import service.orders.$tools.holders.OrderBookHolder;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
+import service.orders.$tools.web_socket.DiffOrdersEndpoint;
+import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
+import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;

@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.orders._tools.OrderBookUpdater;
+import service.orders.$tools.OrderBookUpdater;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

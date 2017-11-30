@@ -1,4 +1,4 @@
-package service.orders._tools;
+package service.orders.$tools;
 
 public class CurrentDiffOrdersHolderTest {
 

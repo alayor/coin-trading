@@ -1,4 +1,4 @@
-package service.orders._tools;
+package service.orders.$tools;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,16 +8,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.model.orders.OrderBookResult;
-import service.orders._tools.holders.OrderBookHolder;
-import service.orders._tools.rest_client.OrderBookRestApiClient;
-import service.orders._tools.web_socket.DiffOrdersMessageHandler;
-import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
+import service.orders.$tools.holders.OrderBookHolder;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
+import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
+import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static service.orders._tools.OrderBookUpdater.getInstance;
+import static service.orders.$tools.OrderBookUpdater.getInstance;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderBookUpdaterTest {

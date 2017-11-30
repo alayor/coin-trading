@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import service.model.diff_orders.DiffOrder;
 import service.model.diff_orders.DiffOrderResult;
-import service.orders._tools.web_socket.DiffOrdersEndpoint;
-import service.orders._tools.web_socket.DiffOrdersMessageHandler;
-import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
+import service.orders.$tools.web_socket.DiffOrdersEndpoint;
+import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
+import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;
@@ -41,13 +41,13 @@ public class DiffOrdersWebSocketClient_OfflineITest {
         DiffOrdersWebSocketClient.clearInstance();
         clientMessageHandler = DiffOrdersMessageHandler.getInstance();
         clientMessageHandler.clearDiffOrders();
-        DiffOrderCreator.sequenceCount = 0;
-        DiffOrderCreator.isCancelled = false;
-    }
-
-    private void initializeWebSocketClient() throws URISyntaxException {
         DiffOrdersEndpoint clientEndpoint = new DiffOrdersEndpoint(clientMessageHandler);
         client = DiffOrdersWebSocketClient.getInstance(new URI("ws://localhost:8025/bitso/mock"), clientEndpoint);
+        DiffOrderCreator.sequenceCount = 0;
+        DiffOrderCreator.isCancelled = false;
+        schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
+                MockedWebSocketEndpoint::sendDiffOrderMessage, 2, 2, TimeUnit.SECONDS);
+        client.connect();
     }
 
     @After
@@ -56,30 +56,23 @@ public class DiffOrdersWebSocketClient_OfflineITest {
         scheduledThreadPoolExecutor.shutdown();
     }
 
-
     @Test
     public void shouldSubscribeSuccessfully() throws Exception {
-        // given
-        initializeWebSocketClientAndConnect(TimeUnit.SECONDS);
         // then
-        try {
-            int count = 5;
-            while (count-- > 0) {
-                Thread.sleep(1000);
-                if (clientMessageHandler.wasSuccessfullySubscribed()) {
-                    return;
-                }
+        int count = 5;
+        while (count-- > 0)
+        {
+            Thread.sleep(1000);
+            if (clientMessageHandler.wasSuccessfullySubscribed())
+            {
+                return;
             }
-            throw new AssertionError("No subscription response message found.");
-        } finally {
-            schedule.cancel(true);
         }
+        throw new AssertionError("No subscription response message found.");
     }
 
     @Test
     public void shouldReturnLastOrders() throws Exception {
-        // given
-        initializeWebSocketClientAndConnect(TimeUnit.SECONDS);
         List<DiffOrderResult> list = new ArrayList<>();
         // when
         list.add(clientMessageHandler.getNext(10, TimeUnit.SECONDS));
@@ -109,17 +102,8 @@ public class DiffOrdersWebSocketClient_OfflineITest {
         assertEquals("open", diffOrder.getStatus());
     }
 
-    private void initializeWebSocketClientAndConnect(TimeUnit timeUnit) throws URISyntaxException, IOException, DeploymentException {
-        initializeWebSocketClient();
-        schedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(
-          MockedWebSocketEndpoint::sendDiffOrderMessage, 2, 2, timeUnit);
-        client.connect();
-    }
-
     @Test
     public void shouldNotFailIfMoreThanFiveHundredDiffOrdersAreInserted() throws Exception {
-        // given
-        initializeWebSocketClientAndConnect(TimeUnit.MILLISECONDS);
         Thread.sleep(5000);
         List<DiffOrderResult> list = new ArrayList<>();
         // when
@@ -128,17 +112,5 @@ public class DiffOrdersWebSocketClient_OfflineITest {
         // then
         assertEquals("1", list.get(0).getSequence());
         assertEquals("2", list.get(1).getSequence());
-    }
-
-    @Test
-    public void shouldParseCancelledDiffOrders() throws Exception {
-        DiffOrderCreator.isCancelled = true;
-        initializeWebSocketClientAndConnect(TimeUnit.SECONDS);
-        // when
-        DiffOrderResult diffOrderResult = clientMessageHandler.getNext(5, TimeUnit.SECONDS);
-        // then
-        assertEquals("", diffOrderResult.getDiffOrderList().get(0).getAmount());
-        assertEquals("", diffOrderResult.getDiffOrderList().get(0).getValue());
-        assertEquals("cancelled", diffOrderResult.getDiffOrderList().get(0).getStatus());
     }
 }

@@ -1,4 +1,4 @@
-package service.orders._tools.holders;
+package service.orders.$tools.holders;
 
 import service.model.diff_orders.DiffOrderResult;
 
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CurrentDiffOrdersHolder {
     private static final CurrentDiffOrdersHolder currentDiffOrdersHolder = new CurrentDiffOrdersHolder();
-    private final BlockingDeque<DiffOrderResult> diffOrders = new LinkedBlockingDeque<>(500);
+    private final BlockingDeque<DiffOrderResult> diffOrders = new LinkedBlockingDeque<>();
 
     private CurrentDiffOrdersHolder() {}
 
@@ -16,12 +16,13 @@ public class CurrentDiffOrdersHolder {
         return currentDiffOrdersHolder;
     }
 
-    public void produce(DiffOrderResult diffOrderResult) {
-        diffOrders.offerFirst(diffOrderResult);
+    public void produce(DiffOrderResult diffOrderResult) throws InterruptedException
+    {
+        diffOrders.offerFirst(diffOrderResult, 20, TimeUnit.SECONDS);
     }
 
     public DiffOrderResult consume() throws InterruptedException {
-        return diffOrders.takeLast();
+        return diffOrders.pollLast(20, TimeUnit.SECONDS);
     }
 
     public DiffOrderResult getNext(int timeout, TimeUnit timeUnit) throws InterruptedException {

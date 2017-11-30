@@ -1,9 +1,9 @@
-package service.orders._tools.web_socket;
+package service.orders.$tools.web_socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import service.model.diff_orders.DiffOrderResult;
-import service.orders._tools.holders.CurrentDiffOrdersHolder;
+import service.orders.$tools.holders.CurrentDiffOrdersHolder;
 
 import javax.websocket.MessageHandler;
 import java.util.concurrent.TimeUnit;
@@ -33,13 +33,12 @@ public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
     public void onMessage(String message) {
         try {
             processMessage(message);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void processMessage(String message) throws JSONException {
+    private void processMessage(String message) throws JSONException, InterruptedException {
         JSONObject jsonObject = new JSONObject(message);
         if (isSubscriptionMessage(jsonObject)) {
             checkSubscriptionWasSuccessful(jsonObject);
@@ -50,7 +49,7 @@ public class DiffOrdersMessageHandler implements MessageHandler.Whole<String> {
         }
     }
 
-    private void addOrderResult(JSONObject jsonObject) {
+    private void addOrderResult(JSONObject jsonObject) throws InterruptedException {
         DiffOrderResult diffOrderResult = DiffOrderResult.parse(jsonObject);
         ordersHolder.produce(diffOrderResult);
     }

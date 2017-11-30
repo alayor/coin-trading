@@ -1,4 +1,4 @@
-package service.orders._tools.rest_client;
+package service.orders.$tools.rest_client;
 
 import service._tools.UriArgumentAppender;
 import service.model.orders.OrderBookResult;

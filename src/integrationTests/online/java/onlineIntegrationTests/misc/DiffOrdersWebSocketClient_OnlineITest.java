@@ -2,9 +2,9 @@ package onlineIntegrationTests.misc;
 
 import org.junit.Before;
 import org.junit.Test;
-import service.orders._tools.web_socket.DiffOrdersEndpoint;
-import service.orders._tools.web_socket.DiffOrdersMessageHandler;
-import service.orders._tools.web_socket.DiffOrdersWebSocketClient;
+import service.orders.$tools.web_socket.DiffOrdersEndpoint;
+import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
+import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 public class DiffOrdersWebSocketClient_OnlineITest {
     private DiffOrdersWebSocketClient client;

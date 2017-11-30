@@ -1,4 +1,4 @@
-package service.orders._tools.holders;
+package service.orders.$tools.holders;
 
 import org.junit.Before;
 import org.junit.Test;
