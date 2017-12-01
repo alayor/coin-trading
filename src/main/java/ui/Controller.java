@@ -2,12 +2,11 @@ package ui;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import ui.data.Ask;
 import ui.data.Bid;
 import ui.data.Trade;
-
-import java.util.List;
 
 public class Controller
 {
@@ -18,6 +17,23 @@ public class Controller
     @FXML
     private TableView<Ask> asksTableView;
     private Main mainApp;
+
+    @FXML
+    public void initialize() {
+        tradesTableView.setRowFactory(tv -> new TableRow<Trade>() {
+            @Override
+            public void updateItem(Trade item, boolean empty) {
+                super.updateItem(item, empty) ;
+                if (item == null) {
+                    setStyle("");
+                } else if (item.getSimulated().equals("true")) {
+                    setStyle("-fx-background-color: lightgreen;");
+                } else {
+                    setStyle("");
+                }
+            }
+        });
+    }
 
     void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
