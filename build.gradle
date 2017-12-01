@@ -1,14 +1,18 @@
 buildscript {
-    dependencies {
-        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
-    }
     repositories {
         mavenLocal()
         mavenCentral()
-
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
     }
 }
 apply plugin: 'java'
+apply plugin: "com.github.johnrengelman.shadow"
 
 sourceSets {
     onlineIntegrationTests {
@@ -85,13 +89,8 @@ task testall {
     dependsOn 'onlineITest'
 }
 
-task fatJar(type: Jar) {
+jar {
     manifest {
-        attributes 'Implementation-Title': 'Coin Trading',
-                'Implementation-Version': '1.0',
-                'Main-Class': 'ui.Main'
+        attributes 'Main-Class': 'ui.Main'
     }
-    baseName = 'coin-trading-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }

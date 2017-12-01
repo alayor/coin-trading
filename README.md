@@ -5,6 +5,10 @@ execution following a simple trading strategy
 
 [![CircleCI](https://circleci.com/gh/alayor/coin-trading/tree/master.svg?style=svg)](https://circleci.com/gh/alayor/coin-trading/tree/master)
 
+### Start application
+Run command: <br />
+java -jar app.jar
+
 ### Assumptions
 * Regarding _"Display the X most recent trades on the same UI"_. The X represents the same number as in the _best bids_
 and _best asks_ configuration.
