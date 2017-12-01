@@ -8,7 +8,6 @@ import javax.ws.rs.client.ClientBuilder;
 import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static service.$tools.AppProperties.getProperty;
 
 public class OrderBookRestApiClient {
     private final String uri;
@@ -20,7 +19,7 @@ public class OrderBookRestApiClient {
     }
 
     public OrderBookRestApiClient() {
-        this.uri = getProperty("order_book_url");
+        this.uri = "https://api.bitso.com/v3/order_book/";
     }
 
     public OrderBookResult getOrderBook() {
@@ -30,7 +29,7 @@ public class OrderBookRestApiClient {
     }
 
     private OrderBookResult getOrderBookResult(URI uri) {
-        uri = appender.appendArgument(uri, "book", getProperty("default_book"));
+        uri = appender.appendArgument(uri, "book", "btc_mxn");
         return client
           .target(uri)
           .request(APPLICATION_JSON_TYPE)

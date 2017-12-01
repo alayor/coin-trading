@@ -9,14 +9,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static service.$tools.AppProperties.getProperty;
-
 public class DiffOrdersEndpoint extends Endpoint {
     private static Map<String, String> subscriptionInfo = new HashMap<>();
     private Session session;
     static {
         subscriptionInfo.put("action", "subscribe");
-        subscriptionInfo.put("book", getProperty("default_book"));
+        subscriptionInfo.put("book", "btc_mxn");
         subscriptionInfo.put("type", "diff-orders");
     }
 

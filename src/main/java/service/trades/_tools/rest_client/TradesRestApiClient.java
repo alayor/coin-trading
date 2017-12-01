@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static service.$tools.AppProperties.getProperty;
 
 public class TradesRestApiClient {
 
@@ -22,7 +21,7 @@ public class TradesRestApiClient {
     }
 
     public TradesRestApiClient() {
-        this.uri = getProperty("trade_url");
+        this.uri = "https://api.bitso.com/v3/trades/";
     }
 
     public TradeResult getTrades(int limit) {
@@ -32,7 +31,7 @@ public class TradesRestApiClient {
     }
 
     private TradeResult getTradeResult(URI uri) {
-        uri = appender.appendArgument(uri, "book", getProperty("default_book"));
+        uri = appender.appendArgument(uri, "book", "btc_mxn");
         return client
           .target(uri)
           .request(APPLICATION_JSON_TYPE)
