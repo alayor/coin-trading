@@ -97,8 +97,12 @@ public class OrderBookHolder {
 
     public void applyDiffOrder(DiffOrderResult diffOrderResult) {
         if (parseInt(diffOrderResult.getSequence()) >= parseInt(this.minSequence)) {
-            this.currentSequence = diffOrderResult.getSequence();
-            applyToBidsOrAsks(diffOrderResult);
+            if(parseInt(diffOrderResult.getSequence()) == parseInt(this.currentSequence) + 1) {
+                this.currentSequence = diffOrderResult.getSequence();
+                applyToBidsOrAsks(diffOrderResult);
+            } else {
+                loadOrderBook();
+            }
         }
     }
 

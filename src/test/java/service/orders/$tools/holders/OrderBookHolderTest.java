@@ -223,11 +223,11 @@ public class OrderBookHolderTest {
     public void shouldUpdateCurrentSequenceWhenApplyingDiffOrder() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "105", BUY, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("9", "105", BUY, "10"))));
         // when
         String currentSequence = holder.getCurrentSequence();
         // then
-        assertEquals("9", currentSequence);
+        assertEquals("2", currentSequence);
     }
 
     private DiffOrderResult createDiffOrderResult(String sequence, List<DiffOrder> diffOrderList) {
@@ -266,7 +266,7 @@ public class OrderBookHolderTest {
     public void shouldApplyAddDiffOrderToBids() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", BUY, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("9", "100", BUY, "10"))));
         // when
         List<Bid> bestBids = holder.getBestBids(10);
         // then
@@ -278,7 +278,7 @@ public class OrderBookHolderTest {
     public void shouldApplyUpdateDiffOrderToBids() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("3", "100", BUY, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("3", "100", BUY, "10"))));
         // when
         List<Bid> bestBids = holder.getBestBids(10);
         // then
@@ -291,7 +291,7 @@ public class OrderBookHolderTest {
     public void shouldApplyAddDiffOrderToAsks() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", SELL, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("9", "100", SELL, "10"))));
         // when
         List<Ask> bestAsks = holder.getBestAsks(10);
         // then
@@ -303,7 +303,7 @@ public class OrderBookHolderTest {
     public void shouldApplyUpdateDiffOrderToAsks() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("6", "100", SELL, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("6", "100", SELL, "10"))));
         // when
         List<Ask> bestAsks = holder.getBestAsks(10);
         // then
@@ -374,7 +374,7 @@ public class OrderBookHolderTest {
     public void shouldAddDiffOrderBidIdsToSet() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", BUY, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("9", "100", BUY, "10"))));
         // when
         Set<String> orderIds = holder.getCurrentOrderIds();
         // then
@@ -385,7 +385,7 @@ public class OrderBookHolderTest {
     public void shouldAddDiffOrderAskIdsToSet() throws Exception {
         // given
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("9", "100", SELL, "10"))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("9", "100", SELL, "10"))));
         // when
         Set<String> orderIds = holder.getCurrentOrderIds();
         // then
@@ -397,7 +397,7 @@ public class OrderBookHolderTest {
         // given
         String noAmount = "";
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "100", BUY, noAmount))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("4", "100", BUY, noAmount))));
         // when
         List<Bid> bestBids = holder.getBestBids(10);
         // then
@@ -410,7 +410,7 @@ public class OrderBookHolderTest {
         // given
         String noAmount = "";
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("5", "101", SELL, noAmount))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("5", "101", SELL, noAmount))));
         // when
         List<Ask> bestAsks = holder.getBestAsks(10);
         // then
@@ -423,7 +423,7 @@ public class OrderBookHolderTest {
         // given
         String noAmount = "";
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("4", "101", BUY, noAmount))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("4", "101", BUY, noAmount))));
         // when
         Set<String> currentOrderIds = holder.getCurrentOrderIds();
         // then
@@ -435,10 +435,23 @@ public class OrderBookHolderTest {
         // given
         String noAmount = "";
         holder.loadOrderBook();
-        holder.applyDiffOrder(createDiffOrderResult("9", singletonList(createDiffOrder("5", "101", SELL, noAmount))));
+        holder.applyDiffOrder(createDiffOrderResult("2", singletonList(createDiffOrder("5", "101", SELL, noAmount))));
         // when
         Set<String> currentOrderIds = holder.getCurrentOrderIds();
         // then
         assertFalse(currentOrderIds.contains("5"));
+    }
+
+    @Test
+    public void shouldLoadOrderBookAgainIfThereIsASkipInSequence() throws Exception {
+        // given
+        holder.loadOrderBook();
+        String newSequence = "3";
+        holder.applyDiffOrder(createDiffOrderResult(newSequence, singletonList(createDiffOrder("10", "100", SELL, "10"))));
+        // when
+        List<Ask> bestAsks = holder.getBestAsks(10);
+        // then
+        assertEquals("5", bestAsks.get(0).getOrderId());
+        assertEquals("101", bestAsks.get(0).getPrice());
     }
 }
