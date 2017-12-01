@@ -37,6 +37,7 @@ public class OrderBookUpdater {
     /**
      * Creates an instance of this class using the default api and web socket clients that
      * connect to Bitso.
+     *
      * @return a new or the current instance of this class.
      * @throws URISyntaxException in case any uri is incorrect
      */
@@ -53,7 +54,8 @@ public class OrderBookUpdater {
      * Then retrieves the current order book when the first diff-order has been received.
      * Finally, it starts the process to get diff-orders from the internal queue and apply them
      * to the book order.
-     * @throws IOException if connection fails with the Rest Api.
+     *
+     * @throws IOException         if connection fails with the Rest Api.
      * @throws DeploymentException if connection fails with the Web Socket.
      */
     public void start() throws IOException, DeploymentException {
@@ -70,14 +72,13 @@ public class OrderBookUpdater {
     }
 
     private void loadOrderBook() {
-
         while (tryCount-- > 0) {
             try {
                 sleep(1000);
-            if (diffOrdersWebSocketClient.firstDiffOfferHasBeenReceived()) {
-                orderBookHolder.loadOrderBook();
-                return;
-            }
+                if (diffOrdersWebSocketClient.firstDiffOfferHasBeenReceived()) {
+                    orderBookHolder.loadOrderBook();
+                    return;
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException("Order Book couldn't get loaded. No Diff Offers were received.");
             }
