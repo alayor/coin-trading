@@ -57,7 +57,7 @@ public class OrderBookUpdaterTest {
         // given
         OrderBookUpdater orderBookUpdater =
           getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
-        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
+        given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
         // then
@@ -70,7 +70,7 @@ public class OrderBookUpdaterTest {
         // given
         OrderBookUpdater orderBookUpdater =
           getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
-        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
+        given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
         // then
@@ -84,7 +84,7 @@ public class OrderBookUpdaterTest {
         // given
         OrderBookUpdater orderBookUpdater =
           getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
-        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
+        given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
         // then

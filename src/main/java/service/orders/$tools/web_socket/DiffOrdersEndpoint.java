@@ -41,4 +41,8 @@ public class DiffOrdersEndpoint extends Endpoint {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean firstDiffOfferHasBeenReceived() {
+        return messageHandler.firstDiffOfferHasBeenReceived();
+    }
 }

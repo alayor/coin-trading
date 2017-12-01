@@ -9,6 +9,7 @@ import org.junit.Test;
 import service.orders.$tools.OrderBookUpdater;
 import service.orders.$tools.rest_client.OrderBookRestApiClient;
 import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
+import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import javax.websocket.DeploymentException;
 import java.net.URI;
@@ -34,6 +35,7 @@ public class OrderBookUpdater_OfflineITest {
     public void setUp() throws Exception {
         OrderBookUpdater.clearInstance();
         DiffOrdersMessageHandler.clearInstance();
+        DiffOrdersWebSocketClient.clearInstance();
         OrderBookRestApiClient orderBookRestApiClient =
           new OrderBookRestApiClient("http://localhost:9999/orders/singleOrderBookFixture.json");
         orderBookUpdater = OrderBookUpdater.getInstance(orderBookRestApiClient, new URI("ws://localhost:8025/bitso/mock"));

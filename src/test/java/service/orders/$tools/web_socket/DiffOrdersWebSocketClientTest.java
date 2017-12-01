@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.websocket.ClientEndpointConfig;
-import javax.websocket.Endpoint;
 import java.net.URI;
 
 import static org.mockito.Mockito.verify;
@@ -19,7 +18,7 @@ public class DiffOrdersWebSocketClientTest {
     @Mock
     private ClientManager clientManager;
     @Mock
-    private Endpoint endpoint;
+    private DiffOrdersEndpoint endpoint;
     @Mock
     private ClientEndpointConfig config;
     private URI uri;

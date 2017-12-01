@@ -80,7 +80,7 @@ public class OrderBookUpdater {
         while (count-- > 0) {
             try {
                 sleep(1000);
-            if (diffOrderMessageHandler.firstDiffOfferHasBeenReceived()) {
+            if (diffOrdersWebSocketClient.firstDiffOfferHasBeenReceived()) {
                 orderBookHolder.loadOrderBook();
                 return;
             }
