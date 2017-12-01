@@ -4,6 +4,7 @@ maintains state between the application and Bitso, and simulates trade
 execution following a simple trading strategy
 
 [![CircleCI](https://circleci.com/gh/alayor/coin-trading/tree/master.svg?style=svg)](https://circleci.com/gh/alayor/coin-trading/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/alayor/coin-trading/badge.svg?branch=master)](https://coveralls.io/github/alayor/coin-trading?branch=master)
 
 ### Usage
 run command: <br />
