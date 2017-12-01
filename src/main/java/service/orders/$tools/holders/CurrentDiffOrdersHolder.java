@@ -18,11 +18,11 @@ public class CurrentDiffOrdersHolder {
 
     public void produce(DiffOrderResult diffOrderResult) throws InterruptedException
     {
-        diffOrders.offerFirst(diffOrderResult, 20, TimeUnit.SECONDS);
+        diffOrders.offerFirst(diffOrderResult, 2, TimeUnit.MINUTES);
     }
 
     public DiffOrderResult consume() throws InterruptedException {
-        return diffOrders.pollLast(20, TimeUnit.SECONDS);
+        return diffOrders.pollLast(2, TimeUnit.MINUTES);
     }
 
     public DiffOrderResult getNext(int timeout, TimeUnit timeUnit) throws InterruptedException {

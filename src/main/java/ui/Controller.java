@@ -12,11 +12,17 @@ import ui.data.Trade;
 
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 public class Controller {
     public TableColumn tidColumn;
     public TextField ordersAndTrades;
     public TextField upticks;
     public TextField downticks;
+
+    public int currentOrdersAndTrades = 25;
+    public int currentUpticks = 3;
+    public int currentDownticks = 3;
     @FXML
     private TableView<Trade> tradesTableView;
     @FXML
@@ -27,9 +33,9 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        tradesTableView.setMinWidth(400);
-        bidsTableView.setMinWidth(400);
-        asksTableView.setMinWidth(400);
+        tradesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        bidsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        asksTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         tradesTableView.setRowFactory(tv -> new TableRow<Trade>() {
             @Override
@@ -53,8 +59,12 @@ public class Controller {
     public void getTrades() {
         ObservableList<Trade> data = tradesTableView.getItems();
         data.clear();
-        int limit = Integer.parseInt(ordersAndTrades.getText());
-        for (service.model.trades.Trade lastTrade : mainApp.getTrades(limit)) {
+        try {
+            currentOrdersAndTrades = parseInt(ordersAndTrades.getText());
+        } catch (NumberFormatException e) {
+            // Intentionally
+        }
+        for (service.model.trades.Trade lastTrade : mainApp.getTrades(currentOrdersAndTrades)) {
             data.add(new Trade(
               lastTrade.getCreatedAt(),
               lastTrade.getAmount(),
@@ -64,15 +74,29 @@ public class Controller {
               Boolean.toString(lastTrade.isSimulated())
             ));
         }
-        mainApp.setUpticksToSell(Integer.parseInt(upticks.getText()));
-        mainApp.setDownticksToBuy(Integer.parseInt(downticks.getText()));
+        try {
+            currentUpticks = parseInt(upticks.getText());
+        } catch (NumberFormatException e) {
+            // Intentionally
+        }
+        try {
+            currentDownticks = parseInt(downticks.getText());
+        } catch (NumberFormatException e) {
+            // Intentionally
+        }
+        mainApp.setUpticksToSell(currentUpticks);
+        mainApp.setDownticksToBuy(currentDownticks);
     }
 
     void getOrders() {
         ObservableList<Bid> bidItems = bidsTableView.getItems();
         bidItems.clear();
-        int limit = Integer.parseInt(ordersAndTrades.getText());
-        for (service.model.orders.Bid bestBid : mainApp.getBestBids(limit)) {
+        try {
+            currentOrdersAndTrades = parseInt(ordersAndTrades.getText());
+        } catch (NumberFormatException e) {
+            // Intentionally
+        }
+        for (service.model.orders.Bid bestBid : mainApp.getBestBids(currentOrdersAndTrades)) {
             bidItems.add(new Bid(
               bestBid.getOrderId(),
               bestBid.getPrice(),
@@ -80,7 +104,7 @@ public class Controller {
             ));
         }
 
-        List<service.model.orders.Ask> bestAsks = mainApp.getBestAsks(limit);
+        List<service.model.orders.Ask> bestAsks = mainApp.getBestAsks(currentOrdersAndTrades);
         ObservableList<Ask> askItems = asksTableView.getItems();
         askItems.clear();
         for (service.model.orders.Ask bestAsk : bestAsks) {
