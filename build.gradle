@@ -2,17 +2,31 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        jcenter()
     }
     dependencies {
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
         classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+        classpath 'com.palantir:jacoco-coverage:0.4.0'
+
     }
+
+
+}
+plugins {
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
 }
 apply plugin: 'java'
 apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'com.palantir.jacoco-coverage'
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
 
 sourceSets {
     onlineIntegrationTests {

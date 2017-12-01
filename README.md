@@ -5,8 +5,8 @@ execution following a simple trading strategy
 
 [![CircleCI](https://circleci.com/gh/alayor/coin-trading/tree/master.svg?style=svg)](https://circleci.com/gh/alayor/coin-trading/tree/master)
 
-### Start application
-Run command: <br />
+### Usage
+run command: <br />
 java -jar app.jar
 
 ### Assumptions
