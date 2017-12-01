@@ -8,8 +8,9 @@ import ui.data.Ask;
 import ui.data.Bid;
 import ui.data.Trade;
 
-public class Controller
-{
+import java.util.List;
+
+public class Controller {
     @FXML
     private TableView<Trade> tradesTableView;
     @FXML
@@ -23,7 +24,7 @@ public class Controller
         tradesTableView.setRowFactory(tv -> new TableRow<Trade>() {
             @Override
             public void updateItem(Trade item, boolean empty) {
-                super.updateItem(item, empty) ;
+                super.updateItem(item, empty);
                 if (item == null) {
                     setStyle("");
                 } else if (item.getSimulated().equals("true")) {
@@ -42,36 +43,38 @@ public class Controller
     public void getTrades() {
         ObservableList<Trade> data = tradesTableView.getItems();
         data.clear();
-        for (service.model.trades.Trade lastTrade : mainApp.getTrades(25))
-        {
+        for (service.model.trades.Trade lastTrade : mainApp.getTrades(25)) {
             data.add(new Trade(
-                    lastTrade.getCreatedAt(),
-                    lastTrade.getAmount(),
-                    lastTrade.getMakerSide(),
-                    lastTrade.getPrice(),
-                    lastTrade.getTid(),
-                    Boolean.toString(lastTrade.isSimulated())
+              lastTrade.getCreatedAt(),
+              lastTrade.getAmount(),
+              lastTrade.getMakerSide(),
+              lastTrade.getPrice(),
+              lastTrade.getTid(),
+              Boolean.toString(lastTrade.isSimulated())
             ));
         }
     }
 
-    public void getBids() {
-        ObservableList<Bid> data = bidsTableView.getItems();
-        data.clear();
-        data.add(new Bid(
-                "1",
-                "101",
-                "23"
-        ));
-    }
+    public void getOrders() {
+        ObservableList<Bid> bidItems = bidsTableView.getItems();
+        bidItems.clear();
+        for (service.model.orders.Bid bestBid : mainApp.getBestBids(25)) {
+            bidItems.add(new Bid(
+              bestBid.getOrderId(),
+              bestBid.getPrice(),
+              bestBid.getAmount()
+            ));
+        }
 
-    public void getAsks() {
-        ObservableList<Ask> data = asksTableView.getItems();
-        data.clear();
-        data.add(new Ask(
-                "1",
-                "101",
-                "23"
-        ));
+        List<service.model.orders.Ask> bestAsks = mainApp.getBestAsks(25);
+        ObservableList<Ask> askItems = asksTableView.getItems();
+        askItems.clear();
+        for (service.model.orders.Ask bestAsk : bestAsks) {
+            askItems.add(new Ask(
+              bestAsk.getOrderId(),
+              bestAsk.getPrice(),
+              bestAsk.getAmount()
+            ));
+        }
     }
 }
