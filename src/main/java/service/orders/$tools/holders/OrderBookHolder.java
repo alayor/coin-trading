@@ -18,6 +18,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * Contains the current Order Book.
+ * It also contains a data structure that keeps the best bids and best asks
+ * from the current order book.
+ */
 public class OrderBookHolder {
     private static OrderBookHolder orderBookHolder;
     private final OrderBookRestApiClient orderBookApiClient;
@@ -31,6 +36,11 @@ public class OrderBookHolder {
         this.orderBookApiClient = orderBookApiClient;
     }
 
+    /**
+     * Creates and retrieves the an instance of this class using the specified api client.
+     * @param orderBookApiClient is the api client to be used to retrieve the current order book.
+     * @return a new or the current instance.
+     */
     public static OrderBookHolder getInstance(OrderBookRestApiClient orderBookApiClient) {
         if (orderBookHolder == null) {
             orderBookHolder = new OrderBookHolder(orderBookApiClient);
@@ -38,10 +48,19 @@ public class OrderBookHolder {
         return orderBookHolder;
     }
 
+    /**
+     * Returns a new instance using the default OrderBookRestApiClient.
+     * @return a new or the current instance.
+     */
     public static OrderBookHolder getInstance() {
         return getInstance(new OrderBookRestApiClient());
     }
 
+    /**
+     * It retrieves the order book from the api client and loads the current bids ans asks
+     * queues.
+     * It also updates the current applied sequence.
+     */
     public void loadOrderBook() {
         OrderBookResult orderBookResult = orderBookApiClient.getOrderBook();
         if (orderBookResult != null) {
@@ -53,6 +72,63 @@ public class OrderBookHolder {
         } else {
             throw new RuntimeException("Order Book could not get loaded.");
         }
+    }
+
+    /**
+     * Updates the current bids and asks order queues using the information from
+     * the new diff orders received from the Web Socket.
+     * It may add, remove, or update current bids and asks orders.
+     * @param diffOrderResult contains the new diff-orders to be applied to the current order book.
+     */
+    public void applyDiffOrder(DiffOrderResult diffOrderResult) {
+        Lock lock = new ReentrantLock();
+        try {
+            lock.lock();
+            if (parseInt(diffOrderResult.getSequence()) >= parseInt(this.minSequence)) {
+                if (parseInt(diffOrderResult.getSequence()) == parseInt(this.currentSequence) + 1) {
+                    this.currentSequence = diffOrderResult.getSequence();
+                    applyToBidsOrAsks(diffOrderResult);
+                } else {
+                    loadOrderBook();
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * Returns the lowest price ask orders.
+     * @param limit is the maximum number of ask orders to be returned.
+     * @return the lowest price ask orders ordered by price asc.
+     */
+    public List<Ask> getBestAsks(int limit) {
+        List<Ask> bestAsks = new ArrayList<>();
+        for (int i = 0; i < limit; i++) {
+            Ask ask = topAsks.poll();
+            if (ask != null) {
+                bestAsks.add(ask);
+            }
+        }
+        topAsks.addAll(bestAsks);
+        return bestAsks;
+    }
+
+    /**
+     * Returns the highest price buy orders.
+     * @param limit is the maximum number of buy orders to be returned.
+     * @return the highest price buy orders ordered by price desc.
+     */
+    public List<Bid> getBestBids(int limit) {
+        List<Bid> bestBids = new ArrayList<>();
+        for (int i = 0; i < limit; i++) {
+            Bid bid = topBids.poll();
+            if (bid != null) {
+                bestBids.add(bid);
+            }
+        }
+        topBids.addAll(bestBids);
+        return bestBids;
     }
 
     private void loadAsks(List<Ask> asks) {
@@ -77,30 +153,6 @@ public class OrderBookHolder {
         }
     }
 
-    public List<Ask> getBestAsks(int limit) {
-        List<Ask> bestAsks = new ArrayList<>();
-        for (int i = 0; i < limit; i++) {
-            Ask ask = topAsks.poll();
-            if (ask != null) {
-                bestAsks.add(ask);
-            }
-        }
-        topAsks.addAll(bestAsks);
-        return bestAsks;
-    }
-
-    public List<Bid> getBestBids(int limit) {
-        List<Bid> bestBids = new ArrayList<>();
-        for (int i = 0; i < limit; i++) {
-            Bid bid = topBids.poll();
-            if (bid != null) {
-                bestBids.add(bid);
-            }
-        }
-        topBids.addAll(bestBids);
-        return bestBids;
-    }
-
     void clear() {
         Lock lock = new ReentrantLock();
         try {
@@ -110,23 +162,6 @@ public class OrderBookHolder {
             topAsks.clear();
             currentSequence = "";
             minSequence = "";
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void applyDiffOrder(DiffOrderResult diffOrderResult) {
-        Lock lock = new ReentrantLock();
-        try {
-            lock.lock();
-            if (parseInt(diffOrderResult.getSequence()) >= parseInt(this.minSequence)) {
-                if (parseInt(diffOrderResult.getSequence()) == parseInt(this.currentSequence) + 1) {
-                    this.currentSequence = diffOrderResult.getSequence();
-                    applyToBidsOrAsks(diffOrderResult);
-                } else {
-                    loadOrderBook();
-                }
-            }
         } finally {
             lock.unlock();
         }

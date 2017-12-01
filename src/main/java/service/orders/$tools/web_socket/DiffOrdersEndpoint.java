@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * It is used to send and receive messages to and from the Bitso Web Socket.
+ */
 public class DiffOrdersEndpoint extends Endpoint {
     private static Map<String, String> subscriptionInfo = new HashMap<>();
     private Session session;
@@ -20,10 +23,19 @@ public class DiffOrdersEndpoint extends Endpoint {
 
     private final DiffOrdersMessageHandler messageHandler;
 
+    /**
+     * Creates and returns a new instance using the specified message handler.
+     * @param messageHandler to be used to process messages received from the Web Socket.
+     */
     public DiffOrdersEndpoint(DiffOrdersMessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
 
+    /**
+     * It sends a subscription message and assigns a message handler to process the received messages.
+     * @param session used to assign the message handler.
+     * @param config used to manipulated interaction with the Web Socket.
+     */
     @Override
     public void onOpen(Session session, EndpointConfig config) {
         this.session = session;
@@ -40,7 +52,7 @@ public class DiffOrdersEndpoint extends Endpoint {
         }
     }
 
-    public boolean firstDiffOfferHasBeenReceived() {
+    boolean firstDiffOfferHasBeenReceived() {
         return messageHandler.firstDiffOfferHasBeenReceived();
     }
 }
