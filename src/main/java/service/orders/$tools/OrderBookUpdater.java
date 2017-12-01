@@ -73,7 +73,6 @@ public class OrderBookUpdater {
                 return;
             }
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
@@ -29,7 +30,6 @@ public class OrderBookHolderTest {
     private final String SELL = "1";
     @Mock
     private OrderBookRestApiClient orderBookApiClient;
-
 
     @Before
     public void setUp() throws Exception {
@@ -71,8 +71,41 @@ public class OrderBookHolderTest {
     }
 
     @Test
+    public void shouldThrowExpectedExceptionIfOrderBookIsNull() throws Exception {
+        // given
+        given(orderBookApiClient.getOrderBook()).willReturn(null);
+        try {
+            // when
+            holder.loadOrderBook();
+        } catch (Exception e) {
+            assertEquals("Order Book could not get loaded.", e.getMessage());
+            return;
+        }
+        throw new AssertionError("No expected exception was thrown.");
+    }
+
+    @Test
+    public void shouldClearBidsAndAsksBeforeLoading() throws Exception {
+        // given
+        given(orderBookApiClient.getOrderBook()).willReturn(createOrderBookResult("")).willReturn(emptyOrderBook());
+        holder.loadOrderBook();
+        // when
+        holder.loadOrderBook();
+        // then
+        assertEquals(0, holder.getBestAsks(10).size());
+        assertEquals(0, holder.getBestBids(10).size());
+        assertEquals(0, holder.getCurrentOrderIds().size());
+        assertEquals("", holder.getCurrentSequence());
+        assertEquals("", holder.getMinSequence());
+    }
+
+    private OrderBookResult emptyOrderBook() {
+        return new OrderBookResult(true, new OrderBook("", "2017", emptyList(), emptyList()));
+    }
+
+    @Test
     public void shouldReturnBestBids() throws Exception {
-       // given
+        // given
         holder.loadOrderBook();
         // when
         List<Bid> bids = holder.getBestBids(4);

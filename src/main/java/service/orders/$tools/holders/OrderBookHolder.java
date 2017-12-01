@@ -42,10 +42,15 @@ public class OrderBookHolder {
 
     public void loadOrderBook() {
         OrderBookResult orderBookResult = orderBookApiClient.getOrderBook();
-        this.currentSequence = orderBookResult.getOrderBook().getSequence();
-        this.minSequence = orderBookResult.getOrderBook().getSequence();
-        loadAsks(orderBookResult.getOrderBook().getAsks());
-        loadBids(orderBookResult.getOrderBook().getBids());
+        if (orderBookResult != null) {
+            clear();
+            this.currentSequence = orderBookResult.getOrderBook().getSequence();
+            this.minSequence = orderBookResult.getOrderBook().getSequence();
+            loadAsks(orderBookResult.getOrderBook().getAsks());
+            loadBids(orderBookResult.getOrderBook().getBids());
+        } else {
+            throw new RuntimeException("Order Book could not get loaded.");
+        }
     }
 
     private void loadAsks(List<Ask> asks) {
@@ -86,6 +91,8 @@ public class OrderBookHolder {
         currentOrderIds.clear();
         topBids.clear();
         topAsks.clear();
+        currentSequence = "";
+        minSequence = "";
     }
 
     public void applyDiffOrder(DiffOrderResult diffOrderResult) {
