@@ -49,10 +49,6 @@ public class TradingService {
         return tradingService;
     }
 
-    private TradingService(TradesRestApiClient tradesRestApiClient, TradingSimulator tradingSimulator) {
-        this(tradesRestApiClient, getScheduledExecutor(), tradingSimulator);
-    }
-
     private TradingService(
       TradesRestApiClient tradesRestApiClient,
       ScheduledExecutorService executor,

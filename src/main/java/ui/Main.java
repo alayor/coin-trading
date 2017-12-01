@@ -28,7 +28,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         mockedServer.start();
         startSchedule();
-        tradingService = TradingService.getInstance(new TradesRestApiClient("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
+        tradingService = TradingService.getInstance(
+          new TradesRestApiClient("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();

@@ -11,17 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Integer.parseInt;
-import static java.util.concurrent.ConcurrentHashMap.newKeySet;
 
 public class OrderBookHolder {
     private static OrderBookHolder orderBookHolder;
     private final OrderBookRestApiClient orderBookApiClient;
     private String minSequence = "";
     private String currentSequence = "";
-    private Set<String> currentOrderIds = newKeySet();
+    private Set<String> currentOrderIds = ConcurrentHashMap.newKeySet();
     private BlockingQueue<Bid> topBids = new PriorityBlockingQueue<>(1000);
     private BlockingQueue<Ask> topAsks = new PriorityBlockingQueue<>(1000);
 
@@ -54,13 +56,25 @@ public class OrderBookHolder {
     }
 
     private void loadAsks(List<Ask> asks) {
-        asks.stream().map(Ask::getOrderId).forEach(id -> currentOrderIds.add(id));
-        topAsks.addAll(asks);
+        Lock lock = new ReentrantLock();
+        try {
+            lock.lock();
+            asks.stream().map(Ask::getOrderId).forEach(id -> currentOrderIds.add(id));
+            topAsks.addAll(asks);
+        } finally {
+            lock.unlock();
+        }
     }
 
     private void loadBids(List<Bid> bids) {
-        bids.stream().map(Bid::getOrderId).forEach(id -> currentOrderIds.add(id));
-        topBids.addAll(bids);
+        Lock lock = new ReentrantLock();
+        try {
+            lock.lock();
+            bids.stream().map(Bid::getOrderId).forEach(id -> currentOrderIds.add(id));
+            topBids.addAll(bids);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public List<Ask> getBestAsks(int limit) {
@@ -88,21 +102,33 @@ public class OrderBookHolder {
     }
 
     void clear() {
-        currentOrderIds.clear();
-        topBids.clear();
-        topAsks.clear();
-        currentSequence = "";
-        minSequence = "";
+        Lock lock = new ReentrantLock();
+        try {
+            lock.lock();
+            currentOrderIds.clear();
+            topBids.clear();
+            topAsks.clear();
+            currentSequence = "";
+            minSequence = "";
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void applyDiffOrder(DiffOrderResult diffOrderResult) {
-        if (parseInt(diffOrderResult.getSequence()) >= parseInt(this.minSequence)) {
-            if(parseInt(diffOrderResult.getSequence()) == parseInt(this.currentSequence) + 1) {
-                this.currentSequence = diffOrderResult.getSequence();
-                applyToBidsOrAsks(diffOrderResult);
-            } else {
-                loadOrderBook();
+        Lock lock = new ReentrantLock();
+        try {
+            lock.lock();
+            if (parseInt(diffOrderResult.getSequence()) >= parseInt(this.minSequence)) {
+                if (parseInt(diffOrderResult.getSequence()) == parseInt(this.currentSequence) + 1) {
+                    this.currentSequence = diffOrderResult.getSequence();
+                    applyToBidsOrAsks(diffOrderResult);
+                } else {
+                    loadOrderBook();
+                }
             }
+        } finally {
+            lock.unlock();
         }
     }
 
