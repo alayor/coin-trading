@@ -15,20 +15,20 @@ import static java.lang.Thread.sleep;
 
 public class OrderBookUpdater {
     private static OrderBookUpdater orderBookUpdater;
-    private final OrderBookRestApiClient orderBookApiClient;
     private final OrderBookHolder orderBookHolder;
     private final DiffOrdersMessageHandler diffOrderMessageHandler;
     private final DiffOrdersWebSocketClient diffOrdersWebSocketClient;
+    private final DiffOrderApplier diffOrderApplier;
 
     private OrderBookUpdater(
       DiffOrdersWebSocketClient diffOrdersWebSocketClient,
-      OrderBookRestApiClient orderBookApiClient,
       OrderBookHolder orderBookHolder,
-      DiffOrdersMessageHandler diffOrderMessageHandler) {
+      DiffOrdersMessageHandler diffOrderMessageHandler,
+      DiffOrderApplier diffOrderApplier) {
         this.diffOrdersWebSocketClient = diffOrdersWebSocketClient;
-        this.orderBookApiClient = orderBookApiClient;
         this.orderBookHolder = orderBookHolder;
         this.diffOrderMessageHandler = diffOrderMessageHandler;
+        this.diffOrderApplier = diffOrderApplier;
     }
 
     public static OrderBookUpdater getInstance() throws URISyntaxException {
@@ -37,7 +37,8 @@ public class OrderBookUpdater {
         final OrderBookRestApiClient orderBookApiClient = new OrderBookRestApiClient();
         final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance(orderBookApiClient);
         final DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(endpoint);
-        return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
+        final DiffOrderApplier diffOrderApplier = DiffOrderApplier.getInstance();
+        return getInstance(webSocketClient, orderBookHolder, messageHandler, diffOrderApplier);
     }
 
     public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
@@ -45,20 +46,21 @@ public class OrderBookUpdater {
         final DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
         final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance(orderBookApiClient);
         final DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
-        return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
+        final DiffOrderApplier diffOrderApplier = DiffOrderApplier.getInstance();
+        return getInstance(webSocketClient, orderBookHolder, messageHandler, diffOrderApplier);
     }
 
     static OrderBookUpdater getInstance(
       DiffOrdersWebSocketClient webSocketClient,
-      OrderBookRestApiClient orderBookApiClient,
       OrderBookHolder orderBookHolder,
-      DiffOrdersMessageHandler diffOrderMessageHandler) {
+      DiffOrdersMessageHandler diffOrderMessageHandler,
+      DiffOrderApplier diffOrderApplier) {
         if (orderBookUpdater == null) {
             orderBookUpdater = new OrderBookUpdater(
               webSocketClient,
-              orderBookApiClient,
               orderBookHolder,
-              diffOrderMessageHandler);
+              diffOrderMessageHandler,
+              diffOrderApplier);
         }
         return orderBookUpdater;
     }
@@ -70,6 +72,7 @@ public class OrderBookUpdater {
     public void start() throws IOException, DeploymentException {
         diffOrdersWebSocketClient.connect();
         loadOrderBook();
+        diffOrderApplier.start();
     }
 
     private void loadOrderBook() {

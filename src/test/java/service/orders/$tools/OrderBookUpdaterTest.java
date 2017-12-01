@@ -5,17 +5,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.model.orders.OrderBookResult;
 import service.orders.$tools.holders.OrderBookHolder;
-import service.orders.$tools.rest_client.OrderBookRestApiClient;
 import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
 import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static service.orders.$tools.OrderBookUpdater.getInstance;
 
@@ -25,13 +23,11 @@ public class OrderBookUpdaterTest {
     @Mock
     private DiffOrdersWebSocketClient webSocketClient;
     @Mock
-    private OrderBookRestApiClient orderBookApiClient;
-    @Mock
     private OrderBookHolder orderBookHolder;
     @Mock
-    private OrderBookResult orderBookResult;
-    @Mock
     private DiffOrdersMessageHandler diffOrderMessageHandler;
+    @Mock
+    private DiffOrderApplier diffOrderApplier;
 
     @Before
     public void setUp() throws Exception {
@@ -60,8 +56,7 @@ public class OrderBookUpdaterTest {
     public void shouldConnectToWebSocketWhenStarting() throws Exception {
         // given
         OrderBookUpdater orderBookUpdater =
-          getInstance(webSocketClient, orderBookApiClient, orderBookHolder, diffOrderMessageHandler);
-        given(orderBookApiClient.getOrderBook()).willReturn(orderBookResult);
+          getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
         given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
@@ -74,14 +69,27 @@ public class OrderBookUpdaterTest {
     public void shouldLoadBookOrderAfterDiffOrdersAreStartedAndFirstDiffOrderHasBeenReceived() throws Exception {
         // given
         OrderBookUpdater orderBookUpdater =
-          getInstance(webSocketClient, orderBookApiClient, orderBookHolder, diffOrderMessageHandler);
-        given(orderBookApiClient.getOrderBook()).willReturn(orderBookResult);
+          getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
         given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
         // then
-        InOrder inOrder = Mockito.inOrder(webSocketClient, orderBookApiClient);
+        InOrder inOrder = inOrder(webSocketClient, orderBookHolder);
         inOrder.verify(webSocketClient).connect();
-        verify(orderBookHolder).loadOrderBook();
+        inOrder.verify(orderBookHolder).loadOrderBook();
+    }
+
+    @Test
+    public void shouldStartDiffOrderApplierAfterOrderBookIsLoaded() throws Exception {
+        // given
+        OrderBookUpdater orderBookUpdater =
+          getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
+        given(diffOrderMessageHandler.firstDiffOfferHasBeenReceived()).willReturn(true);
+        // when
+        orderBookUpdater.start();
+        // then
+        InOrder inOrder = inOrder(orderBookHolder, diffOrderApplier);
+        inOrder.verify(orderBookHolder).loadOrderBook();
+        inOrder.verify(diffOrderApplier).start();
     }
 }

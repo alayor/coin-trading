@@ -24,7 +24,7 @@ public class DiffOrderApplier {
         this.scheduledThreadPoolExecutor = scheduledThreadPoolExecutor;
     }
 
-    public static DiffOrderApplier getInstance(
+    static DiffOrderApplier getInstance(
       CurrentDiffOrdersHolder currentDiffOrdersHolder,
       OrderBookHolder orderBookHolder,
       ScheduledThreadPoolExecutor scheduledThreadPoolExecutor) {
