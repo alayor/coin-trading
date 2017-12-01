@@ -13,6 +13,11 @@ import java.net.URISyntaxException;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * It first connects to the Web Socket to retrieve and queue the current diff orders.
+ * Then retrieves the current Order Book from the Rest Api Service.
+ * Then start the process to apply diff-orders to the Order Book every second.
+ */
 public class OrderBookUpdater {
     private static OrderBookUpdater orderBookUpdater;
     private final OrderBookHolder orderBookHolder;
@@ -29,6 +34,12 @@ public class OrderBookUpdater {
         this.diffOrderApplier = diffOrderApplier;
     }
 
+    /**
+     * Creates an instance of this class using the default api and web socket clients that
+     * connect to Bitso.
+     * @return a new or the current instance of this class.
+     * @throws URISyntaxException in case any uri is incorrect
+     */
     public static OrderBookUpdater getInstance() throws URISyntaxException {
         return getInstance(
           DiffOrdersWebSocketClient.getInstance(new DiffOrdersEndpoint(DiffOrdersMessageHandler.getInstance())),
@@ -37,31 +48,25 @@ public class OrderBookUpdater {
         );
     }
 
-    public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
-        return getInstance(
-          DiffOrdersWebSocketClient.getInstance(uri, new DiffOrdersEndpoint(DiffOrdersMessageHandler.getInstance())),
-          OrderBookHolder.getInstance(orderBookApiClient),
-          DiffOrderApplier.getInstance());
-    }
-
-    static OrderBookUpdater getInstance(
-      DiffOrdersWebSocketClient webSocketClient,
-      OrderBookHolder orderBookHolder,
-      DiffOrderApplier diffOrderApplier) {
-        if (orderBookUpdater == null) {
-            orderBookUpdater = new OrderBookUpdater(webSocketClient, orderBookHolder, diffOrderApplier);
-        }
-        return orderBookUpdater;
-    }
-
-    public static void clearInstance() {
-        orderBookUpdater = null;
-    }
-
+    /**
+     * Starts the process by first get diff-orders from the Web Socket and queue them internally.
+     * Then retrieves the current order book when the first diff-order has been received.
+     * Finally, it starts the process to get diff-orders from the internal queue and apply them
+     * to the book order.
+     * @throws IOException if connection fails with the Rest Api.
+     * @throws DeploymentException if connection fails with the Web Socket.
+     */
     public void start() throws IOException, DeploymentException {
         diffOrdersWebSocketClient.connect();
         loadOrderBook();
         diffOrderApplier.start();
+    }
+
+    /**
+     * Stop the service that updates the book order.
+     */
+    public void stop() {
+        diffOrderApplier.stop();
     }
 
     private void loadOrderBook() {
@@ -84,7 +89,30 @@ public class OrderBookUpdater {
         this.tryCount = 1;
     }
 
-    public void stop() {
-        diffOrderApplier.stop();
+    static OrderBookUpdater getInstance(
+      DiffOrdersWebSocketClient webSocketClient,
+      OrderBookHolder orderBookHolder,
+      DiffOrderApplier diffOrderApplier) {
+        if (orderBookUpdater == null) {
+            orderBookUpdater = new OrderBookUpdater(webSocketClient, orderBookHolder, diffOrderApplier);
+        }
+        return orderBookUpdater;
+    }
+
+    /**
+     * It should only used by tests.
+     */
+    public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
+        return getInstance(
+          DiffOrdersWebSocketClient.getInstance(uri, new DiffOrdersEndpoint(DiffOrdersMessageHandler.getInstance())),
+          OrderBookHolder.getInstance(orderBookApiClient),
+          DiffOrderApplier.getInstance());
+    }
+
+    /**
+     * It should only used by tests.
+     */
+    public static void clearInstance() {
+        orderBookUpdater = null;
     }
 }
