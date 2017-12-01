@@ -28,6 +28,13 @@ public class TradingService {
         return scheduledThreadPoolExecutor;
     }
 
+    public static TradingService getInstance(TradingSimulator tradingSimulator) {
+        if (tradingService == null) {
+            tradingService = new TradingService(new TradesRestApiClient(), getScheduledExecutor(), tradingSimulator);
+        }
+        return tradingService;
+    }
+
     public static TradingService getInstance(
       TradesRestApiClient tradesRestApiClient,
       TradingSimulator tradingSimulator) {

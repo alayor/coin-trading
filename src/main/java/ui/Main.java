@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import service.model.trades.Trade;
 import service.trades.TradingService;
-import service.trades._tools.rest_client.TradesRestApiClient;
 import service.trades._tools.simulator.TradingSimulator;
 import ui.$tools.MockedHttpServer;
 
@@ -28,9 +27,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         mockedServer.start();
         startSchedule();
-        tradingService = TradingService.getInstance(
-          new TradesRestApiClient("http://localhost:9999/singleTradeFixture.json"), new TradingSimulator(3, 3));
-
+        tradingService = TradingService.getInstance(new TradingSimulator(3, 3));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
         controller = loader.getController();

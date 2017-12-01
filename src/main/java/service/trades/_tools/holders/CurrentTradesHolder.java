@@ -20,13 +20,17 @@ public class CurrentTradesHolder {
     }
 
     public void addTrades(List<Trade> tradeList) {
-        tradeList = tradingSimulator.addSimulatedTrades(getLast(), tradeList);
-        freeSpaceAndAddTrades(tradeList);
+        try {
+            tradeList = tradingSimulator.addSimulatedTrades(getLast(), tradeList);
+            freeSpaceAndAddTrades(tradeList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Trade getLast() {
         if (trades.isEmpty()) {
-           return Trade.NULL;
+            return Trade.NULL;
         } else {
             return trades.getLast();
         }

@@ -16,6 +16,7 @@ import service.trades._tools.simulator.TradingSimulator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,6 +40,13 @@ public class TradingSimulatorTest {
     public void shouldNotThrowExceptionIfLastTradeIsNull() throws Exception {
         // when
         trading.addSimulatedTrades(null, singletonList(createTrade("1", "100")));
+        // then no exception is thrown
+    }
+
+    @Test
+    public void shouldNotThrowExceptionIdTradesAreNull() throws Exception {
+        // when
+        trading.addSimulatedTrades(null, emptyList());
         // then no exception is thrown
     }
 

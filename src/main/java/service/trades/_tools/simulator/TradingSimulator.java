@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class TradingSimulator {
@@ -22,10 +23,13 @@ public class TradingSimulator {
     }
 
     public List<Trade> addSimulatedTrades(Trade lastTrade, List<Trade> newTrades) {
-        List<Trade> tradesWithSimulated = new ArrayList<>(singletonList(newTrades.get(0)));
-        addSimulatedTradeFromLastTrade(tradesWithSimulated, lastTrade, newTrades);
-        addSimulatedTradesFromNewTrades(tradesWithSimulated, newTrades);
-        return tradesWithSimulated;
+        if (newTrades != null && !newTrades.isEmpty()) {
+            List<Trade> tradesWithSimulated = new ArrayList<>(singletonList(newTrades.get(0)));
+            addSimulatedTradeFromLastTrade(tradesWithSimulated, lastTrade, newTrades);
+            addSimulatedTradesFromNewTrades(tradesWithSimulated, newTrades);
+            return tradesWithSimulated;
+        }
+        return emptyList();
     }
 
     private void addSimulatedTradeFromLastTrade(List<Trade> tradesWithSimulated, Trade lastTrade, List<Trade> tradeList) {
