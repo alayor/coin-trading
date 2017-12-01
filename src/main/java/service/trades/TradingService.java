@@ -63,6 +63,9 @@ public class TradingService {
         this.tradesRestApiClient = tradesRestApiClient;
         currentTradesHolder = new CurrentTradesHolder(getTradesFromApi(tradesRestApiClient), tradingSimulator);
         this.executor = executor;
+    }
+
+    public void start() {
         scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 

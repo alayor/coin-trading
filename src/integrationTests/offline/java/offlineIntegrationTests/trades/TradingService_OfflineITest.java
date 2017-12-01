@@ -56,6 +56,7 @@ public class TradingService_OfflineITest {
         // given
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/threeTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
+        tradingService.start();
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then
@@ -69,6 +70,7 @@ public class TradingService_OfflineITest {
         // given
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/threeTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
+        tradingService.start();
         copy(
           getPath("../fixtures/trades/singleTradeFixture.json"),
           getPath("../fixtures/trades/threeTradesFixture.json")
@@ -108,6 +110,7 @@ public class TradingService_OfflineITest {
         // given
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/fiveHundredTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
+        tradingService.start();
         copy(
           getPath("../fixtures/trades/singleTradeFixture.json"),
           getPath("../fixtures/trades/fiveHundredTradesFixture.json")
@@ -125,6 +128,7 @@ public class TradingService_OfflineITest {
         // given
         tradesRestApiClient = new TradesRestApiClient("http://localhost:9999/trades/fiveHundredTradesFixture.json");
         tradingService = TradingService.getInstance(tradesRestApiClient, tradingSimulator);
+        tradingService.start();
         // when
         List<Trade> lastTrades = tradingService.getLastTrades(25);
         // then

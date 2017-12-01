@@ -84,3 +84,14 @@ task testall {
     dependsOn 'offlineITest'
     dependsOn 'onlineITest'
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Coin Trading',
+                'Implementation-Version': '1.0',
+                'Main-Class': 'ui.Main'
+    }
+    baseName = 'coin-trading-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

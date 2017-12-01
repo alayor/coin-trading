@@ -48,10 +48,10 @@ and _best asks_ configuration.
 
 | Feature  | File name | Method name |
 | ------------- | ------------- |  ------------- |
-| Schedule the polling of trades over REST. | TradingService | TradingService (constructor) |
+| Schedule the polling of trades over REST. | <a targe='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/trades/TradingService.java#L17'>TradingService</a> | TradingService (constructor) |
 | Request a book snapshot over REST.  | OrderBookUpdater | loadOrderBook |
 | Listen for diff-orders over websocket.  | DiffOrdersMessageHandler | onMessage |
 | Replay diff-orders.  | DiffOrderApplier | applyDiffOrders |
 | Use config option X to request recent trades.  | ui.Controller | getTrades |
-| Use config option X to limit number of ASKs displayed in UI.  |   |   |
+| Use config option X to limit number of ASKs displayed in UI.  | OrderBookHolder | getBestAsks |
 | The loop that causes the trading algorithm to reevaluate.  | TradingSimulator | addSimulatedTrades |

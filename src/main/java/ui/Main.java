@@ -11,8 +11,10 @@ import service.model.trades.Trade;
 import service.orders.OrdersService;
 import service.trades.TradingService;
 import service.trades._tools.simulator.TradingSimulator;
-import ui.$tools.MockedHttpServer;
 
+import javax.websocket.DeploymentException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -22,7 +24,6 @@ public class Main extends Application {
 
     private TradingService tradingService;
     private OrdersService ordersService;
-    private static MockedHttpServer mockedServer = new MockedHttpServer();
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private ScheduledFuture<?> tradesSchedule;
     private ScheduledFuture<?> ordersSchedule;
@@ -31,12 +32,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        mockedServer.start();
-        startSchedule();
-        tradingSimulator = new TradingSimulator(3, 3);
-        tradingService = TradingService.getInstance(tradingSimulator);
-        ordersService = OrdersService.getInstance();
-        ordersService.start();
+        startServices();
+        loadUI(primaryStage);
+    }
+
+    private void loadUI(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
         controller = loader.getController();
@@ -44,6 +44,15 @@ public class Main extends Application {
         primaryStage.setTitle("Coin Trading");
         primaryStage.setScene(new Scene(root, 1200, 800));
         primaryStage.show();
+    }
+
+    private void startServices() throws URISyntaxException, IOException, DeploymentException {
+        startSchedule();
+        tradingSimulator = new TradingSimulator(3, 3);
+        tradingService = TradingService.getInstance(tradingSimulator);
+        tradingService.start();
+        ordersService = OrdersService.getInstance();
+        ordersService.start();
     }
 
     private void startSchedule() {
@@ -63,7 +72,6 @@ public class Main extends Application {
         scheduledThreadPoolExecutor.shutdown();
         tradingService.stop();
         ordersService.stop();
-        mockedServer.stop();
     }
 
     public List<Trade> getTrades(int limit) {
