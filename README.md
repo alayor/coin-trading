@@ -52,10 +52,10 @@ and _best asks_ configuration.
 
 | Feature  | File name | Method name |
 | ------------- | ------------- |  ------------- |
-| Schedule the polling of trades over REST. | <a targe='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/trades/TradingService.java#L17'>TradingService</a> | TradingService (constructor) |
-| Request a book snapshot over REST.  | OrderBookUpdater | loadOrderBook |
-| Listen for diff-orders over websocket.  | DiffOrdersMessageHandler | onMessage |
-| Replay diff-orders.  | DiffOrderApplier | applyDiffOrders |
-| Use config option X to request recent trades.  | ui.Controller | getTrades |
-| Use config option X to limit number of ASKs displayed in UI.  | OrderBookHolder | getBestAsks |
-| The loop that causes the trading algorithm to reevaluate.  | TradingSimulator | addSimulatedTrades |
+| Schedule the polling of trades over REST. | <a target='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/trades/TradingService.java#L17'>TradingService</a> | <a target='_blank' href=''> start</a> |
+| Request a book snapshot over REST.  | <a target='_blank' href=''>OrderBookUpdater</a> | <a target='_blank' href=''>loadOrderBook</a> |
+| Listen for diff-orders over websocket.  | <a target='_blank' href=''>DiffOrdersMessageHandler<a/> | <a target='_blank' href=''>onMessage<a/> |
+| Replay diff-orders.  | <a target='_blank' href=''>DiffOrderApplier<a/> | <a target='_blank' href=''>applyDiffOrders<a/> |
+| Use config option X to request recent trades.  | <a target='_blank' href=''>Controller</a> | <a target='_blank' href=''>getTrades<a/> |
+| Use config option X to limit number of ASKs displayed in UI.  | <a target='_blank' href=''>OrderBookHolder</a> | <a target='_blank' href=''>getBestAsks<a/> |
+| The loop that causes the trading algorithm to reevaluate.  | <a target='_blank' href=''>TradingSimulator<a/> | <a target='_blank' href=''>addSimulatedTrades<a/> |
