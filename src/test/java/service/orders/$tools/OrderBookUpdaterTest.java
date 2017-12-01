@@ -7,7 +7,10 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.orders.$tools.holders.OrderBookHolder;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
 import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
+
+import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,10 +28,18 @@ public class OrderBookUpdaterTest {
     private OrderBookHolder orderBookHolder;
     @Mock
     private DiffOrderApplier diffOrderApplier;
+    @Mock
+    private OrderBookRestApiClient apiClient;
 
     @Before
     public void setUp() throws Exception {
         OrderBookUpdater.clearInstance();
+    }
+
+    @Test
+    public void shouldGetInstanceUsingApiClientAndURI() throws Exception {
+        OrderBookUpdater orderBookUpdater = OrderBookUpdater.getInstance(apiClient, new URI(""));
+        assertNotNull(orderBookUpdater);
     }
 
     @Test
@@ -88,5 +99,16 @@ public class OrderBookUpdaterTest {
         InOrder inOrder = inOrder(orderBookHolder, diffOrderApplier);
         inOrder.verify(orderBookHolder).loadOrderBook();
         inOrder.verify(diffOrderApplier).start();
+    }
+
+    @Test
+    public void shouldStopApplier() throws Exception {
+        // given
+        OrderBookUpdater orderBookUpdater =
+          getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
+        // when
+        orderBookUpdater.stop();
+        // then
+        verify(diffOrderApplier).stop();
     }
 }
