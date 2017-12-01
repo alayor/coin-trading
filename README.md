@@ -7,8 +7,10 @@ execution following a simple trading strategy.
 [![Coverage Status](https://coveralls.io/repos/github/alayor/coin-trading/badge.svg?branch=master&service=github)](https://coveralls.io/github/alayor/coin-trading?branch=master)
 
 ### Usage
-Run command: <br />
-java -jar app.jar
+* To start app: <b>java -jar app.jar<b/>
+* To build project: ./gradlew build
+* To run <a target='_blank' href='https://github.com/alayor/coin-trading/tree/master/src/integrationTests/online/java/onlineIntegrationTests'>Online Integration Tests<a/>: ./gradlew onlineITest
+* To run <a target='_blank' href='https://github.com/alayor/coin-trading/tree/master/src/integrationTests/offline/java/offlineIntegrationTests'>Offline Integration Tests<a/>: ./gradlew offlineITest
 
 ### Assumptions
 * Regarding _"Display the X most recent trades on the same UI"_. The X represents the same number as in the _best bids_
