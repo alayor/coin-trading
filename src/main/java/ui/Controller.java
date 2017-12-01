@@ -64,14 +64,16 @@ public class Controller {
         } catch (NumberFormatException e) {
             // Intentionally
         }
-        for (service.model.trades.Trade lastTrade : mainApp.getTrades(currentOrdersAndTrades)) {
+        List<service.model.trades.Trade> trades = mainApp.getTrades(currentOrdersAndTrades);
+        for (int i = 0; i < trades.size(); i++) {
             data.add(new Trade(
-              lastTrade.getCreatedAt(),
-              lastTrade.getAmount(),
-              lastTrade.getMakerSide(),
-              lastTrade.getPrice(),
-              lastTrade.getTid(),
-              Boolean.toString(lastTrade.isSimulated())
+              String.valueOf(i + 1),
+              trades.get(i).getCreatedAt(),
+              trades.get(i).getAmount(),
+              trades.get(i).getMakerSide(),
+              trades.get(i).getPrice(),
+              trades.get(i).getTid(),
+              Boolean.toString(trades.get(i).isSimulated())
             ));
         }
         try {

@@ -12,6 +12,11 @@
   </Label>
   <TableView GridPane.hgrow="always" GridPane.vgrow="always" fx:id="tradesTableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
     <columns>
+      <TableColumn text="#">
+        <cellValueFactory>
+          <PropertyValueFactory property="index"/>
+        </cellValueFactory>
+      </TableColumn>
       <TableColumn fx:id="tidColumn" text="Id">
         <cellValueFactory>
           <PropertyValueFactory property="tid"/>
