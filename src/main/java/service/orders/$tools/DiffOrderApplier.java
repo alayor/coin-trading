@@ -57,7 +57,6 @@ public class DiffOrderApplier {
             DiffOrderResult diffOrderResult = currentDiffOrdersHolder.consume();
             orderBookHolder.applyDiffOrder(diffOrderResult);
         } catch (InterruptedException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
