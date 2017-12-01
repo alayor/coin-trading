@@ -32,19 +32,19 @@ public class OrderBookUpdater {
     }
 
     public static OrderBookUpdater getInstance() throws URISyntaxException {
-        DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
-        DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
-        OrderBookRestApiClient orderBookApiClient = new OrderBookRestApiClient();
-        OrderBookHolder orderBookHolder = OrderBookHolder.getInstance();
-        DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(endpoint);
+        final DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
+        final DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
+        final OrderBookRestApiClient orderBookApiClient = new OrderBookRestApiClient();
+        final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance();
+        final DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(endpoint);
         return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
     }
 
     public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
-        DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
-        DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
-        OrderBookHolder orderBookHolder = OrderBookHolder.getInstance();
-        DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
+        final DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
+        final DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
+        final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance();
+        final DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
         return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
     }
 
