@@ -1,4 +1,4 @@
-package service.trades._tools;
+package service.trades._tools.rest_client;
 
 import org.junit.Before;
 import org.junit.Test;
