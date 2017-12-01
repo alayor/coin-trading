@@ -3,14 +3,21 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="gridPane" fx:controller="ui.Controller" xmlns:fx="http://javafx.com/fxml" maxHeight="Infinity" maxWidth="Infinity"
-          alignment="center" hgap="10" vgap="10">
-  <padding>
-    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-  </padding>
-  <Label GridPane.hgrow="always" GridPane.vgrow="always" style="-fx-font: NORMAL 20 Tahoma;" text="Last Trades" GridPane.columnIndex="0" GridPane.rowIndex="2">
-  </Label>
-  <TableView GridPane.hgrow="always" GridPane.vgrow="always" fx:id="tradesTableView" GridPane.columnIndex="0" GridPane.rowIndex="3">
+<GridPane fx:id="gridPane" fx:controller="ui.Controller" xmlns:fx="http://javafx.com/fxml">
+  <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
+  </columnConstraints>
+  <Label style="-fx-font: NORMAL 20 Tahoma;" text="Last Trades"
+         GridPane.columnIndex="0"
+         GridPane.rowIndex="0"/>
+  <TableView fx:id="tradesTableView"
+             GridPane.columnIndex="0"
+             GridPane.columnSpan="2"
+             GridPane.hgrow="ALWAYS"
+             GridPane.vgrow="ALWAYS"
+             GridPane.rowIndex="1">
     <columns>
       <TableColumn text="#">
         <cellValueFactory>
@@ -56,78 +63,102 @@
       <fx:reference source="tidColumn"/>
     </sortOrder>
   </TableView>
-  <Label GridPane.hgrow="always" GridPane.vgrow="always" style="-fx-font: NORMAL 20 Tahoma;" text="Best Bids" GridPane.columnIndex="1" GridPane.rowIndex="0">
-  </Label>
-  <TableView GridPane.hgrow="always" GridPane.vgrow="always" fx:id="bidsTableView" GridPane.columnIndex="1" GridPane.rowIndex="1">
-    <columns>
-      <TableColumn text="#">
-        <cellValueFactory>
-          <PropertyValueFactory property="index"/>
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Id">
-        <cellValueFactory>
-          <PropertyValueFactory property="orderId"/>
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Price">
-        <cellValueFactory>
-          <PropertyValueFactory property="price"/>
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Amount">
-        <cellValueFactory>
-          <PropertyValueFactory property="amount"/>
-        </cellValueFactory>
-      </TableColumn>
-    </columns>
-    <items>
-      <FXCollections fx:factory="observableArrayList">
-      </FXCollections>
-    </items>
-  </TableView>
-  <Label GridPane.hgrow="always" GridPane.vgrow="always" style="-fx-font: NORMAL 20 Tahoma;" text="Best Asks" GridPane.columnIndex="1" GridPane.rowIndex="2">
-  </Label>
-  <TableView GridPane.hgrow="always" GridPane.vgrow="always" fx:id="asksTableView" GridPane.columnIndex="1" GridPane.rowIndex="3">
-    <columns>
-      <TableColumn text="#">
-        <cellValueFactory>
-          <PropertyValueFactory property="index"/>
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Id">
-        <cellValueFactory>
-          <PropertyValueFactory property="orderId"/>
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Price">
-        <cellValueFactory>
-          <PropertyValueFactory property="price"/>
-        </cellValueFactory>
-      </TableColumn>
-      <TableColumn text="Amount">
-        <cellValueFactory>
-          <PropertyValueFactory property="amount"/>
-        </cellValueFactory>
-      </TableColumn>
-    </columns>
-    <items>
-      <FXCollections fx:factory="observableArrayList">
-      </FXCollections>
-    </items>
-  </TableView>
-  <VBox GridPane.hgrow="always" GridPane.vgrow="always" spacing="10" alignment="TOP_CENTER" GridPane.columnIndex="0" GridPane.rowIndex="1">
-    <HBox>
-      <Label text="Trades, Bids, and Asks limit (X): " alignment="BOTTOM_CENTER"></Label>
-      <TextField fx:id="ordersAndTrades" promptText="Trades, Best Bids, and Best Asks (X)" prefWidth="90" text="25"/>
-    </HBox>
-    <HBox>
-      <Label text="Upticks (M): " alignment="BOTTOM_CENTER"></Label>
-      <TextField fx:id="upticks" promptText="Upticks (M)" prefWidth="90" text="3"/>
-    </HBox>
-    <HBox>
-      <Label text="Downticks (M): " alignment="BOTTOM_CENTER"></Label>
-      <TextField fx:id="downticks" promptText="Downticks (N)" prefWidth="150" text="3"/>
-    </HBox>
+
+  <VBox GridPane.columnIndex="0"
+        GridPane.columnSpan="1"
+        GridPane.hgrow="ALWAYS"
+        GridPane.vgrow="ALWAYS"
+        GridPane.rowIndex="2">
+    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+    <Label style="-fx-font: NORMAL 20 Tahoma;" text="Best Bids"/>
+    <TableView fx:id="bidsTableView">
+      <columns>
+        <TableColumn text="#">
+          <cellValueFactory>
+            <PropertyValueFactory property="index"/>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Id">
+          <cellValueFactory>
+            <PropertyValueFactory property="orderId"/>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Price">
+          <cellValueFactory>
+            <PropertyValueFactory property="price"/>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Amount">
+          <cellValueFactory>
+            <PropertyValueFactory property="amount"/>
+          </cellValueFactory>
+        </TableColumn>
+      </columns>
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+        </FXCollections>
+      </items>
+    </TableView>
   </VBox>
+  <VBox
+      GridPane.columnIndex="1"
+      GridPane.columnSpan="1"
+      GridPane.hgrow="ALWAYS"
+      GridPane.vgrow="ALWAYS"
+      GridPane.rowIndex="2">
+    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+    <Label style="-fx-font: NORMAL 20 Tahoma;" text="Best Asks"/>
+    <TableView fx:id="asksTableView">
+      <columns>
+        <TableColumn text="#">
+          <cellValueFactory>
+            <PropertyValueFactory property="index"/>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Id">
+          <cellValueFactory>
+            <PropertyValueFactory property="orderId"/>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Price">
+          <cellValueFactory>
+            <PropertyValueFactory property="price"/>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Amount">
+          <cellValueFactory>
+            <PropertyValueFactory property="amount"/>
+          </cellValueFactory>
+        </TableColumn>
+      </columns>
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+        </FXCollections>
+      </items>
+    </TableView>
+  </VBox>
+
+  <HBox spacing="50"
+        alignment="center"
+        GridPane.columnIndex="0"
+        GridPane.columnSpan="2"
+        GridPane.hgrow="ALWAYS"
+        GridPane.vgrow="ALWAYS"
+        GridPane.rowIndex="3">
+    <padding>
+      <Insets left="25" top="25" bottom="25" right="25"/>
+    </padding>
+    <VBox>
+      <TextField fx:id="ordersAndTrades" promptText="Limit Results (X)" prefWidth="100" text="25"/>
+      <Label text="Limit Results (X)" alignment="center"/>
+    </VBox>
+    <VBox>
+      <TextField fx:id="upticks" promptText="Upticks (M)" prefWidth="100" text="3"/>
+      <Label text="Upticks (M)" alignment="center"/>
+    </VBox>
+    <VBox>
+      <TextField fx:id="downticks" promptText="Downticks (N)" prefWidth="100" text="3"/>
+      <Label text="Downticks (N)" alignment="center"/>
+    </VBox>
+  </HBox>
 </GridPane>

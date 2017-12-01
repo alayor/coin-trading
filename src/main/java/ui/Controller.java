@@ -35,6 +35,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        gridPane.setMinSize(0, 0);
         tradesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         bidsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         asksTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
