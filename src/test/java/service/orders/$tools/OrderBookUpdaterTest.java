@@ -137,7 +137,7 @@ public class OrderBookUpdaterTest {
         OrderBookUpdater orderBookUpdater =
           getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
         given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(false);
-        orderBookUpdater.setTryCount(1);
+        orderBookUpdater.setTryCountToOne();
         try {
             // when
             orderBookUpdater.start();

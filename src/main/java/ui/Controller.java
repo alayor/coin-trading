@@ -21,9 +21,9 @@ public class Controller {
     public TextField upticks;
     public TextField downticks;
 
-    public int currentOrdersAndTrades = 25;
-    public int currentUpticks = 3;
-    public int currentDownticks = 3;
+    private int currentOrdersAndTrades = 25;
+    private int currentUpticks = 3;
+    private int currentDownticks = 3;
     public GridPane gridPane;
     @FXML
     private TableView<Trade> tradesTableView;

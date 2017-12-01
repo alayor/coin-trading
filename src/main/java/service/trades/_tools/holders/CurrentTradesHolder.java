@@ -44,7 +44,7 @@ public class CurrentTradesHolder {
 
     /**
      * Retuns a list with all the trades. The more recent trades will appear first.
-     * @return
+     * @return a list of all the current trades.
      */
     public List<Trade> getTrades() {
         List<Trade> list = new ArrayList<>(trades);

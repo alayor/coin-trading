@@ -8,8 +8,8 @@ public class TradeResult {
     private final boolean success;
     private final List<Trade> tradeList;
 
-    public TradeResult(@JsonProperty("success") boolean success,
-                       @JsonProperty("payload") List<Trade> tradeList) {
+    TradeResult(@JsonProperty("success") boolean success,
+                @JsonProperty("payload") List<Trade> tradeList) {
         this.success = success;
         this.tradeList = tradeList;
     }

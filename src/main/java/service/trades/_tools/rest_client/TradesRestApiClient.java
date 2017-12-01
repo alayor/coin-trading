@@ -5,7 +5,6 @@ import service.model.trades.TradeResult;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import java.io.IOException;
 import java.net.URI;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;

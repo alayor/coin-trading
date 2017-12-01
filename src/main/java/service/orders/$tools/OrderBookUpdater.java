@@ -80,8 +80,8 @@ public class OrderBookUpdater {
         throw new RuntimeException("Order Book couldn't get loaded. No Diff Offers were received.");
     }
 
-    void setTryCount(int tryCount) {
-        this.tryCount = tryCount;
+    void setTryCountToOne() {
+        this.tryCount = 1;
     }
 
     public void stop() {

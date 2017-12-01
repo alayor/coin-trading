@@ -62,7 +62,7 @@ public class DiffOrder {
         return status;
     }
 
-    public static List<DiffOrder> parseArray(JSONArray payload) {
+    static List<DiffOrder> parseArray(JSONArray payload) {
         List<DiffOrder> diffOrders = new ArrayList<>();
         try {
             for (int i = 0; i < payload.length(); i++) {
