@@ -3,6 +3,7 @@ package ui.data;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Bid {
+    private final SimpleStringProperty index = new SimpleStringProperty("");
     private final SimpleStringProperty orderId = new SimpleStringProperty("");
     private final SimpleStringProperty price = new SimpleStringProperty("");
     private final SimpleStringProperty amount = new SimpleStringProperty("");
@@ -11,10 +12,19 @@ public class Bid {
     {
     }
 
-    public Bid(String orderId, String price, String amount) {
+    public Bid(String index, String orderId, String price, String amount) {
+        setIndex(index);
         setOrderId(orderId);
         setPrice(price);
         setAmount(amount);
+    }
+
+    public String getIndex() {
+        return index.get();
+    }
+
+    public void setIndex(String index) {
+        this.index.set(index);
     }
 
     public String getOrderId()

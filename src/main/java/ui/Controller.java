@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import ui.data.Ask;
 import ui.data.Bid;
 import ui.data.Trade;
@@ -23,6 +24,7 @@ public class Controller {
     public int currentOrdersAndTrades = 25;
     public int currentUpticks = 3;
     public int currentDownticks = 3;
+    public GridPane gridPane;
     @FXML
     private TableView<Trade> tradesTableView;
     @FXML
@@ -91,29 +93,32 @@ public class Controller {
     }
 
     void getOrders() {
-        ObservableList<Bid> bidItems = bidsTableView.getItems();
-        bidItems.clear();
         try {
             currentOrdersAndTrades = parseInt(ordersAndTrades.getText());
         } catch (NumberFormatException e) {
             // Intentionally
         }
-        for (service.model.orders.Bid bestBid : mainApp.getBestBids(currentOrdersAndTrades)) {
+        ObservableList<Bid> bidItems = bidsTableView.getItems();
+        List<service.model.orders.Bid> bestBids = mainApp.getBestBids(currentOrdersAndTrades);
+        bidItems.clear();
+        for (int i = 0; i < bestBids.size(); i++) {
             bidItems.add(new Bid(
-              bestBid.getOrderId(),
-              bestBid.getPrice(),
-              bestBid.getAmount()
+              String.valueOf(i + 1),
+              bestBids.get(i).getOrderId(),
+              bestBids.get(i).getPrice(),
+              bestBids.get(i).getAmount()
             ));
         }
 
-        List<service.model.orders.Ask> bestAsks = mainApp.getBestAsks(currentOrdersAndTrades);
         ObservableList<Ask> askItems = asksTableView.getItems();
+        List<service.model.orders.Ask> bestAsks = mainApp.getBestAsks(currentOrdersAndTrades);
         askItems.clear();
-        for (service.model.orders.Ask bestAsk : bestAsks) {
+        for (int i =0; i < bestAsks.size(); i++) {
             askItems.add(new Ask(
-              bestAsk.getOrderId(),
-              bestAsk.getPrice(),
-              bestAsk.getAmount()
+              String.valueOf(i + 1),
+              bestAsks.get(i).getOrderId(),
+              bestAsks.get(i).getPrice(),
+              bestAsks.get(i).getAmount()
             ));
         }
     }
