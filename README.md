@@ -1,13 +1,13 @@
 ## Stock Trading
 Application that connects to the Bitso cryptocurrency exchange,
 maintains state between the application and Bitso, and simulates trade
-execution following a simple trading strategy
+execution following a simple trading strategy.
 
 [![CircleCI](https://circleci.com/gh/alayor/coin-trading/tree/master.svg?style=svg)](https://circleci.com/gh/alayor/coin-trading/tree/master)
 [![Coverage Status](https://coveralls.io/repos/github/alayor/coin-trading/badge.svg?branch=master&service=github)](https://coveralls.io/github/alayor/coin-trading?branch=master)
 
 ### Usage
-run command: <br />
+Run command: <br />
 java -jar app.jar
 
 ### Assumptions
@@ -18,7 +18,7 @@ and _best asks_ configuration.
  the UI will display the maximum number of trades at that moment.
 * Imaginary or simulated trades created using "contrarian trading strategy"
  will have the same info (id, price, created_at, etc.) as the previous trade.
-* The default value of M and N is zero. 
+* The default value of M and N is three. 
 * If M is zero or less than zero no simulated trade will be added.
 * If N is zero or less than zero no simulated trade will be added.
 * When a new simulated trade is created using the "contrarian trading strategy",

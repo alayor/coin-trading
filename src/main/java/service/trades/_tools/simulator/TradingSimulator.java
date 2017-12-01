@@ -11,17 +11,42 @@ import java.util.concurrent.locks.ReentrantLock;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+/**
+ * Uses contrarian trading algorithm to add simulated trades to the current trades got from Bitso.
+ * This strategy will work by counting the M consecutive upticks and N consecutive downticks.
+ * A trade that executes at a price that is the same as the price of the trade that executed immediately
+ * preceding it is known as a “zero tick”.
+ * An uptick is when a trade executes at a higher price than the most recent non-zero-tick trade before it.
+ * A downtick is when a trade executes at a lower price than the most recent non-zero-tick trade before it.
+ * After M consecutive upticks, the algorithm should sell 1 BTC at the price of the most recent uptick.
+ * After N consecutive downticks, it should buy 1 BTC at the price of the most recent downtick.
+ */
 public class TradingSimulator {
     private int downticksToBuy;
     private int upticksToSell;
     private TickCounter tickCounter;
 
+    /**
+     * Creates a Trading Simulator specifying the upticks necessary to create a sell trade as well as
+     * the downticks necessary to add a buy trade.
+     * @param upticksToSell number of upticks that will make a sell trade be inserted in the current trades
+     * @param downticksToBuy number of downticks that will make a buy trade be inserted in the current trades
+     */
     public TradingSimulator(int upticksToSell, int downticksToBuy) {
         tickCounter = TickCounter.getInstance();
         this.upticksToSell = upticksToSell;
         this.downticksToBuy = downticksToBuy;
     }
 
+    /**
+     * Tries to add a buy or sell trade evaluating the current upticks and downticks and comparing them
+     * against upticksToSell and downticksToBuy respectively.
+     * If an uptick is detected , then the previous downticks are restarted and vice versa.
+     * @param lastTrade is the last trade added to the current trades used to compare against the first new trade.
+     * @param newTrades are the new trades retrieved from Bitso Rest Api service.
+     * @return the list of trades containing all new trades and any new simulated trade that may be added
+     * using the contrarian algorithm regarding upticks and downticks.
+     */
     public List<Trade> addSimulatedTrades(Trade lastTrade, List<Trade> newTrades) {
         if (newTrades != null && !newTrades.isEmpty()) {
             List<Trade> tradesWithSimulated = new ArrayList<>(singletonList(newTrades.get(0)));
@@ -30,6 +55,22 @@ public class TradingSimulator {
             return tradesWithSimulated;
         }
         return emptyList();
+    }
+
+    /**
+     * Updates the number of upticks necessary to add a sell trade to the current trades.
+     * @param upticksToSell is the number of upticks necessary to add a sell trade to the current trades
+     */
+    public void setUpticksToSell(int upticksToSell) {
+        this.upticksToSell = upticksToSell;
+    }
+
+    /**
+     * Updates the number of downticks necessary to add a buy trade to the current trades.
+     * @param downticksToBuy is the number of downticks necessary to add a buy trade to the current trades
+     */
+    public void setDownticksToBuy(int downticksToBuy) {
+        this.downticksToBuy = downticksToBuy;
     }
 
     private void addSimulatedTradeFromLastTrade(List<Trade> tradesWithSimulated, Trade lastTrade, List<Trade> tradeList) {
@@ -83,19 +124,14 @@ public class TradingSimulator {
         }
     }
 
-    public void setTickCounter(TickCounter tickCounter) {
+    void setTickCounter(TickCounter tickCounter) {
         this.tickCounter = tickCounter;
     }
 
+    /**
+     * To be used only for tests.
+     */
     public void resetCounter() {
         tickCounter.reset();
-    }
-
-    public void setDownticksToBuy(int downticksToBuy) {
-        this.downticksToBuy = downticksToBuy;
-    }
-
-    public void setUpticksToSell(int upticksToSell) {
-        this.upticksToSell = upticksToSell;
     }
 }

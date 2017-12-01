@@ -1,4 +1,18 @@
-package packageservice.trades.tools.simulator;
+package service.trades._tools.simulator;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static service.UnitTestTool.createTrade;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,19 +24,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import service.UnitTestTool;
 import service.model.trades.Trade;
-import service.trades._tools.simulator.TickCounter;
-import service.trades._tools.simulator.TradingSimulator;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static service.UnitTestTool.createTrade;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TradingSimulatorTest {

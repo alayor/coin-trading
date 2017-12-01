@@ -14,6 +14,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import static java.util.Collections.reverse;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+/**
+ * Get trades from the client api and loads them in CurrentTradesHolder.
+ * It also updates them every certain time (5 seconds).
+ */
 public class TradingService {
     private static TradingService tradingService;
     private CurrentTradesHolder currentTradesHolder;
@@ -22,12 +26,20 @@ public class TradingService {
     private final Runnable updateTradesRunnable = this::updateTrades;
     private ScheduledExecutorService executor;
 
-    private static ScheduledThreadPoolExecutor getScheduledExecutor() {
-        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-        scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
-        return scheduledThreadPoolExecutor;
+    private TradingService(
+            TradesRestApiClient tradesRestApiClient,
+            ScheduledExecutorService executor,
+            TradingSimulator tradingSimulator) {
+        this.tradesRestApiClient = tradesRestApiClient;
+        currentTradesHolder = new CurrentTradesHolder(getTradesFromApi(tradesRestApiClient), tradingSimulator);
+        this.executor = executor;
     }
 
+    /**
+     * Returns an instance of the service by specifying the simulator that will be used to add simulated trades.
+     * @param tradingSimulator The simulator that will be used to add simulated trades.
+     * @return a new or existing instance of this class.
+     */
     public static TradingService getInstance(TradingSimulator tradingSimulator) {
         if (tradingService == null) {
             tradingService = new TradingService(new TradesRestApiClient(), getScheduledExecutor(), tradingSimulator);
@@ -35,6 +47,12 @@ public class TradingService {
         return tradingService;
     }
 
+    /**
+     * Returns an instance of the service by specifying the api client and trades simulator.
+     * @param tradesRestApiClient The object that interacts with Bitso(c) REST Api.
+     * @param tradingSimulator The simulator that will be used to add simulated trades.
+     * @return a new or existing instance of this class.
+     */
     public static TradingService getInstance(
       TradesRestApiClient tradesRestApiClient,
       TradingSimulator tradingSimulator) {
@@ -42,6 +60,37 @@ public class TradingService {
             tradingService = new TradingService(tradesRestApiClient, getScheduledExecutor(), tradingSimulator);
         }
         return tradingService;
+    }
+
+    /**
+     * Starts the process for trades updating.
+     */
+    public void start() {
+        scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
+    }
+
+    /**
+     * Calls the trades holder to get the current trades.
+     * @param limit Maximum number of trades to be returned.
+     * @return A list of trades according to the limit.
+     */
+    public List<Trade> getLastTrades(int limit) {
+        List<Trade> trades = currentTradesHolder.getTrades();
+        return trades.subList(0, limit > trades.size() ? trades.size() : limit);
+    }
+
+    /**
+     * Stops the trades updating process.
+     */
+    public void stop() {
+        scheduledFuture.cancel(true);
+        executor.shutdown();
+    }
+
+    private static ScheduledThreadPoolExecutor getScheduledExecutor() {
+        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+        scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
+        return scheduledThreadPoolExecutor;
     }
 
     static TradingService getInstance(
@@ -54,19 +103,6 @@ public class TradingService {
             tradingService.currentTradesHolder = currentTradesHolder;
         }
         return tradingService;
-    }
-
-    private TradingService(
-      TradesRestApiClient tradesRestApiClient,
-      ScheduledExecutorService executor,
-      TradingSimulator tradingSimulator) {
-        this.tradesRestApiClient = tradesRestApiClient;
-        currentTradesHolder = new CurrentTradesHolder(getTradesFromApi(tradesRestApiClient), tradingSimulator);
-        this.executor = executor;
-    }
-
-    public void start() {
-        scheduledFuture = executor.scheduleWithFixedDelay(updateTradesRunnable, 5, 5, SECONDS);
     }
 
     private List<Trade> getTradesFromApi(TradesRestApiClient tradesRestApiClient) {
@@ -84,16 +120,9 @@ public class TradingService {
         return updateTradesRunnable;
     }
 
-    public void stop() {
-        scheduledFuture.cancel(true);
-        executor.shutdown();
-    }
-
-    public List<Trade> getLastTrades(int limit) {
-        List<Trade> trades = currentTradesHolder.getTrades();
-        return trades.subList(0, limit > trades.size() ? trades.size() : limit);
-    }
-
+    /**
+     * It should only used for testing.
+     */
     public static void clearInstance() {
         tradingService = null;
     }
