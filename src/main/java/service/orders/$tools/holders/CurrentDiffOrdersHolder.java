@@ -7,12 +7,15 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 public class CurrentDiffOrdersHolder {
-    private static final CurrentDiffOrdersHolder currentDiffOrdersHolder = new CurrentDiffOrdersHolder();
+    private static CurrentDiffOrdersHolder currentDiffOrdersHolder;
     private final BlockingDeque<DiffOrderResult> diffOrders = new LinkedBlockingDeque<>();
 
     private CurrentDiffOrdersHolder() {}
 
     public static CurrentDiffOrdersHolder getInstance() {
+        if(currentDiffOrdersHolder == null) {
+            currentDiffOrdersHolder = new CurrentDiffOrdersHolder();
+        }
         return currentDiffOrdersHolder;
     }
 
@@ -31,5 +34,9 @@ public class CurrentDiffOrdersHolder {
 
     public void clear() {
         diffOrders.clear();
+    }
+
+    static void clearInstance() {
+        currentDiffOrdersHolder = null;
     }
 }
