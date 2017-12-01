@@ -7,7 +7,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.orders.$tools.holders.OrderBookHolder;
-import service.orders.$tools.web_socket.DiffOrdersMessageHandler;
 import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import static org.junit.Assert.assertEquals;
@@ -24,8 +23,6 @@ public class OrderBookUpdaterTest {
     private DiffOrdersWebSocketClient webSocketClient;
     @Mock
     private OrderBookHolder orderBookHolder;
-    @Mock
-    private DiffOrdersMessageHandler diffOrderMessageHandler;
     @Mock
     private DiffOrderApplier diffOrderApplier;
 
@@ -56,7 +53,7 @@ public class OrderBookUpdaterTest {
     public void shouldConnectToWebSocketWhenStarting() throws Exception {
         // given
         OrderBookUpdater orderBookUpdater =
-          getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
+          getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
         given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
@@ -69,7 +66,7 @@ public class OrderBookUpdaterTest {
     public void shouldLoadBookOrderAfterDiffOrdersAreStartedAndFirstDiffOrderHasBeenReceived() throws Exception {
         // given
         OrderBookUpdater orderBookUpdater =
-          getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
+          getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
         given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
@@ -83,7 +80,7 @@ public class OrderBookUpdaterTest {
     public void shouldStartDiffOrderApplierAfterOrderBookIsLoaded() throws Exception {
         // given
         OrderBookUpdater orderBookUpdater =
-          getInstance(webSocketClient, orderBookHolder, diffOrderMessageHandler, diffOrderApplier);
+          getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
         given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(true);
         // when
         orderBookUpdater.start();
