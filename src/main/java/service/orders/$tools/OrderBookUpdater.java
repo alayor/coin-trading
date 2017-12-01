@@ -35,7 +35,7 @@ public class OrderBookUpdater {
         final DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
         final DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
         final OrderBookRestApiClient orderBookApiClient = new OrderBookRestApiClient();
-        final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance();
+        final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance(orderBookApiClient);
         final DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(endpoint);
         return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
     }
@@ -43,7 +43,7 @@ public class OrderBookUpdater {
     public static OrderBookUpdater getInstance(OrderBookRestApiClient orderBookApiClient, URI uri) throws URISyntaxException {
         final DiffOrdersMessageHandler messageHandler = DiffOrdersMessageHandler.getInstance();
         final DiffOrdersEndpoint endpoint = new DiffOrdersEndpoint(messageHandler);
-        final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance();
+        final OrderBookHolder orderBookHolder = OrderBookHolder.getInstance(orderBookApiClient);
         final DiffOrdersWebSocketClient webSocketClient = DiffOrdersWebSocketClient.getInstance(uri, endpoint);
         return getInstance(webSocketClient, orderBookApiClient, orderBookHolder, messageHandler);
     }
@@ -78,7 +78,7 @@ public class OrderBookUpdater {
             try {
                 sleep(1000);
             if (diffOrderMessageHandler.firstDiffOfferHasBeenReceived()) {
-                orderBookHolder.loadOrderBook(orderBookApiClient.getOrderBook());
+                orderBookHolder.loadOrderBook();
                 return;
             }
             } catch (InterruptedException e) {

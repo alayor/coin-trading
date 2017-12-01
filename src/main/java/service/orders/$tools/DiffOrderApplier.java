@@ -3,6 +3,7 @@ package service.orders.$tools;
 import service.model.diff_orders.DiffOrderResult;
 import service.orders.$tools.holders.CurrentDiffOrdersHolder;
 import service.orders.$tools.holders.OrderBookHolder;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +40,7 @@ public class DiffOrderApplier {
     public static DiffOrderApplier getInstance() {
         return getInstance(
           CurrentDiffOrdersHolder.getInstance(),
-          OrderBookHolder.getInstance(),
+          OrderBookHolder.getInstance(new OrderBookRestApiClient()),
           new ScheduledThreadPoolExecutor(1));
     }
 

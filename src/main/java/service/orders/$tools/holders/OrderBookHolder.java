@@ -5,6 +5,7 @@ import service.model.diff_orders.DiffOrderResult;
 import service.model.orders.Ask;
 import service.model.orders.Bid;
 import service.model.orders.OrderBookResult;
+import service.orders.$tools.rest_client.OrderBookRestApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +18,30 @@ import static java.util.concurrent.ConcurrentHashMap.newKeySet;
 
 public class OrderBookHolder {
     private static OrderBookHolder orderBookHolder;
+    private final OrderBookRestApiClient orderBookApiClient;
     private String minSequence = "";
     private String currentSequence = "";
     private Set<String> currentOrderIds = newKeySet();
     private BlockingQueue<Bid> topBids = new PriorityBlockingQueue<>(1000);
     private BlockingQueue<Ask> topAsks = new PriorityBlockingQueue<>(1000);
 
-    private OrderBookHolder() {
-
+    private OrderBookHolder(OrderBookRestApiClient orderBookApiClient) {
+        this.orderBookApiClient = orderBookApiClient;
     }
 
-    public void loadOrderBook(OrderBookResult orderBookResult) {
+    public static OrderBookHolder getInstance(OrderBookRestApiClient orderBookApiClient) {
+        if (orderBookHolder == null) {
+            orderBookHolder = new OrderBookHolder(orderBookApiClient);
+        }
+        return orderBookHolder;
+    }
+
+    public static OrderBookHolder getInstance() {
+        return getInstance(new OrderBookRestApiClient());
+    }
+
+    public void loadOrderBook() {
+        OrderBookResult orderBookResult = orderBookApiClient.getOrderBook();
         this.currentSequence = orderBookResult.getOrderBook().getSequence();
         this.minSequence = orderBookResult.getOrderBook().getSequence();
         loadAsks(orderBookResult.getOrderBook().getAsks());
@@ -42,13 +56,6 @@ public class OrderBookHolder {
     private void loadBids(List<Bid> bids) {
         bids.stream().map(Bid::getOrderId).forEach(id -> currentOrderIds.add(id));
         topBids.addAll(bids);
-    }
-
-    public static OrderBookHolder getInstance() {
-        if (orderBookHolder == null) {
-            orderBookHolder = new OrderBookHolder();
-        }
-        return orderBookHolder;
     }
 
     public List<Ask> getBestAsks(int limit) {
@@ -76,6 +83,7 @@ public class OrderBookHolder {
     }
 
     void clear() {
+        currentOrderIds.clear();
         topBids.clear();
         topAsks.clear();
     }
@@ -101,29 +109,24 @@ public class OrderBookHolder {
         if (shouldRemove(diffOrder)) {
             removeOrderFromBids(diffOrderResult, diffOrder);
             currentOrderIds.remove(diffOrder.getOrderId());
-        }
-        else if (shouldUpdate(diffOrder)) {
+        } else if (shouldUpdate(diffOrder)) {
             removeOrderFromBids(diffOrderResult, diffOrder);
             addOrderToBids(diffOrderResult, diffOrder);
-        }
-        else if (shouldAdd(diffOrder)) {
+        } else if (shouldAdd(diffOrder)) {
             addOrderToBids(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
     }
 
-    private boolean shouldRemove(DiffOrder diffOrder)
-    {
+    private boolean shouldRemove(DiffOrder diffOrder) {
         return diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId());
     }
 
-    private boolean shouldUpdate(DiffOrder diffOrder)
-    {
+    private boolean shouldUpdate(DiffOrder diffOrder) {
         return !diffOrder.getAmount().isEmpty() && currentOrderIds.contains(diffOrder.getOrderId());
     }
 
-    private boolean shouldAdd(DiffOrder diffOrder)
-    {
+    private boolean shouldAdd(DiffOrder diffOrder) {
         return !diffOrder.getAmount().isEmpty();
     }
 
@@ -149,12 +152,10 @@ public class OrderBookHolder {
         if (shouldRemove(diffOrder)) {
             removeOrderFromAsks(diffOrderResult, diffOrder);
             currentOrderIds.remove(diffOrder.getOrderId());
-        }
-        else if(shouldUpdate(diffOrder)) {
+        } else if (shouldUpdate(diffOrder)) {
             removeOrderFromAsks(diffOrderResult, diffOrder);
             addOrderToAsks(diffOrderResult, diffOrder);
-        }
-        else if(shouldAdd(diffOrder)) {
+        } else if (shouldAdd(diffOrder)) {
             addOrderToAsks(diffOrderResult, diffOrder);
             currentOrderIds.add(diffOrder.getOrderId());
         }
@@ -188,5 +189,10 @@ public class OrderBookHolder {
 
     Set<String> getCurrentOrderIds() {
         return currentOrderIds;
+    }
+
+    static void clearInstance() {
+        orderBookHolder = null;
+        System.out.println("OrderBookHolder instance was cleared!");
     }
 }
