@@ -89,4 +89,9 @@
       </FXCollections>
     </items>
   </TableView>
+  <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <TextField fx:id="ordersAndTrades" promptText="Trades, Best Bids, and Best Asks (X)" prefWidth="90" text="25"/>
+    <TextField fx:id="upticks" promptText="Upticks (M)" prefWidth="90" text="3"/>
+    <TextField fx:id="downticks" promptText="Downticks (N)" prefWidth="150" text="3"/>
+  </HBox>
 </GridPane>

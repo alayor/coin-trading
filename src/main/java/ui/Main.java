@@ -27,12 +27,14 @@ public class Main extends Application {
     private ScheduledFuture<?> tradesSchedule;
     private ScheduledFuture<?> ordersSchedule;
     private Controller controller;
+    private TradingSimulator tradingSimulator;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         mockedServer.start();
         startSchedule();
-        tradingService = TradingService.getInstance(new TradingSimulator(3, 3));
+        tradingSimulator = new TradingSimulator(3, 3);
+        tradingService = TradingService.getInstance(tradingSimulator);
         ordersService = OrdersService.getInstance();
         ordersService.start();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
@@ -47,8 +49,10 @@ public class Main extends Application {
     private void startSchedule() {
         scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(2);
         scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
-        tradesSchedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(() -> controller.getTrades(), 5, 5, TimeUnit.SECONDS);
-        ordersSchedule = scheduledThreadPoolExecutor.scheduleWithFixedDelay(() -> controller.getOrders(), 5, 5, TimeUnit.SECONDS);
+        tradesSchedule = scheduledThreadPoolExecutor
+          .scheduleWithFixedDelay(() -> controller.getTrades(), 5, 5, TimeUnit.SECONDS);
+        ordersSchedule = scheduledThreadPoolExecutor.
+          scheduleWithFixedDelay(() -> controller.getOrders(), 5, 5, TimeUnit.SECONDS);
     }
 
     @Override
@@ -76,5 +80,13 @@ public class Main extends Application {
 
     public List<Ask> getBestAsks(int limit) {
         return ordersService.getBestAsks(limit);
+    }
+
+    void setUpticksToSell(int num) {
+        tradingSimulator.setUpticksToSell(num);
+    }
+
+    void setDownticksToBuy(int num) {
+        tradingSimulator.setDownticksToBuy(num);
     }
 }
