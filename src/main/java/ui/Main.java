@@ -55,8 +55,10 @@ public class Main extends Application {
     public void stop(){
         System.out.println("Stage is closing");
         tradesSchedule.cancel(true);
+        ordersSchedule.cancel(true);
         scheduledThreadPoolExecutor.shutdown();
         tradingService.stop();
+        ordersService.stop();
         mockedServer.stop();
     }
 

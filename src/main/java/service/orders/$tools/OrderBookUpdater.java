@@ -78,4 +78,8 @@ public class OrderBookUpdater {
         }
         throw new RuntimeException("Order Book couldn't get loaded. No Diff Offers were received.");
     }
+
+    public void stop() {
+        diffOrderApplier.stop();
+    }
 }

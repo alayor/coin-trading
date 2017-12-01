@@ -2,6 +2,7 @@ package ui;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import ui.data.Ask;
@@ -11,6 +12,7 @@ import ui.data.Trade;
 import java.util.List;
 
 public class Controller {
+    public TableColumn tidColumn;
     @FXML
     private TableView<Trade> tradesTableView;
     @FXML
@@ -55,7 +57,7 @@ public class Controller {
         }
     }
 
-    public void getOrders() {
+    void getOrders() {
         ObservableList<Bid> bidItems = bidsTableView.getItems();
         bidItems.clear();
         for (service.model.orders.Bid bestBid : mainApp.getBestBids(25)) {

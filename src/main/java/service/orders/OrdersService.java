@@ -48,4 +48,8 @@ public class OrdersService {
     static void clearInstance() {
         ordersService = null;
     }
+
+    public void stop() {
+        orderBookUpdater.stop();
+    }
 }

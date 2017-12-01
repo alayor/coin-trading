@@ -51,7 +51,7 @@ and _best asks_ configuration.
 | Schedule the polling of trades over REST. | TradingService | TradingService (constructor) |
 | Request a book snapshot over REST.  | OrderBookUpdater | loadOrderBook |
 | Listen for diff-orders over websocket.  | DiffOrdersMessageHandler | onMessage |
-| Replay diff-orders.  |   |   |
+| Replay diff-orders.  | DiffOrderApplier | applyDiffOrders |
 | Use config option X to request recent trades.  | ui.Controller | getTrades |
 | Use config option X to limit number of ASKs displayed in UI.  |   |   |
 | The loop that causes the trading algorithm to reevaluate.  | TradingSimulator | addSimulatedTrades |

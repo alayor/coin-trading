@@ -66,4 +66,8 @@ public class DiffOrderApplier {
     Runnable getApplyDiffOrdersRunnable() {
         return applyDiffOrdersRunnable;
     }
+
+    public void stop() {
+        scheduledThreadPoolExecutor.shutdown();
+    }
 }
