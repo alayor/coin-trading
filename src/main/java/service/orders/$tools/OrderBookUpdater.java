@@ -18,6 +18,7 @@ public class OrderBookUpdater {
     private final OrderBookHolder orderBookHolder;
     private final DiffOrdersWebSocketClient diffOrdersWebSocketClient;
     private final DiffOrderApplier diffOrderApplier;
+    private int tryCount = 10;
 
     private OrderBookUpdater(
       DiffOrdersWebSocketClient diffOrdersWebSocketClient,
@@ -64,8 +65,8 @@ public class OrderBookUpdater {
     }
 
     private void loadOrderBook() {
-        int count = 10;
-        while (count-- > 0) {
+
+        while (tryCount-- > 0) {
             try {
                 sleep(1000);
             if (diffOrdersWebSocketClient.firstDiffOfferHasBeenReceived()) {
@@ -73,10 +74,14 @@ public class OrderBookUpdater {
                 return;
             }
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Order Book couldn't get loaded. No Diff Offers were received.");
             }
         }
         throw new RuntimeException("Order Book couldn't get loaded. No Diff Offers were received.");
+    }
+
+    void setTryCount(int tryCount) {
+        this.tryCount = tryCount;
     }
 
     public void stop() {

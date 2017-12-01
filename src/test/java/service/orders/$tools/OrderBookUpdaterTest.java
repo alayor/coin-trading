@@ -12,8 +12,7 @@ import service.orders.$tools.web_socket.DiffOrdersWebSocketClient;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -110,5 +109,43 @@ public class OrderBookUpdaterTest {
         orderBookUpdater.stop();
         // then
         verify(diffOrderApplier).stop();
+    }
+
+    @Test
+    public void shouldThrowExceptionIfFirstDiffOfferHasnThrowsInterruptedException() throws Exception {
+        // given
+        OrderBookUpdater orderBookUpdater =
+          getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
+        given(webSocketClient.firstDiffOfferHasBeenReceived()).willAnswer(invocation -> {
+            Thread.currentThread().interrupt();
+            return null;
+        });
+        try {
+            // when
+            orderBookUpdater.start();
+        } catch (Exception e) {
+            // then
+            assertTrue(e.getMessage().contains("Order Book couldn't get loaded. No Diff Offers were received."));
+            return;
+        }
+        throw new AssertionError("No expected exception was thrown");
+    }
+
+    @Test
+    public void shouldThrowExceptionIfFirstDiffOfferHasnNotBeenReceived() throws Exception {
+        // given
+        OrderBookUpdater orderBookUpdater =
+          getInstance(webSocketClient, orderBookHolder, diffOrderApplier);
+        given(webSocketClient.firstDiffOfferHasBeenReceived()).willReturn(false);
+        orderBookUpdater.setTryCount(1);
+        try {
+            // when
+            orderBookUpdater.start();
+        } catch (Exception e) {
+            // then
+            assertTrue(e.getMessage().contains("Order Book couldn't get loaded. No Diff Offers were received."));
+            return;
+        }
+        throw new AssertionError("No expected exception was thrown");
     }
 }
