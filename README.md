@@ -63,3 +63,40 @@ and _best asks_ configuration.
 | Use config option X to limit number of ASKs displayed in UI.  | <a target='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/orders/%24tools/holders/OrderBookHolder.java#L26'>OrderBookHolder</a> | <a target='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/orders/%24tools/holders/OrderBookHolder.java#L105'>getBestAsks<a/> |
 | The loop that causes the trading algorithm to reevaluate.  | <a target='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/trades/_tools/simulator/TradingSimulator.java#L24'>TradingSimulator<a/> | <a target='_blank' href='https://github.com/alayor/coin-trading/blob/master/src/main/java/service/trades/_tools/simulator/TradingSimulator.java#L24'>addSimulatedTrades<a/> |
 
+### Diagram
+┌─────────────────────────────────────────────────────────────┐
+│            ┌────────────┐                                   │
+│            │  Current   │                                   │
+│            │   Trades   │                                   │
+│            │   Holder   │                                   │
+│            └────────────┘                                   │
+│                   ▲                                         │
+│                   │                                         │
+│              ┌─────────┐   ┌─────────────┐                  │
+│              │ Trading │   │ Trades Rest │                  │
+│      ┌──────▶│ Service │──▶│ Api Client  │                  │
+│      │       └─────────┘   └─────────────┘                  │
+│ ┌────────┐                                                  │
+│ │   UI   │                                                  │
+│ └────────┘                                                  │
+│      │                                                      │
+│      │                                                      │
+│      │    ┌───────────┐     ┌──────────┐    ┌──────────┐    │
+│      │    │   Order   │     │Diff Order│    │ Current  │    │
+│      └───▶│  Service  │ ┌──▶│ Applier  │───▶│   Diff   │    │
+│           └───────────┘ │   └──────────┘    │  Orders  │    │
+│                 │       │         │         └──────────┘    │
+│                 │       │         │                         │
+│                 ▼       │         ▼                         │
+│           ┌──────────┐  │     ┌───────┐    ┌────────────┐   │
+│           │Order Book│  │     │ Order │    │ Order Book │   │
+│           │ Updater  │──┘ ┌──▶│ Book  │───▶│  Rest Api  │   │
+│           └──────────┘    │   │Holder │    └────────────┘   │
+│                 │         │   └───────◀────┐                │
+│                 │         │       │        │                │
+│                 ├─────────┘       │        ├─────────────┐  │
+│                 │     ┌───────────┴──┬──┐  │ Diff Orders │  │
+│                 │     │Diff Order Web│  │  │   Message   │  │
+│                 └────▶│Socket Client │◀─┘  │   Handler   │  │
+│                       └──────────────┘     └─────────────┘  │
+└─────────────────────────────────────────────────────────────┘
